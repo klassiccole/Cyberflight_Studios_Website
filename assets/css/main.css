@@ -1841,3 +1841,87 @@ input, select, textarea {
 				overflow-wrap: anywhere;
 			}
 			}
+
+			/* About page */
+
+				#about .about-layout {
+					display: flex;
+					align-items: flex-start;
+					gap: 2.5rem;
+				}
+
+				#about .about-image {
+					display: block;
+					flex: 0 0 38%;
+					margin: 0;
+					aspect-ratio: 1 / 1;
+					border-radius: 50%;
+					overflow: hidden;
+				}
+
+				#about .about-image img {
+					display: block;
+					width: 100%;
+					height: 100%;
+					object-fit: cover;
+					border-radius: 50%;
+				}
+
+				#about .about-image:before {
+					border-radius: 50%;
+				}
+
+				#about .about-text {
+					flex: 1;
+					min-width: 0;
+				}
+
+				/* Large "Hi, I'm Cole." text */
+
+				#about .about-intro {
+					display: block;
+					font-size: 2.5rem;
+					font-weight: 700;
+					line-height: 1.15;
+					margin-bottom: 0.75rem;
+				}
+
+
+				/* About page - mobile */
+
+				@media screen and (max-width: 736px) {
+
+					#about .about-layout {
+						display: block;
+					}
+
+					#about .about-image {
+						width: 75%;
+						max-width: 300px;
+						margin: 0 auto 2rem auto;
+					}
+
+					#about .about-intro {
+						font-size: 2rem;
+					}
+
+				}
+
+
+				/* Page header banners */
+
+				.page-banner {
+					display: block;
+					width: 100%;
+					margin: 0 0 2rem 0;
+					overflow: hidden;
+					border-radius: 6px;
+				}
+
+				.page-banner img {
+					display: block;
+					width: 100%;
+					height: auto;
+					max-width: 100%;
+					border-radius: 6px;
+				}
