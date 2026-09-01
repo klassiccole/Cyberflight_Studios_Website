@@ -1925,3 +1925,34 @@ input, select, textarea {
 					max-width: 100%;
 					border-radius: 6px;
 				}
+
+				/* Homepage video background */
+				#bg::after {
+					display: none;
+				}
+
+				#bg video {
+					position: absolute;
+					inset: 0;
+					width: 100%;
+					height: 100%;
+					object-fit: cover;
+					object-position: center;
+					z-index: 1;
+				}
+
+				/* Keep the existing dark overlay above the video */
+				#bg::before {
+					z-index: 2;
+				}
+
+				/* Use the poster image for reduced-motion visitors */
+				@media (prefers-reduced-motion: reduce) {
+					#bg video {
+						display: none;
+					}
+
+					#bg::after {
+						display: block;
+					}
+				}
