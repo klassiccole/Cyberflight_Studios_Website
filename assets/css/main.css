@@ -1929,6 +1929,10 @@ input, select, textarea {
 				/* Homepage video background */
 				#bg::after {
 					display: none;
+					background-image: url("../../images/bg.webp");
+					background-position: center;
+					background-size: cover;
+					background-repeat: no-repeat;
 				}
 
 				#bg video {
