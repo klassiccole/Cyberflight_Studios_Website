@@ -1960,3 +1960,39 @@ input, select, textarea {
 						display: block;
 					}
 				}
+
+				/* Page back button */
+
+				#main article .page-back {
+					position: absolute;
+					top: 0.75rem;
+					left: 0.75rem;
+
+					display: flex;
+					align-items: center;
+					justify-content: center;
+
+					width: 2.5rem;
+					height: 2.5rem;
+
+					border: 0;
+					border-radius: 50%;
+					background: transparent;
+
+					color: #ffffff;
+					font-size: 1.35rem;
+					line-height: 1;
+
+					text-decoration: none;
+					cursor: pointer;
+
+					transition: background-color 0.2s ease-in-out;
+				}
+
+				#main article .page-back:hover {
+					background-color: rgba(255, 255, 255, 0.075);
+				}
+
+				#main article .page-back:active {
+					background-color: rgba(255, 255, 255, 0.175);
+				}
