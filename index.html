@@ -21,7 +21,7 @@
 				<!-- Header -->
 					<header id="header">
 						<div class="logo">
-  						<img src="images/logo.webp" alt="Cyberflight Studios Logo" />
+  						<img src="images/logo.webp" alt="Cyberflight Studios Logo" fetchpriority="high">
 						</div>
 						<div class="content">
 							<div class="inner">
@@ -285,7 +285,12 @@
 							<div class="services-grid">
 
 							<a href="#service-photography" class="service-item">
-								<img src="images/services/photography_header.webp" alt="Photography Services">
+								<img
+									src="images/services/photography_header.webp"
+									alt="Photography Services"
+									loading="lazy"
+									decoding="async"
+								>
 								<h3>Photography</h3>
 								<p>
 									Professional photography for events, businesses, individuals,
@@ -295,7 +300,12 @@
 							</a>
 
 							<a href="#service-videography" class="service-item">
-								<img src="images/services/videography_header.webp" alt="Videography Services">
+								<img
+									src="images/services/videography_header.webp"
+									alt="Videography Services"
+									loading="lazy"
+									decoding="async"
+								>
 								<h3>Videography</h3>
 								<p>
 									Video coverage for events, businesses, and creative projects,
@@ -304,7 +314,12 @@
 							</a>
 
 							<a href="#service-drone" class="service-item">
-								<img src="images/services/drone_header.webp" alt="Drone and Aerial Services">
+								<img
+									src="images/services/drone_header.webp"
+									alt="Drone and Aerial Services"
+									loading="lazy"
+									decoding="async"
+								>
 								<h3>Drone &amp; Aerial</h3>
 								<p>
 									Aerial photography, videography, FPV, visual inspections,
@@ -681,31 +696,44 @@
 										</ul>
 									</form>
 								</section>
-
 							</article>
-
 					</div>
 
 				<!-- Footer -->
 					<footer id="footer">
   						<!-- You can always add something to the end right here! -->
 				</footer>
-
-
 			</div>
 
-		<!-- BG -->
+		<!-- Background -->
 			<div id="bg">
 				<video
-					autoplay
+					id="homepage-video"
 					muted
 					loop
 					playsinline
-					preload="metadata"
+					preload="none"
 					poster="images/bg.webp"
 					aria-hidden="true">
-					<source src="videos/homepage_background.mp4" type="video/mp4">
 				</video>
+				<script>
+					window.addEventListener("load", function () {
+						const video = document.getElementById("homepage-video");
+
+						const source = document.createElement("source");
+						source.src = "videos/homepage_background.mp4";
+						source.type = "video/mp4";
+
+						video.appendChild(source);
+						video.load();
+
+						video.addEventListener("canplay", function () {
+							video.play().catch(function () {
+								// Poster remains visible if autoplay is unavailable.
+							});
+						}, { once: true });
+					});
+				</script>
 			</div>
 
 		<!-- Scripts -->
