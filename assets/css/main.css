@@ -4,7 +4,7 @@
 
 @font-face {
     font-family: 'Source Sans Pro';
-    src: url('../webfonts/SourceSans3-Light.ttf') format('truetype');
+    src: url('../webfonts/SourceSans3-Light.woff2') format('woff2');
     font-weight: 300;
     font-style: normal;
     font-display: swap;
@@ -12,7 +12,7 @@
 
 @font-face {
     font-family: 'Source Sans Pro';
-    src: url('../webfonts/SourceSans3-LightItalic.ttf') format('truetype');
+    src: url('../webfonts/SourceSans3-LightItalic.woff2') format('woff2');
     font-weight: 300;
     font-style: italic;
     font-display: swap;
@@ -20,7 +20,7 @@
 
 @font-face {
     font-family: 'Source Sans Pro';
-    src: url('../webfonts/SourceSans3-SemiBold.ttf') format('truetype');
+    src: url('../webfonts/SourceSans3-SemiBold.woff2') format('woff2');
     font-weight: 600;
     font-style: normal;
     font-display: swap;
@@ -28,7 +28,7 @@
 
 @font-face {
     font-family: 'Source Sans Pro';
-    src: url('../webfonts/SourceSans3-SemiBoldItalic.ttf') format('truetype');
+    src: url('../webfonts/SourceSans3-SemiBoldItalic.woff2') format('woff2');
     font-weight: 600;
     font-style: italic;
     font-display: swap;
