@@ -1353,6 +1353,11 @@ input, select, textarea {
 			border-radius: 50%; 		/* keep circular if you like */
 		}
 
+		/* Remove vertical connector above logo on mobile */
+		#header > .content:before {
+			display: none;
+		}
+
 		#header .logo {
 			display: flex;
 			justify-content: center;
