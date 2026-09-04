@@ -1318,15 +1318,15 @@ input, select, textarea {
 			margin-top: 0;
 		}
 
-			#header > :first-child:before {
-				display: none;
-			}
+		#header > :first-child:before {
+			display: none;
+		}
 
 		#header .logo {
 			background: none;
 			box-shadow: none;
 			border-radius: 0;
-			}
+		}
 
 		#header .logo img {
 			width: 12rem;        		/* increase if you want it bigger (7rem or 8rem works well) */
@@ -1335,13 +1335,21 @@ input, select, textarea {
 			border-radius: 50%;   		/* or 50% if you prefer circular */
 			display: block;
 			margin: 0 auto;
-			}
+		}
+
+		#header .content .location {
+			font-size: 0.85rem;
+			font-weight: 600;
+			letter-spacing: 0.2rem;
+			margin-top: -1.25rem;
+			margin-bottom: 1rem;
+		}
 			
-		/* Adjust logo for mobile screens */
+	/* Adjust logo for mobile screens */
 		@media screen and (max-width: 480px) {
 		#header .logo img {
-			width: 4.5rem;      		/* smaller logo for mobile */
-			height: 4.5rem;
+			width: 7rem;      		/* adjust mobile logo size here */
+			height: 7rem;
 			border-radius: 50%; 		/* keep circular if you like */
 		}
 
@@ -2027,4 +2035,36 @@ input, select, textarea {
 
 				#main article .page-back:active {
 					background-color: rgba(255, 255, 255, 0.175);
+				}
+
+				/* Homepage social media links */
+				#header .home-socials {
+					display: flex;
+					justify-content: center;
+					align-items: center;
+					gap: 1.75rem;
+					list-style: none;
+
+					/* Social box */
+					width: fit-content;
+					padding: 0.4rem 1.1rem;
+					margin: 1.75rem auto 0 auto;
+
+					border: solid 1px #ffffff;
+					border-radius: 4px;
+				}
+
+				#header .home-socials li {
+					padding: 0;
+				}
+
+				#header .home-socials a {
+					border-bottom: none;
+					font-size: 1.55rem;
+					transition: transform 0.2s ease, opacity 0.2s ease;
+				}
+
+				#header .home-socials a:hover {
+					transform: scale(1.15);
+					opacity: 0.75;
 				}
