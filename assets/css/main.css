@@ -2073,3 +2073,11 @@ input, select, textarea {
 					transform: scale(1.15);
 					opacity: 0.75;
 				}
+
+				/* Final mobile header connector fix */
+				@media screen and (max-width: 480px) {
+					#header > .content::before {
+						display: none !important;
+						content: none !important;
+					}
+				}
