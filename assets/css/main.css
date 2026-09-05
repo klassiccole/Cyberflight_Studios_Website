@@ -1340,7 +1340,16 @@ Background
 			}
 		}
 
-/* Wrapper */
+/*
+Wrapper
+   Defines the primary structural container for the website interface.
+   Uses a full-height flex layout to center and distribute the page
+   content above the fixed background system.
+
+   Controls the site's overall width, minimum viewport height, outer
+   spacing, positioning, and stacking order. Responsive rules reduce
+   the wrapper padding as the viewport becomes smaller.
+*/
 
 	#wrapper {
 		display: -moz-flex;
@@ -1371,6 +1380,8 @@ Background
 			display: block;
 		}
 
+/* Wrapper - Small Desktop */
+
 		@media screen and (max-width: 1680px) {
 
 			#wrapper {
@@ -1379,6 +1390,8 @@ Background
 
 		}
 
+/* Wrapper - Tablet */	
+
 		@media screen and (max-width: 736px) {
 
 			#wrapper {
@@ -1386,6 +1399,8 @@ Background
 			}
 
 		}
+
+/* Wrapper - Mobile */
 
 		@media screen and (max-width: 480px) {
 
@@ -2064,9 +2079,14 @@ Services
 			margin-bottom: 1rem;
 			}
 
-/* Global Mobile Formatting Fixes */
-		
-			@media screen and (max-width: 480px) {
+/*
+Global Mobile Formatting
+   Applies shared mobile-width constraints to the site's major structural
+   containers. Ensures the Wrapper, Header, Main, and Footer remain within
+   the viewport and do not create horizontal overflow on small screens.
+*/
+
+		@media screen and (max-width: 480px) {
 
 			#wrapper,
 			#header,
@@ -2075,9 +2095,28 @@ Services
 				width: 100%;
 				max-width: 100%;
 			}
-			}
+		}
+		@media screen and (max-width: 480px) {
 
-			/* About page */
+		#wrapper,
+		#header,
+		#main,
+		#footer {
+			width: 100%;
+			max-width: 100%;
+		}
+		}
+
+/*
+About
+   Controls the custom layout and presentation of the About content page.
+   Defines the side-by-side desktop layout, circular profile image,
+   text column, and enlarged introductory text.
+
+   Tablet rules are grouped at the bottom of this section and convert
+   the layout to a stacked format, center and resize the profile image,
+   and reduce the introductory text size for smaller screens.
+*/
 
 				#about .about-layout {
 					display: flex;
@@ -2111,8 +2150,6 @@ Services
 					min-width: 0;
 				}
 
-				/* Large "Hi, I'm Cole." text */
-
 				#about .about-intro {
 					display: block;
 					font-size: 2.5rem;
@@ -2122,7 +2159,7 @@ Services
 				}
 
 
-				/* About page - mobile */
+/* About - Tablet */
 
 				@media screen and (max-width: 736px) {
 
@@ -2142,7 +2179,15 @@ Services
 
 				}
 
-				/* Page header banners */
+/*
+Page Header Banners
+   Controls the banner images displayed at the top of individual content
+   pages. Ensures banners span the available content width while preserving
+   their natural aspect ratio and remaining responsive on smaller screens.
+
+   Also applies consistent spacing, clipping, and rounded corners to both
+   the banner container and its image.
+*/
 
 				.page-banner {
 					display: block;
