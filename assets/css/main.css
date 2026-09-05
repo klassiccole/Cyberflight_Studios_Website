@@ -405,32 +405,6 @@ Type
 					width: calc(25% - 0.375rem);
 				}
 
-		@media screen and (max-width: 480px) {
-
-			form > .fields {
-				width: calc(100% + 3rem);
-				margin: -1.5rem 0 2rem -1.5rem;
-			}
-
-				form > .fields > .field {
-					padding: 1.5rem 0 0 1.5rem;
-					width: calc(100% - 1.5rem);
-				}
-
-					form > .fields > .field.half {
-						width: calc(100% - 1.5rem);
-					}
-
-					form > .fields > .field.third {
-						width: calc(100% - 1.5rem);
-					}
-
-					form > .fields > .field.quarter {
-						width: calc(100% - 1.5rem);
-					}
-
-		}
-
 	label {
 		color: #ffffff;
 		display: block;
@@ -634,7 +608,38 @@ Type
 		opacity: 1.0;
 	}
 
-/* Box */
+/*
+Form
+   Controls the site-wide styling and layout of forms.
+   Defines field structure, labels, text inputs, textareas, select
+   menus, checkboxes, radio buttons, focus states, and placeholder text.
+
+   Mobile form rules are grouped at the bottom of this section and
+   ensure fields stack at full width without causing horizontal overflow.
+*/
+
+	@media screen and (max-width: 480px) {
+
+		form > .fields {
+			width: 100%;
+			margin: 0;
+		}
+
+			form > .fields > .field,
+			form > .fields > .field.half,
+			form > .fields > .field.third,
+			form > .fields > .field.quarter {
+				width: 100%;
+				padding-left: 0;
+			}
+	}
+
+/*
+Box
+   Defines the reusable bordered box component used for grouping content.
+   Applies the box border, rounded corners, internal padding, and spacing,
+   while removing unnecessary bottom margin from the final nested element.
+*/
 
 	.box {
 		border-radius: 4px;
@@ -655,7 +660,15 @@ Type
 			padding: 0;
 		}
 
-/* Icon */
+/*
+Icon
+   Defines the base Font Awesome icon system used throughout the website.
+   Controls icon rendering, font smoothing, hidden accessibility labels,
+   and the font weights/families used for regular, solid, and brand icons.
+
+   Component-specific icon styling remains within the sections where those
+   icons are used, such as Header, Actions, Button, and Icons.
+*/
 
 	.icon {
 		text-decoration: none;
@@ -692,7 +705,15 @@ Type
 			font-family: 'Font Awesome 5 Brands';
 		}
 
-/* Image */
+/*
+Image
+   Defines the reusable image component styles used throughout the website.
+   Supports standard images, left- and right-aligned images, full-width fit
+   images, and larger main images.
+
+   Also applies the site's image overlay treatment, rounded corners,
+   responsive sizing, positioning, and breakpoint-specific spacing.
+*/
 
 	.image {
 		border-radius: 4px;
@@ -761,6 +782,8 @@ Type
 				width: 100%;
 			}
 
+/* Image - Tablet */
+
 		@media screen and (max-width: 736px) {
 
 			.image.main {
@@ -768,6 +791,8 @@ Type
 			}
 
 		}
+
+/* Image - Mobile */
 
 		@media screen and (max-width: 480px) {
 
@@ -777,7 +802,14 @@ Type
 
 		}
 
-/* List */
+/*
+List
+   Defines the site-wide styling for ordered lists, unordered lists,
+   alternate bordered lists, and definition lists.
+
+   Controls list spacing, indentation, bullet and number positioning,
+   and the presentation of alternate and definition-list content.
+*/
 
 	ol {
 		list-style: decimal;
@@ -828,7 +860,15 @@ Type
 			margin-left: 2rem;
 		}
 
-/* Actions */
+/*
+Actions
+   Defines reusable groups of buttons and action links used throughout
+   the website. Controls horizontal and stacked layouts, spacing,
+   alignment, full-width fit behavior, and small action variants.
+
+   Responsive action rules are grouped at the bottom of this section
+   to adapt button groups for smaller screens.
+*/
 
 	ul.actions {
 		display: -moz-flex;
@@ -899,6 +939,8 @@ Type
 				width: 100%;
 			}
 
+/* Actions - Mobile */
+
 		@media screen and (max-width: 480px) {
 
 			ul.actions:not(.fixed) {
@@ -950,7 +992,15 @@ Type
 
 		}
 
-/* Icons */
+/*
+Icons
+   Defines the reusable icon-list component used for groups of linked icons.
+   Displays icons inline with consistent spacing and circular borders,
+   and provides hover and active feedback for interactive icon links.
+
+   This section controls icon-list layout and appearance; the base Font
+   Awesome rendering behavior is defined separately in the Icon section.
+*/
 
 	ul.icons {
 		cursor: default;
@@ -985,7 +1035,16 @@ Type
 					background-color: rgba(255, 255, 255, 0.175);
 				}
 
-/* Table */
+/*
+Table
+   Defines the reusable table component used throughout the website.
+   Controls table width and spacing, row borders, alternating row
+   backgrounds, cell and header formatting, and table header/footer borders.
+
+   Also defines the alternate bordered table style and the table wrapper
+   used to allow horizontal scrolling when table content exceeds its
+   available width.
+*/
 
 	.table-wrapper {
 		-webkit-overflow-scrolling: touch;
@@ -1053,7 +1112,15 @@ Type
 				border-top: 0;
 			}
 
-/* Button */
+/*
+Button
+   Defines the reusable button styles used throughout the website,
+   including form buttons and elements using the .button class.
+
+   Controls button appearance, sizing, spacing, hover and active states,
+   icon spacing, full-width fit buttons, small and primary variants,
+   disabled states, and native button alignment.
+*/
 
 	input[type="submit"],
 	input[type="reset"],
@@ -1161,7 +1228,21 @@ Type
 		line-height: calc(2.75rem - 2px);
 	}
 
-/* BG */
+/*
+Background
+   Controls the full-screen background layer displayed behind the website.
+   Defines the fixed background container, dark texture overlay, homepage
+   video background, fallback background image, and background transitions
+   used when opening and closing content pages.
+
+   The video normally provides the visible homepage background while the
+   static WebP image remains hidden as a fallback. Visitors who prefer
+   reduced motion are shown the static image instead of the background video.
+
+   Layering is controlled with z-index values so the video or fallback image
+   remains behind the dark overlay while the website interface stays above
+   the entire background system.
+*/
 
 	#bg {
 		-moz-transform: scale(1.0);
@@ -1204,6 +1285,7 @@ Type
 		}
 
 		#bg:after {
+			display: none;
 			-moz-transform: scale(1.125);
 			-webkit-transform: scale(1.125);
 			-ms-transform: scale(1.125);
@@ -1212,7 +1294,7 @@ Type
 			-webkit-transition: -webkit-transform 0.325s ease-in-out, -webkit-filter 0.325s ease-in-out;
 			-ms-transition: -ms-transform 0.325s ease-in-out, -ms-filter 0.325s ease-in-out;
 			transition: transform 0.325s ease-in-out, filter 0.325s ease-in-out;
-			background-image: url("../../images/bg.jpg");
+			background-image: url("../../images/bg.webp");
 			background-position: center;
 			background-size: cover;
 			background-repeat: no-repeat;
@@ -1232,6 +1314,30 @@ Type
 
 		body.is-preload #bg:before {
 			background-color: #000000;
+		}
+
+/* Homepage Video Background */
+
+		#bg video {
+			position: absolute;
+			inset: 0;
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+			object-position: center;
+			z-index: 1;
+		}
+
+/* Background - Reduced Motion */
+
+		@media (prefers-reduced-motion: reduce) {
+			#bg video {
+				display: none;
+			}
+
+			#bg::after {
+				display: block;
+			}
 		}
 
 /* Wrapper */
@@ -1969,21 +2075,6 @@ Services
 				width: 100%;
 				max-width: 100%;
 			}
-
-/* Mobile overflow fixes */
-
-			form > .fields {
-				width: 100%;
-				margin: 0;
-			}
-
-			form > .fields > .field,
-			form > .fields > .field.half,
-			form > .fields > .field.third,
-			form > .fields > .field.quarter {
-				width: 100%;
-				padding-left: 0;
-			}
 			}
 
 			/* About page */
@@ -2067,39 +2158,4 @@ Services
 					height: auto;
 					max-width: 100%;
 					border-radius: 6px;
-				}
-
-				/* Homepage video background */
-				#bg::after {
-					display: none;
-					background-image: url("../../images/bg.webp");
-					background-position: center;
-					background-size: cover;
-					background-repeat: no-repeat;
-				}
-
-				#bg video {
-					position: absolute;
-					inset: 0;
-					width: 100%;
-					height: 100%;
-					object-fit: cover;
-					object-position: center;
-					z-index: 1;
-				}
-
-				/* Keep the existing dark overlay above the video */
-				#bg::before {
-					z-index: 2;
-				}
-
-				/* Use the poster image for reduced-motion visitors */
-				@media (prefers-reduced-motion: reduce) {
-					#bg video {
-						display: none;
-					}
-
-					#bg::after {
-						display: block;
-					}
 				}
