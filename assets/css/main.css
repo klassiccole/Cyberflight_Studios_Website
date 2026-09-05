@@ -357,7 +357,15 @@ Type
 
 	}
 
-/* Form */
+/*
+Form
+   Controls the site-wide styling and layout of forms.
+   Defines field structure, labels, text inputs, textareas, select
+   menus, checkboxes, radio buttons, focus states, and placeholder text.
+
+   Mobile form rules are grouped at the bottom of this section and
+   ensure fields stack at full width without causing horizontal overflow.
+*/
 
 	form {
 		margin: 0 0 2rem 0;
@@ -608,15 +616,7 @@ Type
 		opacity: 1.0;
 	}
 
-/*
-Form
-   Controls the site-wide styling and layout of forms.
-   Defines field structure, labels, text inputs, textareas, select
-   menus, checkboxes, radio buttons, focus states, and placeholder text.
-
-   Mobile form rules are grouped at the bottom of this section and
-   ensure fields stack at full width without causing horizontal overflow.
-*/
+/* Form - Mobile */
 
 	@media screen and (max-width: 480px) {
 
@@ -1525,8 +1525,8 @@ Header / Homepage
 				font-size: 0.8rem;
 				line-height: 2;
 			}
+/* Homepage Social Media Links */
 
-/* Homepage social media links */
 			#header .home-socials {
 				display: flex;
 				justify-content: center;
@@ -2095,16 +2095,6 @@ Global Mobile Formatting
 				width: 100%;
 				max-width: 100%;
 			}
-		}
-		@media screen and (max-width: 480px) {
-
-		#wrapper,
-		#header,
-		#main,
-		#footer {
-			width: 100%;
-			max-width: 100%;
-		}
 		}
 
 /*
