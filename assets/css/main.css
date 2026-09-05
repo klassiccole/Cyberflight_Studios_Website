@@ -1172,12 +1172,9 @@ input, select, textarea {
 			-ms-transition-delay: 0.75s;
 			transition-delay: 0.75s;
 			background-image: linear-gradient(to top, rgba(19, 21, 25, 0.5), rgba(19, 21, 25, 0.5)), url("../../images/overlay.png");
-			background-size: auto,
- 256px 256px;
-			background-position: center,
- center;
-			background-repeat: no-repeat,
- repeat;
+			background-size: auto, 256px 256px;
+			background-position: center, center;
+			background-repeat: no-repeat, repeat;
 			z-index: 2;
 		}
 
@@ -1267,7 +1264,12 @@ input, select, textarea {
 
 		}
 
-/* Header */
+/* 
+Header / Homepage
+   The homepage interface is primarily contained within #header.
+   This includes the logo, company information, navigation, and social links.
+   #main contains the individual content pages opened from the homepage.
+*/
 
 	#header {
 		display: -moz-flex;
@@ -1329,10 +1331,10 @@ input, select, textarea {
 		}
 
 		#header .logo img {
-			width: 12rem;        		/* increase if you want it bigger (7rem or 8rem works well) */
+			width: 12rem;
 			height: 12rem;
 			object-fit: contain;
-			border-radius: 50%;   		/* or 50% if you prefer circular */
+			border-radius: 50%;
 			display: block;
 			margin: 0 auto;
 		}
@@ -1343,26 +1345,6 @@ input, select, textarea {
 			letter-spacing: 0.2rem;
 			margin-top: -1.25rem;
 			margin-bottom: 1rem;
-		}
-			
-	/* Adjust logo for mobile screens */
-		@media screen and (max-width: 480px) {
-		#header .logo img {
-			width: 7rem;      		/* adjust mobile logo size here */
-			height: 7rem;
-			border-radius: 50%; 		/* keep circular if you like */
-		}
-
-		/* Remove vertical connector above logo on mobile */
-		#header > .content:before {
-			display: none;
-		}
-
-		#header .logo {
-			display: flex;
-			justify-content: center;
-			align-items: center;
-		}
 		}
 
 		#header .content {
@@ -1396,6 +1378,38 @@ input, select, textarea {
 				letter-spacing: 0.2rem;
 				font-size: 0.8rem;
 				line-height: 2;
+			}
+
+/* Homepage social media links */
+			#header .home-socials {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				gap: 1.75rem;
+				list-style: none;
+
+				/* Social box */
+				width: fit-content;
+				padding: 0.4rem 1.1rem;
+				margin: 1.75rem auto 0 auto;
+
+				border: solid 1px #ffffff;
+				border-radius: 4px;
+			}
+
+			#header .home-socials li {
+				padding: 0;
+			}
+
+			#header .home-socials a {
+				border-bottom: none;
+				font-size: 1.55rem;
+				transition: transform 0.2s ease, opacity 0.2s ease;
+			}
+
+			#header .home-socials a:hover {
+				transform: scale(1.15);
+				opacity: 0.75;
 			}
 
 		#header nav ul {
@@ -1484,6 +1498,8 @@ input, select, textarea {
 			opacity: 0;
 		}
 
+/* Header - Small Desktop */
+
 		@media screen and (max-width: 980px) {
 
 			#header .content p br {
@@ -1491,6 +1507,8 @@ input, select, textarea {
 			}
 
 		}
+
+/* Header - Tablet */
 
 		@media screen and (max-width: 736px) {
 
@@ -1523,22 +1541,21 @@ input, select, textarea {
 
 		}
 
+/* Header - Mobile */
+
 		@media screen and (max-width: 480px) {
 
 			#header {
 				padding: 1.5rem 0;
 			}
 
-				#header .content .inner {
-					padding: 2.5rem 0;
-				}
-
 				#header nav ul {
 					-moz-flex-direction: column;
 					-webkit-flex-direction: column;
 					-ms-flex-direction: column;
 					flex-direction: column;
-					min-width: 10rem;
+					width: 100%;
+					min-width: 0;
 					max-width: 100%;
 				}
 
@@ -1554,14 +1571,54 @@ input, select, textarea {
 						#header nav ul li a {
 							height: 3rem;
 							line-height: 3rem;
-							min-width: 0;
 							width: 100%;
+							min-width: 0;
+							padding-left: 1rem;
+							padding-right: 1rem;
 						}
 
 				#header nav.use-middle:after {
 					display: none;
 				}
 
+			#header .logo {
+				width: 7rem;
+				height: 7rem;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+			}
+
+			#header .logo img {
+				width: 7rem;
+				height: 7rem;
+				border-radius: 50%;
+			}
+
+			#header > .content::before {
+				display: none;
+			}
+
+			#header .content {
+				width: 100%;
+				max-width: 100%;
+			}
+
+			#header .content .inner {
+				width: 100%;
+				max-width: 100%;
+				padding: 2.5rem 1rem;
+			}
+
+			#header nav {
+				width: 100%;
+				max-width: 100%;
+			}
+
+			#header h1 {
+				letter-spacing: 0.25rem;
+				word-break: break-word;
+			}
 		}
 
 /* Main */
@@ -1820,41 +1877,6 @@ input, select, textarea {
 				max-width: 100%;
 			}
 
-			#header .content {
-				width: 100%;
-				max-width: 100%;
-			}
-
-			#header .content .inner {
-				width: 100%;
-				max-width: 100%;
-				padding-left: 1rem;
-				padding-right: 1rem;
-			}
-
-			#header nav {
-				width: 100%;
-				max-width: 100%;
-			}
-
-			#header nav ul {
-				width: 100%;
-				min-width: 0;
-				max-width: 100%;
-			}
-
-			#header nav ul li a {
-				width: 100%;
-				min-width: 0;
-				padding-left: 1rem;
-				padding-right: 1rem;
-			}
-
-			#header h1 {
-				letter-spacing: 0.25rem;
-				word-break: break-word;
-			}
-
 			form > .fields {
 				width: 100%;
 				margin: 0;
@@ -1867,17 +1889,6 @@ input, select, textarea {
 				width: 100%;
 				padding-left: 0;
 			}
-			}
-
-			@media screen and (max-width: 480px) {
-			#main article h2.major {
-				font-size: 1rem;
-				letter-spacing: 0.14rem;
-				line-height: 1.35;
-			}
-			}
-
-			@media screen and (max-width: 480px) {
 			#main article h2.major {
 				font-size: 1rem;
 				letter-spacing: 0.14rem;
@@ -1951,7 +1962,6 @@ input, select, textarea {
 					}
 
 				}
-
 
 				/* Page header banners */
 
@@ -2040,44 +2050,4 @@ input, select, textarea {
 
 				#main article .page-back:active {
 					background-color: rgba(255, 255, 255, 0.175);
-				}
-
-				/* Homepage social media links */
-				#header .home-socials {
-					display: flex;
-					justify-content: center;
-					align-items: center;
-					gap: 1.75rem;
-					list-style: none;
-
-					/* Social box */
-					width: fit-content;
-					padding: 0.4rem 1.1rem;
-					margin: 1.75rem auto 0 auto;
-
-					border: solid 1px #ffffff;
-					border-radius: 4px;
-				}
-
-				#header .home-socials li {
-					padding: 0;
-				}
-
-				#header .home-socials a {
-					border-bottom: none;
-					font-size: 1.55rem;
-					transition: transform 0.2s ease, opacity 0.2s ease;
-				}
-
-				#header .home-socials a:hover {
-					transform: scale(1.15);
-					opacity: 0.75;
-				}
-
-				/* Final mobile header connector fix */
-				@media screen and (max-width: 480px) {
-					#header > .content::before {
-						display: none !important;
-						content: none !important;
-					}
 				}
