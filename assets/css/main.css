@@ -2069,7 +2069,8 @@ Services
 			padding: 1.5rem;
 			}
 
-			.service-item img {
+			.service-item img,
+			.service-item video {
 			width: 100%;
 			height: 220px;
 			object-fit: cover;

@@ -254,7 +254,7 @@
 
 							-->
 
-						<!-- Photography Gallery -->
+							<!-- Photography Gallery -->
 								<article id="gallery-photo">
 								<h2 class="major">Photography</h2>
 								<p>A blend of lifestyle, portrait, and creative compositions.</p>
@@ -266,7 +266,7 @@
 								</div>
 								</article>
 
-						<!-- Film Photography Gallery -->
+							<!-- Film Photography Gallery -->
 								<article id="gallery-film">
 								<h2 class="major">35MM Film Photography</h2>
 
@@ -285,7 +285,7 @@
 								</div>
 								</article>
 
-								<!-- Nature Gallery -->
+							<!-- Nature Gallery -->
 								<article id="gallery-nature">
 								<h2 class="major">Nature Photography</h2>
 								<p></p>
@@ -301,10 +301,10 @@
 								</article>
 
 
-						<!-- Services -->
+					<!-- Services -->
 							<article id="services">
 
-								<!-- Services Header -->
+							<!-- Services Header -->
 								<span class="image page-banner">
 									<img src="images/headers/services.webp" alt="Services" />
 								</span>
@@ -315,7 +315,7 @@
 
 							<a href="#service-photography" class="service-item">
 								<img
-									src="images/services/photography_header.webp"
+									src="images/services/photography_main_header.webp"
 									alt="Photography Services"
 									loading="lazy"
 									decoding="async"
@@ -330,7 +330,7 @@
 
 							<a href="#service-videography" class="service-item">
 								<img
-									src="images/services/videography_header.webp"
+									src="images/services/videography_main_header.webp"
 									alt="Videography Services"
 									loading="lazy"
 									decoding="async"
@@ -343,20 +343,49 @@
 							</a>
 
 							<a href="#service-drone" class="service-item">
-								<img
-									src="images/services/drone_header.webp"
-									alt="Drone and Aerial Services"
-									loading="lazy"
-									decoding="async"
-								>
-								<h3>Drone &amp; Aerial</h3>
+								<video
+									id="drone-service-video"
+									muted
+									playsinline
+									preload="metadata"
+									poster="images/services/drone_header.webp"
+									aria-label="Drone Services aerial footage"
+								></video>
+								<h3>Drone Services</h3>
 								<p>
 									Aerial photography, videography, FPV, visual inspections,
 									and custom drone services for creative and practical applications.
 								</p>
 							</a>
-
 						</div>
+					</article>
+
+				<!-- Photography Services -->
+					<article id="service-photography">
+
+						<!-- Photography Services Header -->
+						<span class="image page-banner">
+							<img
+								src="images/services/photography_page_header.webp"
+								alt="Photography Services"
+							/>
+						</span>
+
+						<h2 class="major">Photography Services</h2>
+
+						<p>
+							Cyberflight Studios provides professional photography for events,
+							businesses, individuals, and creative projects throughout the
+							Charlotte area and beyond.
+						</p>
+
+						<p>
+							Each project is approached around the needs of the client and the
+							environment being photographed. Coverage can range from portraits
+							and events to promotional imagery, action-focused shoots, and other
+							custom photography projects.
+						</p>
+
 					</article>
 
 						<!-- Contact -->
@@ -424,7 +453,7 @@
 											<option value="">Select a service</option>
 											<option value="photography">Photography</option>
 											<option value="event-photography">Videography</option>
-											<option value="wedding-photography">Drone Work</option>
+											<option value="wedding-photography">Drone Services</option>
 											<option value="videography">Multiple Services</option>
 											<option value="other">Other / Not Sure</option>
 										</select>
@@ -857,6 +886,51 @@
 				} finally {
 					submitButton.disabled = false;
 				}
+			});
+		</script>
+
+		<script>
+			window.addEventListener("load", function () {
+
+				const video = document.getElementById("drone-service-video");
+
+				if (!video) return;
+
+				const forwardVideo = "videos/drone_services_forward.mp4";
+				const reverseVideo = "videos/drone_services_reverse.mp4";
+				const pauseDuration = 5000;
+
+				let playingForward = true;
+
+				function playVideo(source) {
+					video.src = source;
+					video.load();
+
+					video.addEventListener("canplay", function () {
+						video.play().catch(function () {
+							// Poster remains visible if autoplay is unavailable.
+						});
+					}, { once: true });
+				}
+
+				video.addEventListener("ended", function () {
+
+					setTimeout(function () {
+
+						playingForward = !playingForward;
+
+						if (playingForward) {
+							playVideo(forwardVideo);
+						} else {
+							playVideo(reverseVideo);
+						}
+
+					}, pauseDuration);
+
+				});
+
+				playVideo(forwardVideo);
+
 			});
 		</script>
 
