@@ -104,18 +104,19 @@ input, select, textarea {
 	appearance: none;
 }
 
-/* Basic */
+/*
+Basic
+   Global foundation for the entire website.
+   Defines root viewport behavior, box sizing, the page background,
+   and preload behavior used to prevent animations and transitions
+   while the site is initially loading.
+
+   Responsive rules in this section apply globally rather than to a
+   specific page or component.
+*/
 
 	@-ms-viewport {
 		width: device-width;
-	}
-
-	@media screen and (max-width: 480px) {
-
-		html, body {
-			min-width: 320px;
-		}
-
 	}
 
 	html {
@@ -139,37 +140,35 @@ input, select, textarea {
 			-webkit-transition: none !important;
 			-ms-transition: none !important;
 			transition: none !important;
+	}
+
+/* Basic - Mobile */
+
+	@media screen and (max-width: 480px) {
+
+		html, body {
+			min-width: 320px;
+			overflow-x: clip;
+			width: 100%;
+			max-width: 100%;
 		}
 
-/* Type */
+	}
+
+/*
+Type
+   Controls site-wide typography and text presentation.
+   Defines responsive root font sizing, body and form typography,
+   links, headings, paragraphs, emphasis, code blocks, horizontal
+   rules, and text-alignment utilities.
+
+   Responsive typography rules are grouped at the bottom of this
+   section by breakpoint for easier maintenance.
+*/
 
 	html {
 		font-size: 16pt;
 	}
-
-		@media screen and (max-width: 1680px) {
-
-			html {
-				font-size: 12pt;
-			}
-
-		}
-
-		@media screen and (max-width: 736px) {
-
-			html {
-				font-size: 11pt;
-			}
-
-		}
-
-		@media screen and (max-width: 360px) {
-
-			html {
-				font-size: 10pt;
-			}
-
-		}
 
 	body, input, select, textarea {
 		color: #ffffff;
@@ -258,20 +257,6 @@ input, select, textarea {
 		font-size: 0.6rem;
 	}
 
-	@media screen and (max-width: 736px) {
-
-		h1 {
-			font-size: 1.75rem;
-			line-height: 1.4;
-		}
-
-		h2 {
-			font-size: 1.25em;
-			line-height: 1.5;
-		}
-
-	}
-
 	sub {
 		font-size: 0.8rem;
 		position: relative;
@@ -330,6 +315,46 @@ input, select, textarea {
 
 	.align-right {
 		text-align: right;
+	}
+
+/* Type - Small Desktop */
+
+	@media screen and (max-width: 1680px) {
+
+			html {
+				font-size: 12pt;
+			}
+
+		}
+
+/* Type - Tablet */
+
+	@media screen and (max-width: 736px) {
+
+		html {
+			font-size: 11pt;
+		}
+
+		h1 {
+			font-size: 1.75rem;
+			line-height: 1.4;
+		}
+
+		h2 {
+			font-size: 1.25em;
+			line-height: 1.5;
+		}
+
+	}
+
+	/* Type - Small Mobile */
+
+	@media screen and (max-width: 360px) {
+
+		html {
+			font-size: 10pt;
+		}
+
 	}
 
 /* Form */
@@ -1785,7 +1810,7 @@ Main / Content Pages
 			#main article {
 				padding: 3rem 1.5rem 0.5rem 1.5rem ;
 			}
-			
+
 			#main article h2.major {
 				font-size: 1rem;
 				letter-spacing: 0.14rem;
@@ -1796,7 +1821,12 @@ Main / Content Pages
 
 		}
 
-/* Footer */
+/*
+Footer
+   Contains the site copyright information shown beneath the homepage.
+   The footer fades and scales out when a content page is opened
+   and remains hidden during the initial page-load transition.
+*/
 
 	#footer {
 		-moz-transition: -moz-transform 0.325s ease-in-out, -moz-filter 0.325s ease-in-out, opacity 0.325s ease-in-out;
@@ -1832,7 +1862,14 @@ Main / Content Pages
 		body.is-preload #footer {
 			opacity: 0;
 		}
-		/* ==== Gallery Grid ==== */
+
+/*
+Gallery Grid
+   Controls the image grid used on the Gallery content page.
+   Includes thumbnail layout, image sizing, hover behavior,
+   and responsive gallery adjustments for smaller screens.
+*/
+
 			.gallery-grid {
 			display: grid;
 			grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -1869,7 +1906,8 @@ Main / Content Pages
 			border-color: rgba(255, 255, 255, 0.4);
 			}
 
-		/* Sub-gallery media items */
+/* Sub-gallery media items */
+
 			.gallery-grid > img,
 			.gallery-grid > video {
 			width: 100%;
@@ -1878,7 +1916,22 @@ Main / Content Pages
 			border-radius: 8px;
 			}
 
-		/* Services Section */
+/* Gallery Grid - Tablet */
+
+		@media screen and (max-width: 736px) {
+
+			.gallery-grid > img,
+			.gallery-grid > video {
+				max-height: none;
+				object-fit: contain;
+			}
+		}
+
+/*
+Services
+   Controls the service cards used on the Services content page.
+   Includes the service grid layout, card containers, and service images.
+*/
 
 			.services-grid {
 			display: grid;
@@ -1904,23 +1957,10 @@ Main / Content Pages
 			border-radius: 6px;
 			margin-bottom: 1rem;
 			}
-		/* Optional: make sub-gallery images a little less aggressively cropped on mobile */
-			@media screen and (max-width: 736px) {
-			.gallery-grid > img,
-			.gallery-grid > video {
-				height: auto;
-				max-height: none;
-				object-fit: contain;
-			}
-			}
 
-			/* Mobile overflow fixes */
+/* Global Mobile Formatting Fixes */
+		
 			@media screen and (max-width: 480px) {
-			html, body {
-				overflow-x: clip;
-				width: 100%;
-				max-width: 100%;
-			}
 
 			#wrapper,
 			#header,
@@ -1929,6 +1969,8 @@ Main / Content Pages
 				width: 100%;
 				max-width: 100%;
 			}
+
+/* Mobile overflow fixes */
 
 			form > .fields {
 				width: 100%;
