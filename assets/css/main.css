@@ -1621,7 +1621,13 @@ Header / Homepage
 			}
 		}
 
-/* Main */
+/*
+Main / Content Pages
+   #main contains the individual content pages opened from the homepage.
+   Each page is displayed as an article within #main.
+   This section controls the shared article container, transitions,
+   close/back navigation, and responsive article layout.
+*/
 
 	#main {
 		-moz-flex-grow: 1;
@@ -1719,6 +1725,44 @@ Header / Homepage
 					background-color: rgba(255, 255, 255, 0.175);
 				}
 
+/* Main - Page back button */
+
+				#main article .page-back {
+					position: absolute;
+					top: 0.75rem;
+					left: 0.75rem;
+
+					display: flex;
+					align-items: center;
+					justify-content: center;
+
+					width: 2.5rem;
+					height: 2.5rem;
+
+					border: 0;
+					border-radius: 50%;
+					background: transparent;
+
+					color: #ffffff;
+					font-size: 1.35rem;
+					line-height: 1;
+
+					text-decoration: none;
+					cursor: pointer;
+
+					transition: background-color 0.2s ease-in-out;
+				}
+
+				#main article .page-back:hover {
+					background-color: rgba(255, 255, 255, 0.075);
+				}
+
+				#main article .page-back:active {
+					background-color: rgba(255, 255, 255, 0.175);
+				}
+
+/* Main - Tablet */
+
 		@media screen and (max-width: 736px) {
 
 			#main article {
@@ -1732,14 +1776,23 @@ Header / Homepage
 					height: 2.25rem;
 					background-size: 14px 14px;
 				}
-
 		}
+
+/* Main - Mobile */
 
 		@media screen and (max-width: 480px) {
 
 			#main article {
 				padding: 3rem 1.5rem 0.5rem 1.5rem ;
 			}
+			
+			#main article h2.major {
+				font-size: 1rem;
+				letter-spacing: 0.14rem;
+				line-height: 1.35;
+				word-break: break-word;
+				overflow-wrap: anywhere;
+			}		
 
 		}
 
@@ -1889,13 +1942,6 @@ Header / Homepage
 				width: 100%;
 				padding-left: 0;
 			}
-			#main article h2.major {
-				font-size: 1rem;
-				letter-spacing: 0.14rem;
-				line-height: 1.35;
-				word-break: break-word;
-				overflow-wrap: anywhere;
-			}
 			}
 
 			/* About page */
@@ -2014,40 +2060,4 @@ Header / Homepage
 					#bg::after {
 						display: block;
 					}
-				}
-
-				/* Page back button */
-
-				#main article .page-back {
-					position: absolute;
-					top: 0.75rem;
-					left: 0.75rem;
-
-					display: flex;
-					align-items: center;
-					justify-content: center;
-
-					width: 2.5rem;
-					height: 2.5rem;
-
-					border: 0;
-					border-radius: 50%;
-					background: transparent;
-
-					color: #ffffff;
-					font-size: 1.35rem;
-					line-height: 1;
-
-					text-decoration: none;
-					cursor: pointer;
-
-					transition: background-color 0.2s ease-in-out;
-				}
-
-				#main article .page-back:hover {
-					background-color: rgba(255, 255, 255, 0.075);
-				}
-
-				#main article .page-back:active {
-					background-color: rgba(255, 255, 255, 0.175);
 				}
