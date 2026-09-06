@@ -2226,6 +2226,24 @@ Page Header Banners
 					}
 
 				}
+
+/* Page Transitions
+Smooths navigation between Cyberflight Studios pages.
+*/
+
+				body {
+					opacity: 1;
+					transition: opacity 0.4s ease;
+				}
+
+				body.is-preload {
+					opacity: 0;
+				}
+
+				body.is-page-leaving {
+					opacity: 0;
+}
+
 /*
 Standalone Pages
    Allows individual content pages such as /about/ to display their article
