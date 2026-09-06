@@ -2052,10 +2052,16 @@ Services
    Includes the service grid layout, card containers, and service images.
 */
 
+/*
+Services
+   Controls the service cards used on the Services content page.
+   Includes the service grid layout, card containers, and service images.
+*/
+
 			.services-grid {
 			display: grid;
-			grid-template-columns: 1fr;
-			gap: 2rem;
+			grid-template-columns: repeat(3, 1fr);
+			gap: 1.5rem;
 			margin-top: 2rem;
 			}
 
@@ -2077,6 +2083,16 @@ Services
 			border-radius: 6px;
 			margin-bottom: 1rem;
 			}
+
+	/* Services - Tablet */
+
+		@media screen and (max-width: 736px) {
+
+			.services-grid {
+				grid-template-columns: 1fr;
+			}
+
+		}
 
 /*
 Global Mobile Formatting
@@ -2192,4 +2208,21 @@ Page Header Banners
 					height: auto;
 					max-width: 100%;
 					border-radius: 6px;
+				}
+
+				/* Page Header Banners - Desktop */
+
+				@media screen and (min-width: 737px) {
+
+					.page-banner {
+						height: 190px;
+					}
+
+					.page-banner img {
+						width: 100%;
+						height: 100%;
+						object-fit: cover;
+						object-position: center;
+					}
+
 				}
