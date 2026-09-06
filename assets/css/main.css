@@ -1905,6 +1905,42 @@ Main / Content Pages
 					background-color: rgba(255, 255, 255, 0.175);
 				}
 
+/* Main - Page home button */
+
+				#main article .page-home {
+					position: absolute;
+					top: 0.75rem;
+					right: 0.75rem;
+
+					display: flex;
+					align-items: center;
+					justify-content: center;
+
+					width: 2.5rem;
+					height: 2.5rem;
+
+					border: 0;
+					border-radius: 50%;
+					background: transparent;
+
+					color: #ffffff;
+					font-size: 1.15rem;
+					line-height: 1;
+
+					text-decoration: none;
+					cursor: pointer;
+
+					transition: background-color 0.2s ease-in-out;
+				}
+
+				#main article .page-home:hover {
+					background-color: rgba(255, 255, 255, 0.075);
+				}
+
+				#main article .page-home:active {
+					background-color: rgba(255, 255, 255, 0.175);
+				}
+
 /* Main - Tablet */
 
 		@media screen and (max-width: 736px) {
@@ -2045,12 +2081,6 @@ Gallery Grid
 				object-fit: contain;
 			}
 		}
-
-/*
-Services
-   Controls the service cards used on the Services content page.
-   Includes the service grid layout, card containers, and service images.
-*/
 
 /*
 Services

@@ -34,27 +34,42 @@
 
         }
 
-	/*
-	 * Initial Page Animation
-	 *
-	 * Removes the preload class shortly after the DOM is ready,
-	 * allowing the site's entrance animations to begin.
-	 */
-	document.addEventListener('DOMContentLoaded', function () {
+/*
+* Initial Page Animation
+*
+* Removes transition classes when a page is loaded or restored from
+* browser history, allowing the page to fade smoothly into view.
+*/
+    document.addEventListener('DOMContentLoaded', function () {
 
-		window.setTimeout(function () {
-			document.body.classList.remove('is-preload');
-		}, 100);
+        window.setTimeout(function () {
+            document.body.classList.remove('is-preload');
+            document.body.classList.remove('is-page-leaving');
+        }, 100);
 
-	});
+    });
+
+/*
+ * Browser History Restoration
+ *
+ * Browsers may restore a previous page from the back/forward cache rather
+ * than loading it again. Remove the leaving state so restored pages become
+ * visible again.
+ */
+
+    window.addEventListener('pageshow', function () {
+
+        document.body.classList.remove('is-page-leaving');
+
+    });
 
 
-	/*
-	 * Navigation Alignment
-	 *
-	 * Preserves Dimension's centered navigation styling when the
-	 * navigation contains an even number of menu items.
-	 */
+/*
+* Navigation Alignment
+*
+* Preserves Dimension's centered navigation styling when the
+* navigation contains an even number of menu items.
+*/
 	document.addEventListener('DOMContentLoaded', function () {
 
 		const nav = document.querySelector('#header nav');
@@ -74,13 +89,69 @@
 
 	});
 
-    	/*
-	 * Page Transitions
-	 *
-	 * Fades the current page out before navigating to another internal
-	 * Cyberflight Studios page. The destination page then fades in through
-	 * the Initial Page Animation above.
-	 */
+/*
+* Standalone Page Home Button
+*
+* Automatically adds a Home button to the upper-right corner of
+* standalone pages. This keeps navigation consistent without requiring
+* the button to be manually added to every HTML file.
+*/
+    document.addEventListener('DOMContentLoaded', function () {
+
+        if (!document.body.classList.contains('standalone-page'))
+            return;
+
+        const article = document.querySelector('#main article');
+
+        if (!article)
+            return;
+
+        const homeButton = document.createElement('a');
+
+        homeButton.href = '/';
+        homeButton.className = 'page-home icon solid fa-home';
+        homeButton.setAttribute('aria-label', 'Home');
+        homeButton.setAttribute('title', 'Home');
+
+        article.appendChild(homeButton);
+
+    });
+
+/*
+* Standalone Page Back Navigation
+*
+* Makes the page Back arrow behave like the browser's Back button.
+* This returns the visitor to the page they actually came from rather
+* than always following the page's directory-based fallback link.
+*/
+	document.addEventListener('DOMContentLoaded', function () {
+
+		const backButton = document.querySelector('.page-back');
+
+		if (!backButton)
+			return;
+
+		backButton.addEventListener('click', function (event) {
+
+			event.preventDefault();
+
+			document.body.classList.add('is-page-leaving');
+
+			window.setTimeout(function () {
+				window.history.back();
+			}, 400);
+
+		});
+
+	});
+
+/*
+* Page Transitions
+*
+* Fades the current page out before navigating to another internal
+* Cyberflight Studios page. The destination page then fades in through
+* the Initial Page Animation above.
+*/
 	document.addEventListener('DOMContentLoaded', function () {
 
 		const internalLinks = document.querySelectorAll('a[href]');
@@ -97,6 +168,7 @@
 					href.startsWith('#') ||
 					href.startsWith('mailto:') ||
 					href.startsWith('tel:') ||
+                    link.classList.contains('page-back') ||
 					link.target === '_blank'
 				) {
 					return;
