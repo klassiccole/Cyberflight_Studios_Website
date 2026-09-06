@@ -1,0 +1,166 @@
+<!DOCTYPE HTML>
+<!--
+	Dimension by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license
+-->
+<html>
+	<head>
+		<title>About | Cyberflight Studios</title>
+
+		<meta charset="utf-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1, user-scalable=no"
+		/>
+
+		<!-- SEO -->
+		<meta
+			name="description"
+			content="Learn about Cyberflight Studios, a Charlotte, NC creative studio focused on drone media, photography, and videography."
+		/>
+
+		<link rel="icon" type="image/png" href="../images/favicon.png" />
+
+		<!-- Styles -->
+		<link rel="stylesheet" href="../assets/css/fontawesome-all.min.css" />
+		<link rel="stylesheet" href="../assets/css/main.css" />
+
+		<noscript>
+			<link rel="stylesheet" href="../assets/css/noscript.css" />
+		</noscript>
+	</head>
+
+	<body class="is-preload standalone-page">
+
+		<!-- Wrapper -->
+		<div id="wrapper">
+
+			<!-- Main -->
+			<div id="main">
+
+				<!-- About -->
+				<article id="about">
+
+					<!-- About Header -->
+					<span class="image page-banner">
+						<img
+							src="../images/headers/about.webp"
+							alt="About Cyberflight Studios"
+						/>
+					</span>
+
+					<div class="about-layout">
+
+						<span class="image about-image">
+							<img
+								src="../images/profile.webp"
+								alt="Cole Dorazio - Cyberflight Studios"
+							/>
+						</span>
+
+						<div class="about-text">
+
+							<p>
+								<span class="about-intro">Hi, I'm Cole.</span>
+								I'm the creator of <strong>Cyberflight Studios</strong>,
+								born and raised in Charlotte, NC. I've always had a passion
+								for technology, design, and adrenalin-fueled creativity.
+								I love exploring the intersection of engineering and art.
+							</p>
+
+							<p>
+								Cyberflight Studios is a studio focused on aerial media,
+								photography, and videography. I work with individuals,
+								businesses, and organizations to create visual content that
+								tells a story, gives a new perspective, and takes your vision
+								to new heights.
+							</p>
+
+							<p>
+								Be sure to check out my
+								<a href="../gallery/">gallery</a>
+								to see some of my work, or explore the
+								<a href="../services/">services</a>
+								offered through Cyberflight Studios.
+							</p>
+
+							<p>
+								<strong>Let's make your ideas move.</strong>
+							</p>
+
+						</div>
+					</div>
+
+					<!-- Back to Home -->
+					<a
+						href="../"
+						class="page-back"
+						aria-label="Back to home"
+						title="Back to Home"
+					>
+						&#8592;
+					</a>
+
+				</article>
+
+			</div>
+
+			<!-- Footer -->
+			<footer id="footer">
+				<!-- You can always add something to the end right here! -->
+			</footer>
+
+		</div>
+
+		<!-- Background -->
+		<div id="bg">
+
+			<video
+				id="homepage-video"
+				muted
+				loop
+				playsinline
+				preload="none"
+				poster="../images/bg.webp"
+				aria-hidden="true">
+			</video>
+
+			<script>
+				window.addEventListener("load", function () {
+
+					const video = document.getElementById("homepage-video");
+
+					const source = document.createElement("source");
+					source.src = "../videos/homepage_background.mp4";
+					source.type = "video/mp4";
+
+					video.appendChild(source);
+					video.load();
+
+					video.addEventListener("canplay", function () {
+						video.play().catch(function () {
+							// Poster remains visible if autoplay is unavailable.
+						});
+					}, { once: true });
+
+				});
+			</script>
+
+		</div>
+
+		<!-- Scripts -->
+		<script src="../assets/js/jquery.min.js"></script>
+		<script src="../assets/js/browser.min.js"></script>
+		<script src="../assets/js/breakpoints.min.js"></script>
+		<script src="../assets/js/util.js"></script>
+
+		<script>
+			// Remove preload styling once the page is ready.
+			window.addEventListener("DOMContentLoaded", function () {
+				document.body.classList.remove("is-preload");
+			});
+		</script>
+
+	</body>
+</html>

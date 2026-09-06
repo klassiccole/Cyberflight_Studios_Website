@@ -1,0 +1,213 @@
+<!DOCTYPE HTML>
+<!--
+	Dimension by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license
+-->
+<html>
+	<head>
+		<title>Photography, Videography & Drone Services | Cyberflight Studios</title>
+
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+
+		<!-- SEO -->
+		<meta
+			name="description"
+			content="Explore photography, videography, and drone media services from Cyberflight Studios in Charlotte, NC."
+		/>
+
+		<link rel="icon" type="image/png" href="../images/favicon.png" />
+
+		<!-- Styles -->
+		<link rel="stylesheet" href="../assets/css/fontawesome-all.min.css" />
+		<link rel="stylesheet" href="../assets/css/main.css" />
+
+		<noscript>
+			<link rel="stylesheet" href="../assets/css/noscript.css" />
+		</noscript>
+	</head>
+
+	<body class="is-preload standalone-page">
+
+		<!-- Wrapper -->
+		<div id="wrapper">
+
+			<!-- Main -->
+			<div id="main">
+
+				<!-- Services -->
+				<article id="services">
+
+					<!-- Services Header -->
+					<span class="image page-banner">
+						<img
+							src="../images/headers/services.webp"
+							alt="Cyberflight Studios Services"
+						/>
+					</span>
+
+					<div class="services-grid">
+
+						<a href="photography/" class="service-item">
+							<img
+								src="../images/services/photography_main_header.webp"
+								alt="Photography Services"
+								loading="lazy"
+								decoding="async"
+							/>
+							<h3>Photography</h3>
+							<p>
+								Professional photography for events, businesses, individuals,
+								and creative projects. From portraits and event coverage to
+								promotional imagery and action-focused shoots.
+							</p>
+						</a>
+
+						<a href="videography/" class="service-item">
+							<img
+								src="../images/services/videography_main_header.webp"
+								alt="Videography Services"
+								loading="lazy"
+								decoding="async"
+							/>
+							<h3>Videography</h3>
+							<p>
+								Video coverage for events, businesses, and creative projects,
+								with an emphasis on movement, storytelling, and engaging visuals.
+							</p>
+						</a>
+
+						<a href="drone/" class="service-item">
+							<video
+								id="drone-service-video"
+								muted
+								playsinline
+								preload="metadata"
+								poster="../images/services/drone_header.webp"
+								aria-label="Drone Services aerial footage">
+							</video>
+
+							<h3>Drone Services</h3>
+							<p>
+								Aerial photography, videography, FPV, visual inspections,
+								and custom drone services for creative and practical applications.
+							</p>
+						</a>
+
+					</div>
+
+					<!-- Back to Home -->
+					<a
+						href="../"
+						class="page-back"
+						aria-label="Back to home"
+						title="Back to Home">
+						&#8592;
+					</a>
+
+				</article>
+
+			</div>
+
+			<footer id="footer"></footer>
+
+		</div>
+
+		<!-- Background -->
+		<div id="bg">
+
+			<video
+				id="homepage-video"
+				muted
+				loop
+				playsinline
+				preload="none"
+				poster="../images/bg.webp"
+				aria-hidden="true">
+			</video>
+
+			<script>
+				window.addEventListener("load", function () {
+
+					const video = document.getElementById("homepage-video");
+
+					const source = document.createElement("source");
+					source.src = "../videos/homepage_background.mp4";
+					source.type = "video/mp4";
+
+					video.appendChild(source);
+					video.load();
+
+					video.addEventListener("canplay", function () {
+						video.play().catch(function () {
+							// Poster remains visible if autoplay is unavailable.
+						});
+					}, { once: true });
+
+				});
+			</script>
+
+		</div>
+
+		<!-- Scripts -->
+		<script src="../assets/js/jquery.min.js"></script>
+		<script src="../assets/js/browser.min.js"></script>
+		<script src="../assets/js/breakpoints.min.js"></script>
+		<script src="../assets/js/util.js"></script>
+
+		<script>
+			// Remove preload styling once the page is ready.
+			window.addEventListener("DOMContentLoaded", function () {
+				document.body.classList.remove("is-preload");
+			});
+		</script>
+
+		<!-- Drone Service Card Video -->
+		<script>
+			window.addEventListener("load", function () {
+
+				const video = document.getElementById("drone-service-video");
+
+				if (!video) return;
+
+				const forwardVideo = "../videos/drone_services_forward.mp4";
+				const reverseVideo = "../videos/drone_services_reverse.mp4";
+				const pauseDuration = 5000;
+
+				let playingForward = true;
+
+				function playVideo(source) {
+					video.src = source;
+					video.load();
+
+					video.addEventListener("canplay", function () {
+						video.play().catch(function () {
+							// Poster remains visible if autoplay is unavailable.
+						});
+					}, { once: true });
+				}
+
+				video.addEventListener("ended", function () {
+
+					setTimeout(function () {
+
+						playingForward = !playingForward;
+
+						if (playingForward) {
+							playVideo(forwardVideo);
+						} else {
+							playVideo(reverseVideo);
+						}
+
+					}, pauseDuration);
+
+				});
+
+				playVideo(forwardVideo);
+
+			});
+		</script>
+
+	</body>
+</html>

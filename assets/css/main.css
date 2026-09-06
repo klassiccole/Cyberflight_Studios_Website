@@ -2226,3 +2226,20 @@ Page Header Banners
 					}
 
 				}
+/*
+Standalone Pages
+   Allows individual content pages such as /about/ to display their article
+   directly without relying on Dimension's hash-based navigation system.
+*/
+
+				body.standalone-page #main {
+					display: flex;
+					opacity: 1;
+					transform: none;
+				}
+
+				body.standalone-page #main article {
+					display: block;
+					opacity: 1;
+					transform: none;
+				}

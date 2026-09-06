@@ -1,0 +1,311 @@
+<!DOCTYPE HTML>
+<!--
+	Dimension by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>Contact | Cyberflight Studios</title>
+
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+
+		<!-- SEO -->
+		<meta
+			name="description"
+			content="Contact Cyberflight Studios for photography, videography, and drone media services in Charlotte, NC and surrounding areas."
+		/>
+
+		<link rel="icon" type="image/png" href="../images/favicon.png" />
+
+		<!-- Styles -->
+		<link rel="stylesheet" href="../assets/css/fontawesome-all.min.css" />
+		<link rel="stylesheet" href="../assets/css/main.css" />
+
+		<noscript>
+			<link rel="stylesheet" href="../assets/css/noscript.css" />
+		</noscript>
+	</head>
+
+	<body class="is-preload standalone-page">
+
+		<!-- Wrapper -->
+		<div id="wrapper">
+
+			<!-- Main -->
+			<div id="main">
+
+				<!-- Contact -->
+				<article id="contact">
+
+					<!-- Contact Header -->
+					<span class="image page-banner">
+						<img
+							src="../images/headers/contact.webp"
+							alt="Contact Cyberflight Studios"
+						/>
+					</span>
+
+					<p>
+						Have a project, event, or idea in mind? I'd love to hear about it.
+						Whether you're looking for photography, videography, aerial media,
+						or creative coverage for something a little different, tell me what
+						you have in mind and what you're hoping to create.
+					</p>
+
+					<p>
+						Fill out the form below with a few details about your project and
+						I'll get back to you as soon as I can to discuss your vision,
+						availability, and the next steps.
+					</p>
+
+					<form
+						id="contact-form"
+						method="POST"
+						action="https://forms.cyberflight.studio/"
+					>
+						<div class="fields">
+
+							<div class="field half">
+								<label for="name">Name</label>
+								<input
+									type="text"
+									name="name"
+									id="name"
+									maxlength="100"
+									required
+								/>
+							</div>
+
+							<div class="field half">
+								<label for="email">Email</label>
+								<input
+									type="email"
+									name="email"
+									id="email"
+									maxlength="254"
+									required
+								/>
+							</div>
+
+							<div class="field half">
+								<label for="event-date">Event / Project Date</label>
+								<input
+									type="date"
+									name="event-date"
+									id="event-date"
+								/>
+							</div>
+
+							<div class="field half">
+								<label for="service">Service</label>
+								<select name="service" id="service">
+									<option value="">Select a service</option>
+									<option value="photography">Photography</option>
+									<option value="event-photography">Videography</option>
+									<option value="wedding-photography">Drone Services</option>
+									<option value="videography">Multiple Services</option>
+									<option value="other">Other / Not Sure</option>
+								</select>
+							</div>
+
+							<div class="field">
+								<label for="message">Tell Me About Your Project</label>
+								<textarea
+									name="message"
+									id="message"
+									rows="4"
+									maxlength="5000"
+									required
+								></textarea>
+							</div>
+
+							<div class="field">
+								<div
+									class="cf-turnstile"
+									data-sitekey="0x4AAAAAAETDlK6Z2eQKAY43"
+									data-theme="dark">
+								</div>
+							</div>
+
+							<!-- Spam honeypot. Leave this hidden. -->
+							<div style="display: none;" aria-hidden="true">
+								<label for="website">Website</label>
+								<input
+									type="text"
+									name="website"
+									id="website"
+									tabindex="-1"
+									autocomplete="off"
+								/>
+							</div>
+
+						</div>
+
+						<ul class="actions">
+							<li>
+								<input type="submit" value="Send Message" class="primary" />
+							</li>
+							<li>
+								<input type="reset" value="Reset" />
+							</li>
+						</ul>
+
+						<p id="form-status" aria-live="polite"></p>
+					</form>
+
+					<ul class="icons">
+						<li>
+							<a
+								href="https://www.instagram.com/cyberflightstudios"
+								class="icon brands fa-instagram"
+								target="_blank"
+								rel="noopener noreferrer">
+								<span class="label">Instagram</span>
+							</a>
+						</li>
+
+						<li>
+							<a
+								href="https://github.com/klassiccole"
+								class="icon brands fa-github"
+								target="_blank"
+								rel="noopener noreferrer">
+								<span class="label">GitHub</span>
+							</a>
+						</li>
+
+						<li>
+							<a
+								href="https://www.youtube.com/@cyberflightstudios"
+								class="icon brands fa-youtube"
+								target="_blank"
+								rel="noopener noreferrer">
+								<span class="label">YouTube</span>
+							</a>
+						</li>
+
+						<li>
+							<a
+								href="mailto:contact@cyberflightstudios.com"
+								class="icon solid fa-envelope">
+								<span class="label">Email</span>
+							</a>
+						</li>
+					</ul>
+
+					<!-- Back to Home -->
+					<a
+						href="../"
+						class="page-back"
+						aria-label="Back to home"
+						title="Back to Home">
+						&#8592;
+					</a>
+
+				</article>
+
+			</div>
+
+			<!-- Footer -->
+			<footer id="footer"></footer>
+
+		</div>
+
+		<!-- Background -->
+		<div id="bg">
+
+			<video
+				id="homepage-video"
+				muted
+				loop
+				playsinline
+				preload="none"
+				poster="../images/bg.webp"
+				aria-hidden="true">
+			</video>
+
+			<script>
+				window.addEventListener("load", function () {
+
+					const video = document.getElementById("homepage-video");
+
+					const source = document.createElement("source");
+					source.src = "../videos/homepage_background.mp4";
+					source.type = "video/mp4";
+
+					video.appendChild(source);
+					video.load();
+
+					video.addEventListener("canplay", function () {
+						video.play().catch(function () {
+							// Poster remains visible if autoplay is unavailable.
+						});
+					}, { once: true });
+
+				});
+			</script>
+
+		</div>
+
+		<!-- Scripts -->
+		<script src="../assets/js/jquery.min.js"></script>
+		<script src="../assets/js/browser.min.js"></script>
+		<script src="../assets/js/breakpoints.min.js"></script>
+		<script src="../assets/js/util.js"></script>
+
+		<script>
+			// Remove preload styling once the page is ready.
+			window.addEventListener("DOMContentLoaded", function () {
+				document.body.classList.remove("is-preload");
+			});
+		</script>
+
+		<!-- Contact Form -->
+		<script>
+			const contactForm = document.getElementById("contact-form");
+			const formStatus = document.getElementById("form-status");
+			const submitButton = contactForm.querySelector('input[type="submit"]');
+
+			contactForm.addEventListener("submit", async function (event) {
+				event.preventDefault();
+
+				formStatus.textContent = "Sending...";
+				submitButton.disabled = true;
+
+				try {
+					const response = await fetch(contactForm.action, {
+						method: "POST",
+						body: new FormData(contactForm)
+					});
+
+					if (!response.ok) {
+						throw new Error("Submission failed");
+					}
+
+					formStatus.textContent =
+						"Thank you! Your message has been sent to Cyberflight Studios.";
+
+					contactForm.reset();
+
+				} catch (error) {
+					console.error(error);
+
+					formStatus.textContent =
+						"Sorry, your message could not be sent. Please try again.";
+				} finally {
+					submitButton.disabled = false;
+				}
+			});
+		</script>
+
+		<!-- Cloudflare Turnstile -->
+		<script
+			src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+			async
+			defer>
+		</script>
+
+	</body>
+</html>

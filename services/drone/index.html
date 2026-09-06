@@ -1,0 +1,132 @@
+<!DOCTYPE HTML>
+<!--
+	Dimension by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license
+-->
+<html>
+	<head>
+		<title>Drone Services | Cyberflight Studios</title>
+
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+
+		<!-- SEO -->
+		<meta
+			name="description"
+			content="Professional drone services in Charlotte, NC including aerial photography, aerial videography, FPV drone footage, visual inspections, and custom drone projects."
+		/>
+
+		<link rel="icon" type="image/png" href="../../images/favicon.png" />
+
+		<!-- Styles -->
+		<link rel="stylesheet" href="../../assets/css/fontawesome-all.min.css" />
+		<link rel="stylesheet" href="../../assets/css/main.css" />
+
+		<noscript>
+			<link rel="stylesheet" href="../../assets/css/noscript.css" />
+		</noscript>
+	</head>
+
+	<body class="is-preload standalone-page">
+
+		<!-- Wrapper -->
+		<div id="wrapper">
+
+			<!-- Main -->
+			<div id="main">
+
+				<!-- Drone Services -->
+				<article id="service-drone">
+
+					<!-- Drone Services Header -->
+					<span class="image page-banner">
+						<img
+							src="../../images/services/drone_header.webp"
+							alt="Drone Services"
+						/>
+					</span>
+
+					<h2 class="major">Drone Services</h2>
+
+					<p>
+						Cyberflight Studios provides aerial photography, videography,
+						FPV drone footage, visual inspections, and custom drone services
+						throughout the Charlotte area and beyond.
+					</p>
+
+					<p>
+						From cinematic aerial perspectives and fast-moving FPV footage
+						to practical visual applications, drone services can be tailored
+						to the needs of businesses, events, individuals, and creative
+						projects.
+					</p>
+
+					<!-- Back to Services -->
+					<a
+						href="../"
+						class="page-back"
+						aria-label="Back to services"
+						title="Back to Services">
+						&#8592;
+					</a>
+
+				</article>
+
+			</div>
+
+			<footer id="footer"></footer>
+
+		</div>
+
+		<!-- Background -->
+		<div id="bg">
+
+			<video
+				id="homepage-video"
+				muted
+				loop
+				playsinline
+				preload="none"
+				poster="../../images/bg.webp"
+				aria-hidden="true">
+			</video>
+
+			<script>
+				window.addEventListener("load", function () {
+
+					const video = document.getElementById("homepage-video");
+
+					const source = document.createElement("source");
+					source.src = "../../videos/homepage_background.mp4";
+					source.type = "video/mp4";
+
+					video.appendChild(source);
+					video.load();
+
+					video.addEventListener("canplay", function () {
+						video.play().catch(function () {
+							// Poster remains visible if autoplay is unavailable.
+						});
+					}, { once: true });
+
+				});
+			</script>
+
+		</div>
+
+		<!-- Scripts -->
+		<script src="../../assets/js/jquery.min.js"></script>
+		<script src="../../assets/js/browser.min.js"></script>
+		<script src="../../assets/js/breakpoints.min.js"></script>
+		<script src="../../assets/js/util.js"></script>
+
+		<script>
+			// Remove preload styling once the page is ready.
+			window.addEventListener("DOMContentLoaded", function () {
+				document.body.classList.remove("is-preload");
+			});
+		</script>
+
+	</body>
+</html>

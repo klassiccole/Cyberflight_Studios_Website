@@ -1,0 +1,160 @@
+<!DOCTYPE HTML>
+<!--
+	Dimension by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license
+-->
+<html>
+	<head>
+		<title>Gallery | Cyberflight Studios</title>
+
+		<meta charset="utf-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1, user-scalable=no"
+		/>
+
+		<!-- SEO -->
+		<meta
+			name="description"
+			content="Explore photography and visual media from Cyberflight Studios, including events, Charlotte, nature, and film photography."
+		/>
+
+		<link rel="icon" type="image/png" href="../images/favicon.png" />
+
+		<!-- Styles -->
+		<link rel="stylesheet" href="../assets/css/fontawesome-all.min.css" />
+		<link rel="stylesheet" href="../assets/css/main.css" />
+
+		<noscript>
+			<link rel="stylesheet" href="../assets/css/noscript.css" />
+		</noscript>
+	</head>
+
+	<body class="is-preload standalone-page">
+
+		<!-- Wrapper -->
+		<div id="wrapper">
+
+			<!-- Main -->
+			<div id="main">
+
+				<!-- Gallery -->
+				<article id="gallery">
+
+					<!-- Gallery Header -->
+					<span class="image page-banner">
+						<img
+							src="../images/headers/gallery.webp"
+							alt="Cyberflight Studios Gallery"
+						/>
+					</span>
+
+					<div class="gallery-grid">
+
+						<a href="events" class="gallery-item">
+							<img
+								src="../images/gallery/events/events_cover.webp"
+								alt="Local Events"
+							/>
+							<h3>Events</h3>
+						</a>
+
+						<a href="charlotte" class="gallery-item">
+							<img
+								src="../images/gallery/charlotte/charlotte_cover.webp"
+								alt="Charlotte"
+							/>
+							<h3>Charlotte</h3>
+						</a>
+
+						<a href="nature" class="gallery-item">
+							<img
+								src="../images/gallery/nature/nature_cover.webp"
+								alt="Nature Photography"
+							/>
+							<h3>Nature</h3>
+						</a>
+
+						<a href="film" class="gallery-item">
+							<img
+								src="../images/gallery/film/film_cover.webp"
+								alt="Film Photography"
+							/>
+							<h3>Film</h3>
+						</a>
+
+					</div>
+
+					<!-- Back to Home -->
+					<a
+						href="../"
+						class="page-back"
+						aria-label="Back to home"
+						title="Back to Home"
+					>
+						&#8592;
+					</a>
+
+				</article>
+
+			</div>
+
+			<!-- Footer -->
+			<footer id="footer">
+				<!-- You can always add something to the end right here! -->
+			</footer>
+
+		</div>
+
+		<!-- Background -->
+		<div id="bg">
+
+			<video
+				id="homepage-video"
+				muted
+				loop
+				playsinline
+				preload="none"
+				poster="../images/bg.webp"
+				aria-hidden="true">
+			</video>
+
+			<script>
+				window.addEventListener("load", function () {
+
+					const video = document.getElementById("homepage-video");
+
+					const source = document.createElement("source");
+					source.src = "../videos/homepage_background.mp4";
+					source.type = "video/mp4";
+
+					video.appendChild(source);
+					video.load();
+
+					video.addEventListener("canplay", function () {
+						video.play().catch(function () {
+							// Poster remains visible if autoplay is unavailable.
+						});
+					}, { once: true });
+
+				});
+			</script>
+
+		</div>
+
+		<!-- Scripts -->
+		<script src="../assets/js/jquery.min.js"></script>
+		<script src="../assets/js/browser.min.js"></script>
+		<script src="../assets/js/breakpoints.min.js"></script>
+		<script src="../assets/js/util.js"></script>
+
+		<script>
+			// Remove preload styling once the page is ready.
+			window.addEventListener("DOMContentLoaded", function () {
+				document.body.classList.remove("is-preload");
+			});
+		</script>
+
+	</body>
+</html>
