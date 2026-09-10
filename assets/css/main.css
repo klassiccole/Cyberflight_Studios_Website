@@ -1977,6 +1977,278 @@ Main / Content Pages
 		}
 
 /*
+Graduation Portraits
+   Controls the layout and presentation of the Graduation Portraits
+   service page, including the introduction, package cards, pricing,
+   featured package, session information, and final call to action.
+*/
+
+			.graduation-page .graduation-intro {
+				display: grid;
+				grid-template-columns: 1.3fr 0.7fr;
+				gap: 2.5rem;
+				align-items: center;
+				max-width: none;
+				margin: 0 auto 1.5rem auto;
+				text-align: left;
+			}
+
+			.graduation-intro-image img {
+				display: block;
+				width: 100%;
+				height: 420px;
+				object-fit: cover;
+				object-position: center;
+				border-radius: 8px;
+				border: 1px solid rgba(255, 255, 255, 0.18);
+				box-shadow: 0 12px 30px rgba(0, 0, 0, 0.22);
+			}
+
+			.graduation-page .graduation-label {
+				margin-bottom: 0.5rem;
+				font-size: 0.75rem;
+				font-weight: 600;
+				letter-spacing: 0.2rem;
+				text-transform: uppercase;
+				opacity: 0.7;
+			}
+
+			.graduation-page .graduation-intro h1 {
+				margin-bottom: 1rem;
+			}
+
+			.graduation-page .graduation-tagline {
+				font-size: 1.25rem;
+				margin-bottom: 1.5rem;
+				padding-bottom: 1.25rem;
+				border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+			}
+
+			.graduation-local-note {
+				text-align: center;
+				font-weight: 600;
+				font-size: 0.9em;
+				letter-spacing: 0.03em;
+			}
+
+/* Graduation Package Section */
+
+			.graduation-packages {
+			margin: 0 0 3rem 0;
+			padding-top: 3rem;
+			border-top: solid 1px rgba(255, 255, 255, 0.25);
+		}
+
+			.graduation-section-heading {
+				text-align: center;
+				margin-bottom: 2rem;
+			}
+
+			.graduation-section-heading p {
+				margin-bottom: 0;
+			}
+
+/* Graduation Package Cards */
+
+			.graduation-package-grid {
+				display: grid;
+				grid-template-columns: repeat(3, 1fr);
+				gap: 1.5rem;
+			}
+
+			.graduation-package {
+				position: relative;
+				display: flex;
+				flex-direction: column;
+				width: 100%;
+				min-height: 30rem;
+				padding: 1.75rem;
+
+				background: rgba(255, 255, 255, 0.05);
+				border: solid 1px rgba(255, 255, 255, 0.2);
+				border-radius: 8px;
+			}
+
+			.graduation-package-header {
+				text-align: center;
+				margin-bottom: 1rem;
+			}
+
+			.graduation-package-header h3 {
+				margin-bottom: 0.5rem;
+			}
+
+			.graduation-price {
+				font-size: 2rem;
+				font-weight: 600;
+				line-height: 1.2;
+				margin: 0;
+			}
+
+			.graduation-package-description {
+				text-align: center;
+				min-height: 5rem;
+				margin-bottom: 1.25rem;
+			}
+
+			.graduation-package ul {
+				flex-grow: 1;
+				margin-bottom: 1.5rem;
+			}
+
+			.graduation-package li {
+				margin-bottom: 0.45rem;
+			}
+
+			.graduation-book {
+				display: block;
+				width: 100%;
+				margin-top: auto;
+			}
+
+/* Featured Graduation Package */
+			.graduation-package-featured {
+				background: rgba(255, 255, 255, 0.09);
+				border-color: rgba(255, 255, 255, 0.55);
+			}
+
+			.graduation-package-badge {
+				position: absolute;
+				top: -0.8rem;
+				left: 50%;
+				transform: translateX(-50%);
+
+				padding: 0.25rem 0.8rem;
+				margin: 0;
+
+				background: #ffffff;
+				border-radius: 4px;
+
+				color: #1b1f22;
+				font-size: 0.65rem;
+				font-weight: 600;
+				letter-spacing: 0.12rem;
+				text-transform: uppercase;
+				white-space: nowrap;
+			}
+
+/* Graduation Information */
+			.graduation-info {
+				display: grid;
+				grid-template-columns: 0.8fr 1.2fr;
+				gap: 3rem;
+				align-items: start;
+
+				padding-top: 3rem;
+				border-top: solid 1px rgba(255, 255, 255, 0.25);
+			}
+
+			.graduation-info-image img {
+				display: block;
+				width: 100%;
+				aspect-ratio: 4 / 5;
+				object-fit: cover;
+
+				border-radius: 8px;
+				border: 1px solid rgba(255, 255, 255, 0.18);
+				box-shadow: 0 12px 30px rgba(0, 0, 0, 0.22);
+			}
+
+			.graduation-info-content h2 {
+				margin-top: 0;
+				margin-bottom: 2rem;
+			}
+
+			.graduation-info-content h3 {
+				margin-bottom: 0.75rem;
+			}
+
+			.graduation-info-content p {
+				margin-bottom: 1.5rem;
+			}
+
+/* Graduation Showcase */
+			.graduation-showcase {
+				margin-top: 3rem;
+				width: 100%;
+			}
+
+			.graduation-showcase img {
+				display: block;
+				width: 100%;
+				height: 420px;
+				object-fit: cover;
+				object-position: center 32%;
+
+				border-radius: 8px;
+				border: 1px solid rgba(255, 255, 255, 0.18);
+				box-shadow: 0 12px 30px rgba(0, 0, 0, 0.22);
+			}
+
+/* Graduation Call to Action */
+			.graduation-cta {
+				margin-top: 3rem;
+				padding: 2rem;
+				text-align: center;
+
+				background: rgba(255, 255, 255, 0.05);
+				border: solid 1px rgba(255, 255, 255, 0.2);
+				border-radius: 8px;
+			}
+
+			.graduation-cta p {
+				margin-bottom: 1.5rem;
+			}
+
+/* Graduation Portraits - Tablet */
+
+		@media screen and (max-width: 980px) {
+
+			.graduation-package {
+				display: flex;
+				width: 100%;
+				min-height: 0;
+				margin-right: 0;
+			}
+
+			.graduation-package-description {
+				min-height: 0;
+			}
+
+		}
+
+/* Graduation Portraits - Mobile */
+
+		@media screen and (max-width: 480px) {
+
+			.graduation-page .graduation-intro {
+				margin-bottom: 2rem;
+			}
+
+			.graduation-page .graduation-intro h1 {
+				font-size: 1.5rem;
+				letter-spacing: 0.2rem;
+			}
+
+			.graduation-page .graduation-tagline {
+				font-size: 1.1rem;
+			}
+
+			.graduation-package {
+				padding: 1.5rem;
+			}
+
+			.graduation-price {
+				font-size: 1.75rem;
+			}
+
+			.graduation-cta {
+				padding: 1.5rem;
+			}
+
+		}
+	
+/*
 Footer
    Contains the site copyright information shown beneath the homepage.
    The footer fades and scales out when a content page is opened
