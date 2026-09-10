@@ -2080,6 +2080,7 @@ service page.
 		.photography-cta {
 			margin-top: 2rem;
 			padding-top: 2rem;
+			padding-bottom: 1rem;
 		}
 	}
 /*
@@ -2284,7 +2285,7 @@ Graduation Portraits
 				width: 100%;
 				height: 420px;
 				object-fit: cover;
-				object-position: center 32%;
+				object-position: center 8%;
 
 				border-radius: 8px;
 				border: 1px solid rgba(255, 255, 255, 0.18);
@@ -2328,6 +2329,7 @@ Graduation Portraits
 		@media screen and (max-width: 480px) {
 
 			.graduation-page .graduation-intro {
+				display: block;
 				margin-bottom: 2rem;
 			}
 
@@ -2340,18 +2342,108 @@ Graduation Portraits
 				font-size: 1.1rem;
 			}
 
+			.graduation-page .graduation-intro-image {
+				width: 100%;
+				margin-top: 2rem;
+			}
+
+			.graduation-page .graduation-intro-image img {
+				width: 100%;
+				height: auto;
+				aspect-ratio: 4 / 5;
+				object-fit: cover;
+			}
+
+		/* Swipeable Package Cards */
+
+			.graduation-packages {
+				min-width: 0;
+				overflow: visible;
+			}
+
+			.graduation-package-grid {
+				display: flex;
+				overflow-x: auto;
+				gap: 1rem;
+				padding-bottom: 1rem;
+				scroll-snap-type: x mandatory;
+				-webkit-overflow-scrolling: touch;
+			}
+
 			.graduation-package {
+				flex: 0 0 88%;
+				width: auto;
+				min-width: 0;
 				padding: 1.5rem;
+				scroll-snap-align: start;
+			}
+
+			.graduation-package-grid::-webkit-scrollbar {
+				display: none;
 			}
 
 			.graduation-price {
 				font-size: 1.75rem;
 			}
 
-			.graduation-cta {
-				padding: 1.5rem;
+		/* What to Expect */
+			.graduation-info {
+				display: block;
 			}
 
+			.graduation-info-image {
+				width: 100%;
+				margin: 0 0 2rem 0;
+			}
+
+			.graduation-info-image img {
+				width: 100%;
+				height: auto;
+				aspect-ratio: 4 / 5;
+				object-fit: cover;
+			}
+
+			.graduation-info-content {
+				width: 100%;
+			}
+
+		/* Bottom Showcase Image */
+			.graduation-showcase {
+				margin-top: 2rem;
+			}
+
+			.graduation-showcase img {
+				width: 100%;
+				height: auto;
+				object-fit: contain;
+				object-position: center;
+			}
+
+		/* Call to Action */
+			.graduation-cta {
+				margin-top: 2rem;
+				padding: 1.5rem 1.5rem;
+			}
+
+			.graduation-cta h2 {
+				margin-bottom: 1rem;
+			}
+
+			.graduation-cta p {
+				margin-bottom: 1.25rem;
+			}
+
+			.graduation-cta .button {
+				width: 100%;
+				box-sizing: border-box;
+				padding-left: 0.75rem;
+				padding-right: 0.75rem;
+				letter-spacing: 0.2rem;
+				white-space: nowrap;
+			}
+			#main article.graduation-page {
+				padding-bottom: 1.5rem;
+			}
 		}
 	
 /*
@@ -2461,6 +2553,7 @@ service page.
 			.videography-cta {
 				margin-top: 2rem;
 				padding-top: 2rem;
+				padding-bottom: 1rem;
 			}
 		}	
 
@@ -2573,6 +2666,7 @@ page.
 				.drone-cta {
 					margin-top: 2rem;
 					padding-top: 2rem;
+					padding-bottom: 1rem;
 				}
 
 			}
@@ -2691,7 +2785,7 @@ Services
 
 			.services-grid {
 			display: grid;
-			grid-template-columns: repeat(3, 1fr);
+			grid-template-columns: repeat(2, 1fr);
 			gap: 1.5rem;
 			margin-top: 2rem;
 			}
