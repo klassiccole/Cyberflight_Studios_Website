@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en" class="graduation-booking-root">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="description" content="Local demonstration of the Cyberflight Studios graduation booking experience.">
+  <title>Book a Graduation Session · Cyberflight Studios · Prototype</title>
+  <link rel="icon" href="../../../images/logo.webp">
+  <link rel="stylesheet" href="booking.css">
+  <link rel="stylesheet" href="../../../assets/css/fontawesome-all.min.css"/>
+  <link rel="stylesheet" href="booking.css">
+  <script defer src="booking-core.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body class="graduation-booking">
+  <main id="main">
+    <div class="booking-intro-tile">
+     <nav class="booking-page-nav" aria-label="Page navigation">
+
+    <a
+        href="../"
+        class="booking-page-back"
+        aria-label="Back to Graduation Portraits"
+        title="Back to Graduation Portraits">
+        &#8592;
+    </a>
+
+    <a
+        href="../../../"
+        class="booking-page-home icon solid fa-home"
+        aria-label="Home"
+        title="Home">
+    </a>
+
+</nav>
+  <div class="page-intro">
+    <h1>Make it a moment.</h1>
+    <p>Choose your session. Find your time. We’ll take it from there.</p>
+  </div>
+
+  <nav class="steps" aria-label="Booking progress">
+    <ol>
+      <li>
+        <button type="button" data-step="0" aria-current="step">
+          <span>01</span>Session
+        </button>
+      </li>
+      <li>
+        <button type="button" data-step="1" disabled>
+          <span>02</span>Date &amp; time
+        </button>
+      </li>
+      <li>
+        <button type="button" data-step="2" disabled>
+          <span>03</span>Your details
+        </button>
+      </li>
+      <li>
+        <button type="button" data-step="3" disabled>
+          <span>04</span>Review &amp; sign
+        </button>
+      </li>
+    </ol>
+  </nav>
+</div>
+    <div class="booking-layout">
+      <div class="workspace">
+        <section class="panel" data-panel="0" aria-labelledby="heading-0">
+          <p class="eyebrow">01 / YOUR SESSION</p><h2 id="heading-0" tabindex="-1">A little time, a lasting memory.</h2><p class="muted">All sessions include edited, high-resolution photos delivered within 7 days.</p>
+          <fieldset class="package-options"><legend class="sr-only">Choose your graduation package</legend>
+            <label class="package"><input type="radio" name="package" value="mini"><span class="package-content"><span class="package-top"><span class="package-title">Mini</span><span class="price">$125</span></span><span class="package-description">The graduation essentials.</span><span class="specs"><span>30 minutes</span><span>1 graduate</span><span>10+ photos</span></span></span></label>
+            <label class="package"><input type="radio" name="package" value="standard" checked><span class="package-content"><span class="package-top"><span class="package-title">Standard <small>MORE VARIETY</small></span><span class="price">$200</span></span><span class="package-description">More time for the places and poses that feel like you.</span><span class="specs"><span>60–90 minutes</span><span>1 graduate</span><span>20–25+ photos</span></span></span></label>
+            <label class="package"><input type="radio" name="package" value="group"><span class="package-content"><span class="package-top"><span class="package-title">Group</span><span class="price">from $280</span></span><span class="package-description">Your people. Individual portraits and photos together.</span><span class="specs"><span>90 minutes</span><span>2–4 graduates</span><span>30–40+ photos total</span></span></span></label>
+          </fieldset>
+          <div class="panel-actions"><span class="small muted">No payment collected on this form.</span><button class="primary" type="button" id="choose-time">Choose a time <span aria-hidden="true">→</span></button></div>
+        </section>
+        <section class="panel" data-panel="1" aria-labelledby="heading-1" hidden>
+          <p class="eyebrow">02 / DATE &amp; TIME</p><h2 id="heading-1" tabindex="-1">Find your time.</h2><p class="muted">All times are Charlotte time (America/New_York). Requests open at least 5 days ahead.</p>
+          <div id="group-options" class="inset" hidden><label for="group-size">How many graduates?</label><select id="group-size"><option value="2">2 graduates — $280 total</option><option value="3">3 graduates — $340 total</option><option value="4">4 graduates — $380 total</option></select><p class="small muted">One organizer signs and pays for the group. Friends arrange their own split.</p></div>
+          <div class="availability-note"><span class="sample-label">SAMPLE CALENDAR</span><span>These are demonstration times, not Cole’s real availability.</span></div>
+          <div class="date-navigation"><h3 id="date-range"></h3><div><button type="button" class="icon-button" id="previous-week" aria-label="Previous week">←</button><button type="button" class="icon-button" id="next-week" aria-label="Next week">→</button></div></div>
+          <div class="date-grid" id="date-grid" role="group" aria-label="Choose a date"></div>
+          <div class="time-heading"><h3 id="time-heading">Select a date above</h3><span class="small muted" id="duration-note"></span></div>
+          <div id="slots" class="slots" role="group" aria-label="Available session start times"></div>
+          <p class="small muted" id="slot-explanation">Each time includes room for a 30-minute buffer before and after your session.</p>
+          <details class="demo-details"><summary>How these sample times are calculated</summary><p>Sample availability is 1–6 p.m. on Mondays, Tuesdays, Thursdays, Fridays, and Saturdays. Wednesdays and Sundays are closed. A sample busy appointment blocks 3–4 p.m. on Tuesdays. Both buffers must fit inside the availability block and avoid that appointment.</p><p>Mini occupies 90 minutes including buffers. Standard and Group occupy 150 minutes. Start times are offered every 30 minutes. No real calendar is connected.</p></details>
+          <p class="form-error" id="time-error" role="alert"></p>
+          <div class="panel-actions"><button class="secondary" type="button" data-back="0">Back</button><button class="primary" type="button" id="enter-details">Your details <span aria-hidden="true">→</span></button></div>
+        </section>
+        <section class="panel" data-panel="2" aria-labelledby="heading-2" hidden>
+          <p class="eyebrow">03 / YOUR DETAILS</p><h2 id="heading-2" tabindex="-1">Tell us a little about your session.</h2><p class="muted">Use sample information to try this preview. Entries stay in this tab and clear when you reload.</p>
+          <button class="text-button" id="sample-details" type="button">Fill with sample details</button>
+          <form id="details-form">
+            <div class="field-grid"><div class="field"><label for="client-name">Your full name <span>*</span></label><input id="client-name" name="clientName" required maxlength="100" autocomplete="name"></div><div class="field"><label for="client-email">Email address <span>*</span></label><input id="client-email" name="email" type="email" required maxlength="254" autocomplete="email"></div><div class="field"><label for="client-phone">Phone number <span>*</span></label><input id="client-phone" name="phone" type="tel" required maxlength="30" autocomplete="tel"></div><div class="field"><label for="location">Preferred location <span>*</span></label><select id="location" name="location" required><option value="">Choose a location</option><option value="UNC Charlotte campus">UNC Charlotte campus</option><option value="Another Charlotte-area location">Another Charlotte-area location</option></select></div></div>
+            <div class="field" id="custom-location-field" hidden><label for="custom-location">Location or address <span>*</span></label><input id="custom-location" maxlength="200" autocomplete="street-address"></div>
+            <div class="field" id="individual-graduate-field"><label for="graduate-name">Graduate’s name <span class="optional">if different from yours</span></label><input id="graduate-name" maxlength="100"></div>
+            <fieldset id="participants-field" class="participants" hidden><legend>Your group</legend><p class="muted small">Include yourself if you’re one of the graduates. Participant emails are optional in this preview; their own promotional permission is separate.</p><div id="participant-rows"></div></fieldset>
+            <div class="field"><label for="notes">Anything you’d like us to know? <span class="optional">optional</span></label><textarea id="notes" rows="3" maxlength="1500" placeholder="Favorite spots, accessibility needs, or ideas for your photos…"></textarea></div>
+            <p class="small muted">Your location will be reviewed before confirmation. The organizer is responsible for the full group price.</p>
+            <div class="panel-actions"><button class="secondary" type="button" data-back="1">Back</button><button class="primary" type="submit">Review agreement <span aria-hidden="true">→</span></button></div>
+          </form>
+        </section>
+        <section class="panel" data-panel="3" aria-labelledby="heading-3" hidden>
+          <p class="eyebrow">04 / REVIEW &amp; SIGN</p><h2 id="heading-3" tabindex="-1">Your session, in writing.</h2><p class="muted">Check the details below before trying the signing step.</p>
+          <div id="review-facts" class="review-facts"></div><button type="button" class="text-button" data-back="2">Edit your details</button>
+          <details class="agreement" open><summary><span id="agreement-title">Graduation photography agreement</span><span class="sample-label">DRAFT</span></summary><div id="agreement-content"></div></details>
+          <form id="signature-form">
+            <fieldset id="promotion-field"><legend>Portfolio permission</legend><p class="small muted">Optional and separate from your booking. Applies only to your own likeness. Leave unselected if signing for someone else.</p><label class="choice"><input type="radio" name="promotion" value="yes">Yes, photos of me may be used in the portfolio and promotional materials.</label><label class="choice"><input type="radio" name="promotion" value="no">No, keep identifiable photos of me out of public promotions.</label></fieldset>
+            <div class="inset" id="group-promotion-note" hidden><h3>Each graduate has their own choice.</h3><p>Promotional permission will be collected separately from every graduate. Your signature here covers the group booking and payment responsibility, not anyone else’s permission.</p></div>
+            <div class="signature-section"><h3>Try the signature step</h3><p class="small muted">Demonstration only. This creates no binding agreement or stored signature.</p><div class="field"><label for="signature-name">Type your full legal name <span>*</span></label><input id="signature-name" required maxlength="100" autocomplete="off" placeholder="Your full name"><div id="typed-signature" aria-hidden="true"></div></div>
+            <details class="draw-option"><summary>Add a drawn signature <span class="optional">optional</span></summary><p class="small muted">Use a mouse or finger. Typing your name above is sufficient for this demonstration.</p><canvas id="signature-canvas" width="1400" height="300" aria-label="Optional drawn signature area"></canvas><button class="text-button" type="button" id="clear-signature">Clear drawing</button></details>
+            <label class="choice"><input type="checkbox" id="agreement-consent" required><span>For this demonstration, I have reviewed the draft agreement and understand that a real request would be subject to the photographer’s confirmation.</span></label>
+            <label class="choice"><input type="checkbox" id="electronic-consent" required><span>For this demonstration, I consent to signing electronically and receiving an electronic copy.</span></label></div>
+            <p class="form-error" id="sign-error" role="alert"></p>
+            <div class="panel-actions"><button class="secondary" type="button" data-back="2">Back</button><button class="primary" type="submit">Submit demo request <span aria-hidden="true">→</span></button></div>
+            <p class="small muted submit-note">Nothing is sent. No calendar hold, invoice, or signed PDF is created.</p>
+          </form>
+        </section>
+        <section class="panel success" id="success" hidden aria-labelledby="success-heading"><div class="success-symbol" aria-hidden="true">✓</div><p class="eyebrow">PREVIEW COMPLETE</p><h2 id="success-heading" tabindex="-1">That’s the request experience.</h2><p>No real booking was made. Here’s what the next step would look like.</p><div id="success-facts" class="review-facts"></div><ol class="next-steps"><li><b>Request received</b><span>Your signed request would hold the time for 72 hours.</span></li><li><b>Cole reviews your session</b><span>You’d receive a confirmation or an update about the request.</span></li><li><b>Your invoice arrives separately</b><span>After approval, your Zoho invoice would be due 48 hours before the session.</span></li></ol><details class="email-preview"><summary>Preview the customer acknowledgment</summary><div id="customer-email"></div></details><details class="email-preview"><summary>Preview the notification to Cole</summary><div id="owner-email"></div></details><div class="panel-actions"><button class="secondary" id="download-summary" type="button">Download demo summary</button><button class="primary" id="restart" type="button">Try another package</button></div><p class="small muted">The downloaded text summary is marked as a demo. It is not a signed agreement.</p></section>
+      </div>
+      <aside class="summary" aria-label="Your session summary"><img class="summary-image" id="summary-image" src="../../../images/services/graduation/graduation1.webp" alt="Graduation portrait by Cyberflight Studios"><div class="summary-body"><p class="eyebrow">YOUR SESSION</p><h2 id="summary-title">Grad Standard</h2><button type="button" class="text-button" id="change-package" data-back="0">Change package</button><p class="summary-spec" id="summary-spec">60–90 minutes · 1 graduate</p><dl><div><dt>Date</dt><dd id="summary-date">Choose a date</dd></div><div><dt>Time</dt><dd id="summary-time">Choose a time</dd></div><div><dt>Payment due</dt><dd id="summary-due">48 hours before</dd></div><div class="total"><dt>Package price</dt><dd id="summary-price">$200</dd></div></dl><p class="small muted">No payment today. Tax or travel charges, if applicable, need to be disclosed and agreed before a live booking is signed.</p><div class="summary-note"><strong>A request, then a confirmation.</strong><p>We’ll review your time and location before confirming. Your requested time is held for up to 3 days.</p></div></div></aside>
+    </div>
+    <footer><span>CYBERFLIGHT STUDIOS</span><p>Not ready to book? <a href="../../../contact/">Ask a general question <span aria-hidden="true">↗</span></a></p></footer>
+  </main>
+  <noscript><p class="noscript">This interactive prototype needs JavaScript enabled.</p></noscript>
+</body>
+<div class="booking-background" aria-hidden="true">
+  <video autoplay muted loop playsinline
+    poster="../../../images/bg.webp">
+    <source src="../../../videos/homepage_background.mp4"
+      type="video/mp4">
+  </video>
+</div>
+</html>
