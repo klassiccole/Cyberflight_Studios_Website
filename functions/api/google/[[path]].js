@@ -114,9 +114,30 @@ export async function onRequest({ request, env }) {
       ? 'Authorization completed. The connection was saved during the callback. This page does not check current calendar access. You can close this tab.'
       : 'Connection did not complete. Check the configured account, permissions, secrets and database binding, then start again at /api/google/connect.'));
     return response(page('Not found.'), 404);
-  } catch {
-    // Do not log authorization codes, credentials, tokens, or Google responses.
-    if (callback) return response(null, 303, { Location: '/api/google/result?connected=0', 'Set-Cookie': clearCookie });
-    return response(page('Connection setup is unavailable. Check the production secrets and BOOKING_DB binding.'), 503);
+  } catch (error) {
+    // Log only a safe diagnostic label, never credentials or tokens.
+    const safeLabels = [
+      'configuration', 'google', 'response size', 'encryption',
+      'state', 'code', 'token', 'scopes', 'account'
+    ];
+
+    const message = error instanceof Error ? error.message : '';
+
+    console.error(
+      'Google connection failed:',
+      safeLabels.includes(message) ? message : 'database-or-unexpected'
+    );
+
+    if (callback) {
+      return response(null, 303, {
+        Location: '/api/google/result?connected=0',
+        'Set-Cookie': clearCookie
+      });
+    }
+
+    return response(
+      page('Connection setup is unavailable. Check the production secrets and BOOKING_DB binding.'),
+      503
+    );
   }
 }
