@@ -128,6 +128,18 @@ export async function onRequest({ request, env }) {
       safeLabels.includes(message) ? message : 'database-or-unexpected'
     );
 
+    // Log source-code locations only, excluding the error message and data.
+    console.error(
+      'Google connection failure location:',
+      error instanceof Error
+        ? String(error.stack || '')
+            .split('\n')
+            .filter(line => /^\s+at\s/.test(line))
+            .slice(0, 4)
+            .join('\n')
+        : 'No stack available'
+    );
+
     if (callback) {
       return response(null, 303, {
         Location: '/api/google/result?connected=0',
