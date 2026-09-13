@@ -36,7 +36,12 @@ function page(text, form = '') {
   return `<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Cyberflight Google connection</title><h1>Google Calendar connection</h1><p>${text}</p>${form}</html>`;
 }
 async function googleJSON(url, options = {}) {
-  const result = await fetch(url, { ...options, signal: AbortSignal.timeout(15000), redirect: 'error' });
+  // Do not follow redirects; the status check below rejects them.
+  const result = await fetch(url, {
+    ...options,
+    signal: AbortSignal.timeout(15000),
+    redirect: 'manual'
+  });
   if (!result.ok || !result.body) throw new Error('google');
   const reader = result.body.getReader();
   const chunks = []; let length = 0;
