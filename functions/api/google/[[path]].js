@@ -28,7 +28,7 @@ function response(body, status = 200, extra = {}) {
   return new Response(body, { status, headers: {
     'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store',
     'Referrer-Policy': 'same-origin', 'X-Content-Type-Options': 'nosniff',
-    'Content-Security-Policy': "default-src 'none'; form-action 'self'; frame-ancestors 'none'; base-uri 'none'",
+    'Content-Security-Policy': "default-src 'none'; form-action 'self' https://accounts.google.com; frame-ancestors 'none'; base-uri 'none'",
     ...extra
   }});
 }
