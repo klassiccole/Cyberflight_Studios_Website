@@ -32,13 +32,9 @@
     }
     throw new Error('Invalid Charlotte local time');
   }
-  function sampleAvailability(key) {
-    const weekday = new Date(key+'T12:00:00Z').getUTCDay();
-    return { blocks: [0,3].includes(weekday) ? [] : [[780,1080]], busy: weekday===2 ? [[900,960]] : [] };
-  }
   function availableSlots({key, duration, now=new Date(), blocks, busy}) {
-    const sample = sampleAvailability(key);
-    blocks = blocks || sample.blocks; busy = busy || sample.busy;
+  // Show no openings until availability and busy data are provided.
+  if (!Array.isArray(blocks) || !Array.isArray(busy)) return [];
     const candidates = new Set();
     for (const [start,end] of blocks) {
       for (let t=Math.ceil((start+30)/30)*30;t+duration+30<=end;t+=30) {
@@ -51,7 +47,7 @@
     return [...candidates].sort((a,b)=>a-b);
   }
   function deadline(key, minutes) { return new Date(sessionInstant(key,minutes).getTime()-48*3600000); }
-  const api = {packages,groupPrices,zone,price,dateKey,addDays,sessionInstant,sampleAvailability,availableSlots,deadline};
+   const api = {packages,groupPrices,zone,price,dateKey,addDays,sessionInstant,availableSlots,deadline};
   if (typeof module!=='undefined' && module.exports) module.exports=api;
   else root.BookingCore=api;
 })(typeof window!=='undefined'?window:globalThis);
