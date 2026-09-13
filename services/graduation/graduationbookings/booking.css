@@ -2,6 +2,16 @@
    This page uses its own styles; do not load main.css or the main site script here. */
 @font-face { font-family:CFBooking;src:url('../../../assets/webfonts/SourceSans3-Light.woff2') format('woff2');font-weight:300;font-display:swap }
 @font-face { font-family:CFBooking;src:url('../../../assets/webfonts/SourceSans3-SemiBold.woff2') format('woff2');font-weight:600;font-display:swap }
+
+/* Booking controls need flexible sizing and compact text. */
+body.graduation-booking button {
+	height: auto;
+	letter-spacing: normal;
+	text-transform: none;
+	white-space: normal;
+	box-shadow: none;
+}
+
 html.graduation-booking-root { color-scheme:dark;--bg:#12151b;--panel:#1b1f25;--raised:#242932;--line:#3b414c;--text:#f4f4f6;--muted:#bbc0ca;--accent:#c5b6ff;--ink:#201931;--error:#ffb2ac;font-family:CFBooking,'Segoe UI',sans-serif;font-weight:300;font-size:17px;line-height:1.5 }
 body.graduation-booking * { box-sizing:border-box }
 body.graduation-booking { margin:0;background:linear-gradient(135deg,#181322c9,#14171eee 55%,#111823f0),url('../../../images/bg.webp') center/cover fixed;color:var(--text);min-height:100vh }
@@ -245,6 +255,8 @@ body.graduation-booking .success .panel-actions { flex-direction:column;align-it
 body.graduation-booking .success .primary { margin:0 }
 }
 
+
+
 /* Video behind the booking page */
 body.graduation-booking {
   position: relative;
@@ -284,7 +296,7 @@ body.graduation-booking .summary {
 /* Overall page width and space around the floating tiles */
 body.graduation-booking main {
   width: calc(100% - 64px);
-  max-width: 1280px;
+  max-width: var(--cf-content-max-width);
   margin: 0 auto;
   padding: 48px 0;
 }

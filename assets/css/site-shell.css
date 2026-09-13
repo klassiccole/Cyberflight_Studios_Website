@@ -126,6 +126,9 @@ input, select, textarea {
 	--cf-back-icon-size: 1.35rem;
 	--cf-home-icon-size: 1.15rem;
 
+	/* Shared content width */
+	--cf-content-max-width: 960px;
+
 	/* Shared colors */
 	--cf-shell-text: #ffffff;
 	--cf-nav-hover: rgba(255, 255, 255, 0.075);
@@ -1621,12 +1624,6 @@ transition: opacity var(--cf-page-transition-speed) ease;
 body.is-preload {
 opacity: 0;
 }
-/*
-body.is-page-leaving {
-opacity: 0;
-pointer-events: none;
-}
-*/
 body.is-preload *,
 body.is-preload *::before,
 body.is-preload *::after {
