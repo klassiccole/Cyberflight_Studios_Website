@@ -75,17 +75,83 @@ document.querySelectorAll('[data-step]').forEach(el=>el.addEventListener('click'
 document.querySelectorAll('[data-back]').forEach(el=>el.addEventListener('click',()=>showStep(Number(el.dataset.back))));
 $('choose-time').addEventListener('click',()=>showStep(1));
 
-function slotsFor(key){return C.availableSlots({key,duration:packageInfo().duration,now:new Date()});}
-function renderDates(){
+// Live availability for the visible week. No sample fallback.
+let calendarRequest = 0;
+let calendarData = null;
+let calendarStatus = 'idle';
+let calendarController = null;
+
+function slotsFor(key) {
+if (calendarStatus !== 'ready' || calendarData?.package !== state.package) return [];
+return calendarData.days.find(day => day.key === key)?.slots || [];
+}
+
+async function renderDates() {
+const start = C.addDays(firstDay, state.week * 7);
+const packageId = state.package;
+if (calendarStatus === 'ready' && calendarData?.start === start &&
+    calendarData.package === packageId && Date.now() - calendarData.loadedAt < 30000) {
+  renderDateButtons();
+  return;
+}
+
+const attempt = ++calendarRequest;
+calendarController?.abort();
+const controller = new AbortController();
+calendarController = controller;
+calendarStatus = 'loading';
+calendarData = null;
+state.time = null;
+state.maxStep = 1;
+resetDownstream();
+$('time-error').textContent = '';
+renderDateButtons();
+updateProgress();
+const timer = window.setTimeout(() => controller.abort(), 25000);
+
+try {
+  const query = new URLSearchParams({ start, package: packageId });
+  const response = await fetch(`/api/availability?${query}`, {
+    signal: controller.signal, cache: 'no-store'
+  });
+  if (!response.ok) throw new Error('Availability request failed');
+  const data = await response.json();
+  if (data.source !== 'google' || data.timeZone !== C.zone || data.start !== start ||
+      data.package !== packageId || !Array.isArray(data.days) || data.days.length !== 7 ||
+      !data.days.every((day, i) => day.key === C.addDays(start, i) && Array.isArray(day.slots) &&
+        day.slots.every(t => Number.isInteger(t) && t >= 0 && t < 1440 && t % 30 === 0))) {
+    throw new Error('Unexpected availability response');
+  }
+  if (attempt !== calendarRequest) return;
+  calendarData = { ...data, loadedAt: Date.now() };
+  calendarStatus = 'ready';
+  state.date = data.days.find(day => day.key === state.date && day.slots.length)?.key ||
+    data.days.find(day => day.slots.length)?.key || null;
+} catch {
+  if (attempt !== calendarRequest) return;
+  calendarStatus = 'error';
+  calendarData = null;
+  state.date = null;
+  $('time-error').textContent = 'Availability could not be loaded. Go back to Session and try again, or contact us.';
+} finally {
+  window.clearTimeout(timer);
+  if (attempt === calendarRequest) {
+    renderDateButtons();
+    updateProgress();
+  }if
+}
+}
+
+function renderDateButtons(){
   const weekStart=C.addDays(firstDay,state.week*7);
   const end=C.addDays(weekStart,6);
   $('date-range').textContent=`${formatDate(weekStart,{month:'short',day:'numeric'})} – ${formatDate(end,{month:'short',day:'numeric',year:'numeric'})}`;
   $('previous-week').disabled=state.week===0;$('next-week').disabled=state.week===3;
   const days=Array.from({length:7},(_,i)=>C.addDays(weekStart,i));
-  if(!state.date)state.date=days.find(key=>slotsFor(key).length>0)||days[0];
+  if(!state.date)state.date=days.find(key=>slotsFor(key).length>0)||null;
   $('date-grid').innerHTML=days.map(key=>{
     const available=slotsFor(key).length>0;
-    return `<button type="button" class="date-button" data-date="${key}" aria-label="${escapeHTML(formatDate(key,{weekday:'long',month:'long',day:'numeric'}))}${available?'':', unavailable'}" aria-pressed="${state.date===key}" ${available?'':'disabled'}><span>${formatDate(key,{weekday:'short'})}</span><strong>${Number(key.slice(-2))}</strong><small>${available?'Available':'Closed'}</small></button>`;
+    return `<button type="button" class="date-button" data-date="${key}" aria-label="${escapeHTML(formatDate(key,{weekday:'long',month:'long',day:'numeric'}))}${available?'':', unavailable'}" aria-pressed="${state.date===key}" ${available?'':'disabled'}><span>${formatDate(key,{weekday:'short'})}</span><strong>${Number(key.slice(-2))}</strong><small>${available?'Available':calendarStatus==='ready'?'Closed':'Unavailable'}</small></button>`;
   }).join('');
   $('date-grid').querySelectorAll('button').forEach(el=>el.addEventListener('click',()=>{
     if(state.date!==el.dataset.date){state.date=el.dataset.date;state.time=null;state.maxStep=1;resetDownstream();}
@@ -93,7 +159,20 @@ function renderDates(){
   }));
   renderSlots();updateSummary();
 }
+
 function renderSlots(){
+    // Block selection until this week's live calendar data has loaded.
+  $('enter-details').disabled = calendarStatus !== 'ready' || state.time === null;
+  if (calendarStatus !== 'ready') {
+    $('time-heading').textContent = calendarStatus === 'loading'
+      ? 'Loading availability…' : 'Availability unavailable';
+    $('duration-note').textContent = '';
+    $('slots').textContent = calendarStatus === 'loading'
+      ? 'Checking available times…' : 'Unable to load times. Please try again or contact us.';
+    $('slot-explanation').textContent = '';
+    return;
+  }
+
   const slots=state.date?slotsFor(state.date):[];
   if(state.time!==null&&!slots.includes(state.time)){state.time=null;resetDownstream();}
   $('time-heading').textContent=state.date?formatDate(state.date,{weekday:'long',month:'short',day:'numeric'}):'Select a date above';

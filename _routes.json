@@ -1,5 +1,5 @@
 {
   "version": 1,
-  "include": ["/api/google/*"],
+  "include": ["/api/google/*", "/api/availability"],
   "exclude": []
 }
