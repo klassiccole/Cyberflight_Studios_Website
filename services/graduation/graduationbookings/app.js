@@ -138,7 +138,7 @@ try {
   if (attempt === calendarRequest) {
     renderDateButtons();
     updateProgress();
-  }if
+  }
 }
 }
 
