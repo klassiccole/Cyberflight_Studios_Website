@@ -134,10 +134,27 @@
               Draw with your mouse or finger, or leave this blank to use your typed name.
             </p>
             <canvas id="signature-canvas" width="1400" height="300" aria-label="Optional drawn signature area"></canvas><button class="text-button" type="button" id="clear-signature">Clear drawing</button></details>
-            <label class="choice"><input type="checkbox" id="agreement-consent" required><span>For this demonstration, I have reviewed the draft agreement and understand that a real request would be subject to the photographer’s confirmation.</span></label>
-            <label class="choice"><input type="checkbox" id="electronic-consent" required><span>For this demonstration, I consent to signing electronically and receiving an electronic copy.</span></label></div>
+            <label class="choice">
+              <input type="checkbox" id="agreement-consent" required>
+              <span>
+                I have reviewed the agreement and understand that my requested session
+                is subject to the photographer’s confirmation.
+              </span>
+            </label>
+
+            <label class="choice">
+              <input type="checkbox" id="electronic-consent" required>
+              <span>
+                I consent to signing electronically and receiving an electronic copy.
+              </span>
+            </label>
             <p class="form-error" id="sign-error" role="alert"></p>
-            <div class="panel-actions"><button class="secondary" type="button" data-back="2">Back</button><button class="primary" type="submit">Submit demo request <span aria-hidden="true">→</span></button></div>
+            <div class="panel-actions">
+              <button class="secondary" type="button" data-back="2">Back</button>
+              <button class="primary" type="submit">
+                Submit preview request <span aria-hidden="true">→</span>
+              </button>
+            </div>
           </form>
         </section>
         <section class="panel success" id="success" hidden aria-labelledby="success-heading"><div class="success-symbol" aria-hidden="true">✓</div><p class="eyebrow">PREVIEW COMPLETE</p><h2 id="success-heading" tabindex="-1">That’s the request experience.</h2><p>No real booking was made. Here’s what the next step would look like.</p><div id="success-facts" class="review-facts"></div><ol class="next-steps"><li><b>Request received</b><span>Your signed request would hold the time for 72 hours.</span></li><li><b>Cole reviews your session</b><span>You’d receive a confirmation or an update about the request.</span></li><li><b>Your invoice arrives separately</b><span>After approval, your Zoho invoice would be due 48 hours before the session.</span></li></ol><details class="email-preview"><summary>Preview the customer acknowledgment</summary><div id="customer-email"></div></details><details class="email-preview"><summary>Preview the notification to Cole</summary><div id="owner-email"></div></details><div class="panel-actions"><button class="secondary" id="download-summary" type="button">Download demo summary</button><button class="primary" id="restart" type="button">Try another package</button></div><p class="small muted">The downloaded text summary is marked as a demo. It is not a signed agreement.</p></section>
@@ -160,7 +177,8 @@
   </div>
     <footer><span>CYBERFLIGHT STUDIOS</span><p>Not ready to book? <a href="../../../contact/">Ask a general question <span aria-hidden="true">↗</span></a></p></footer>
   </main>
-  <noscript><p class="noscript">This interactive prototype needs JavaScript enabled.</p></noscript>
+  <noscript>
+  <p class="noscript">This interactive prototype needs JavaScript enabled.</p></noscript>
 </body>
 <div class="booking-background" aria-hidden="true">
   <video autoplay muted loop playsinline
