@@ -76,6 +76,8 @@
           <div class="panel-actions"><span class="small muted">No payment collected on this form.</span><button class="primary" type="button" id="choose-time">Choose a time <span aria-hidden="true">→</span></button></div>
         </section>
         <section class="panel" data-panel="1" aria-labelledby="heading-1" hidden>
+          <p class="eyebrow">02 / DATE &amp; TIME</p>
+          <h2 id="heading-1" tabindex="-1">Find your time.</h2>
           <p class="muted">
             All times are shown in Eastern Time, local to Charlotte, NC.
             Please choose a date at least 5 days in advance.
@@ -111,14 +113,27 @@
           </form>
         </section>
         <section class="panel" data-panel="3" aria-labelledby="heading-3" hidden>
-          <p class="eyebrow">04 / REVIEW &amp; SIGN</p><h2 id="heading-3" tabindex="-1">Your session, in writing.</h2><p class="muted">Check the details below before trying the signing step.</p>
+          <p class="eyebrow">04 / REVIEW &amp; SIGN</p><h2 id="heading-3" tabindex="-1">Your session, in writing.</h2>
+          <p class="muted">
+            Review your session details and agreement, then complete the signature below.
+          </p>
           <div id="review-facts" class="review-facts"></div><button type="button" class="text-button" data-back="2">Edit your details</button>
           <details class="agreement" open><summary><span id="agreement-title">Graduation photography agreement</span><span class="sample-label">DRAFT</span></summary><div id="agreement-content"></div></details>
           <form id="signature-form">
             <fieldset id="promotion-field"><legend>Portfolio permission</legend><p class="small muted">Optional and separate from your booking. Applies only to your own likeness. Leave unselected if signing for someone else.</p><label class="choice"><input type="radio" name="promotion" value="yes">Yes, photos of me may be used in the portfolio and promotional materials.</label><label class="choice"><input type="radio" name="promotion" value="no">No, keep identifiable photos of me out of public promotions.</label></fieldset>
             <div class="inset" id="group-promotion-note" hidden><h3>Each graduate has their own choice.</h3><p>Promotional permission will be collected separately from every graduate. Your signature here covers the group booking and payment responsibility, not anyone else’s permission.</p></div>
-            <div class="signature-section"><h3>Try the signature step</h3><p class="small muted">Demonstration only. This creates no binding agreement or stored signature.</p><div class="field"><label for="signature-name">Type your full legal name <span>*</span></label><input id="signature-name" required maxlength="100" autocomplete="off" placeholder="Your full name"><div id="typed-signature" aria-hidden="true"></div></div>
-            <details class="draw-option"><summary>Add a drawn signature <span class="optional">optional</span></summary><p class="small muted">Use a mouse or finger. Typing your name above is sufficient for this demonstration.</p><canvas id="signature-canvas" width="1400" height="300" aria-label="Optional drawn signature area"></canvas><button class="text-button" type="button" id="clear-signature">Clear drawing</button></details>
+            <div class="signature-section">
+            <h3>Your signature</h3>
+              <p class="small muted">
+                Signing is currently in preview. Your signature is not saved,
+                and submitting this form does not create a booking.
+              </p>
+              <div class="field"><label for="signature-name">Type your full legal name <span>*</span></label><input id="signature-name" required maxlength="100" autocomplete="off" placeholder="Your full name"><div id="typed-signature" aria-hidden="true"></div></div>
+              <details class="draw-option"><summary>Add a drawn signature <span class="optional">optional</span></summary>
+            <p class="small muted">
+              Draw with your mouse or finger, or leave this blank to use your typed name.
+            </p>
+            <canvas id="signature-canvas" width="1400" height="300" aria-label="Optional drawn signature area"></canvas><button class="text-button" type="button" id="clear-signature">Clear drawing</button></details>
             <label class="choice"><input type="checkbox" id="agreement-consent" required><span>For this demonstration, I have reviewed the draft agreement and understand that a real request would be subject to the photographer’s confirmation.</span></label>
             <label class="choice"><input type="checkbox" id="electronic-consent" required><span>For this demonstration, I consent to signing electronically and receiving an electronic copy.</span></label></div>
             <p class="form-error" id="sign-error" role="alert"></p>
