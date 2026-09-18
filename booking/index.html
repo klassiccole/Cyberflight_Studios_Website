@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en" class="cf-booking-root">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="description" content="Book photography, videography, drone, event, wedding, and real estate coverage with Cyberflight Studios.">
+  <title>Book a Session · Cyberflight Studios</title>
+  <link rel="icon" href="../images/logo.webp">
+  <link rel="stylesheet" href="../assets/css/fontawesome-all.min.css">
+  <link rel="stylesheet" href="../assets/css/site-shell.css">
+  <link rel="stylesheet" href="booking.css">
+  <script defer src="booking-core.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body class="cf-booking">
+  <main id="main">
+    <div class="booking-intro-tile">
+     <nav class="booking-page-nav" aria-label="Page navigation">
+    <a href="/services/" class="booking-page-back" id="nav-back" aria-label="Back to Services" title="Back to Services">&#8592;</a>
+    <a href="/" class="booking-page-home icon solid fa-home" aria-label="Home" title="Home"></a>
+</nav>
+  <div class="page-intro">
+    <h1>Let's make it a moment.</h1>
+    <p>Choose your service. Find your time. I'll take it from there.</p>
+  </div>
+  <nav class="steps" aria-label="Booking progress">
+    <ol>
+      <li>
+        <button type="button" data-step="0" aria-current="step">
+          <span>01</span>Service
+        </button>
+      </li>
+      <li>
+        <button type="button" data-step="1" disabled>
+          <span>02</span>Date &amp; time
+        </button>
+      </li>
+      <li>
+        <button type="button" data-step="2" disabled>
+          <span>03</span>Your details
+        </button>
+      </li>
+      <li>
+        <button type="button" data-step="3" disabled>
+          <span>04</span>Review &amp; sign
+        </button>
+      </li>
+    </ol>
+  </nav>
+</div>
+    <div class="booking-layout">
+      <div class="workspace">
+        <section class="panel" data-panel="0" aria-labelledby="heading-0">
+          <p class="eyebrow">01 / YOUR SERVICE</p><h2 id="heading-0" tabindex="-1">What are we shooting?</h2><p class="muted">Every booking includes a reviewed time and location before it's confirmed. Pricing shown where it's fixed; larger jobs are quoted by proposal.</p>
+          <fieldset class="package-options"><legend class="sr-only">Choose your service</legend>
+            <label class="package service" data-service="graduation"><input type="radio" name="service" value="graduation"><span class="package-content"><span class="package-top"><span class="package-title">Graduation</span><span class="service-price" id="grad-price">$200</span></span><span class="package-description">Cap and gown, campus portraits, individual and group sessions.</span>
+              <span class="service-select-wrap"><label for="grad-package">Session length</label><select id="grad-package" class="service-select" disabled><option value="mini">Mini — 30 minutes, 10+ photos — $125</option><option value="standard" selected>Standard — 60–90 minutes, 20–25+ photos — $200</option><option value="group">Group — 90 minutes, 2–4 graduates — from $280</option></select></span>
+            </span></label>
+            <label class="package service" data-service="event"><input type="radio" name="service" value="event"><span class="package-content"><span class="package-top"><span class="package-title">Event Coverage <small>BY PROPOSAL</small></span></span><span class="package-description">Parties, openings, races, conferences — you set the coverage length.</span><span class="specs"><span>1–10 hours</span><span>Custom quote</span></span></span></label>
+            <label class="package service" data-service="wedding"><input type="radio" name="service" value="wedding"><span class="package-content"><span class="package-top"><span class="package-title">Wedding <small>BY PROPOSAL</small></span></span><span class="package-description">Full-day coverage built around your timeline. Booked through a proposal meeting.</span><span class="specs"><span>Full day</span><span>1 month lead time</span></span></span></label>
+            <label class="package service" data-service="realestate"><input type="radio" name="service" value="realestate"><span class="package-content"><span class="package-top"><span class="package-title">Real Estate</span><span class="service-price" id="re-price">$150</span></span><span class="package-description">Listings shot clean, bright, and ready for the market.</span>
+              <span class="service-select-wrap"><label for="re-tier">Property size</label><select id="re-tier" class="service-select" disabled><option value="t1">Up to 2,000 sq ft — $150</option><option value="t2">2,000–3,500 sq ft — $200</option><option value="t3">Over 3,500 sq ft — from $250</option></select></span>
+            </span></label>
+          </fieldset>
+          <div class="panel-actions"><span class="small muted">No payment collected on this form.</span><button class="primary" type="button" id="choose-time" disabled>Choose a time <span aria-hidden="true">→</span></button></div>
+        </section>
+        <section class="panel" data-panel="1" aria-labelledby="heading-1" hidden>
+          <p class="eyebrow">02 / DATE &amp; TIME</p>
+          <h2 id="heading-1" tabindex="-1">Find your time.</h2>
+          <p class="muted">
+            All times are shown in Eastern Time, local to Charlotte, NC.
+            Please choose a date at least 5 days in advance.
+          </p>
+          <div id="group-options" class="inset" hidden><label for="group-size">How many graduates?</label><select id="group-size"><option value="2">2 graduates — $280 total</option><option value="3">3 graduates — $340 total</option><option value="4">4 graduates — $380 total</option></select><p class="small muted">One organizer signs and pays for the group. Friends arrange their own split.</p></div>
+          <div id="session-schedule">
+            <div class="date-navigation"><h3 id="date-range"></h3><div><button type="button" class="icon-button" id="previous-week" aria-label="Previous week">←</button><button type="button" class="icon-button" id="next-week" aria-label="Next week">→</button></div></div>
+            <div class="date-grid" id="date-grid" role="group" aria-label="Choose a date"></div>
+            <div class="time-heading"><h3 id="time-heading">Select a date above</h3><span class="small muted" id="duration-note"></span></div>
+            <div id="slots" class="slots" role="group" aria-label="Available session start times"></div>
+            <p class="small muted" id="slot-explanation" hidden></p>
+          </div>
+          <div id="event-schedule" hidden>
+            <div class="field"><label for="event-date">Event date</label><input type="date" id="event-date"></div>
+            <div class="field range-field"><label for="event-length">Coverage length: <strong id="event-length-label">3 hours</strong></label><input type="range" id="event-length" min="60" max="600" step="30" value="180"><div class="range-ends" aria-hidden="true"><span>1 hour</span><span>10 hours</span></div></div>
+            <div class="time-heading"><h3 id="event-time-heading">Start times</h3><span class="small muted" id="event-duration-note"></span></div>
+            <div id="event-slots" class="slots" role="group" aria-label="Available event start times"></div>
+            <p class="small muted" id="event-note"></p>
+          </div>
+          <div id="wedding-schedule" hidden>
+            <div class="field"><label for="wedding-date">Wedding date</label><input type="date" id="wedding-date"></div>
+            <div class="inset"><p>Weddings are booked at least <strong>one month in advance</strong>. Availability isn't shown here — I reach every couple directly to build the day around your timeline before anything is confirmed.</p></div>
+          </div>
+          <p class="form-error" id="time-error" role="alert"></p>
+          <div class="panel-actions"><button class="secondary" type="button" data-back="0">Back</button><button class="primary" type="button" id="enter-details" disabled>Your details <span aria-hidden="true">→</span></button></div>
+        </section>
+        <section class="panel" data-panel="2" aria-labelledby="heading-2" hidden>
+          <p class="eyebrow">03 / YOUR DETAILS</p><h2 id="heading-2" tabindex="-1">Tell us a little about your session.</h2>
+          <p class="muted">
+              Add your contact details and location, along with anything else
+              worth knowing about the shoot.
+            </p>
+          <form id="details-form">
+            <div class="field-grid"><div class="field"><label for="client-name">Your full name <span>*</span></label><input id="client-name" name="clientName" required maxlength="100" autocomplete="name"></div><div class="field"><label for="client-email">Email address <span>*</span></label><input id="client-email" name="email" type="email" required maxlength="254" autocomplete="email"></div><div class="field"><label for="client-phone">Phone number <span>*</span></label><input id="client-phone" name="phone" type="tel" required maxlength="30" autocomplete="tel"></div></div>
+            <div id="grad-location-group"><div class="field-grid"><div class="field"><label for="location">Preferred location <span>*</span></label><select id="location" name="location" required><option value="">Choose a location</option><option value="UNC Charlotte campus">UNC Charlotte campus</option><option value="Another Charlotte-area location">Another Charlotte-area location</option></select></div></div>
+            <div class="field" id="custom-location-field" hidden><label for="custom-location">Location or address <span>*</span></label><input id="custom-location" maxlength="200" autocomplete="street-address"></div></div>
+            <div class="field" id="address-field" hidden><label id="address-label" for="address">Location or address <span>*</span></label><input id="address" maxlength="200" autocomplete="street-address"></div>
+            <div class="field" id="individual-graduate-field" hidden><label for="graduate-name">Graduate’s name <span class="optional">if different from yours</span></label><input id="graduate-name" maxlength="100"></div>
+            <fieldset id="participants-field" class="participants" hidden><legend>Your group</legend><p class="muted small">Include yourself if you’re one of the graduates.</p><div id="participant-rows"></div></fieldset>
+            <div class="field"><label for="notes">Anything you’d like us to know? <span class="optional">optional</span></label><textarea id="notes" rows="3" maxlength="1500"></textarea></div>
+            <p class="small muted">
+              Your location will be reviewed before your session is confirmed.
+            </p>
+            <div class="panel-actions"><button class="secondary" type="button" data-back="1">Back</button><button class="primary" type="submit">Review agreement <span aria-hidden="true">→</span></button></div>
+          </form>
+        </section>
+        <section class="panel" data-panel="3" aria-labelledby="heading-3" hidden>
+          <p class="eyebrow">04 / REVIEW &amp; SIGN</p><h2 id="heading-3" tabindex="-1">Your session, in writing.</h2>
+          <p class="muted">
+            Review your session details and agreement, then complete the signature below.
+          </p>
+          <div id="review-facts" class="review-facts"></div><button type="button" class="text-button" data-back="2">Edit your details</button>
+          <details class="agreement" open><summary><span id="agreement-title">Session agreement</span><span class="sample-label">DRAFT</span></summary><div id="agreement-content"></div></details>
+          <form id="signature-form">
+            <fieldset id="promotion-field"><legend>Portfolio permission</legend><p class="small muted">Optional and separate from your booking. Applies only to your own likeness. Leave unselected if signing for someone else.</p><label class="choice"><input type="radio" name="promotion" value="yes">Yes, photos of me may be used in the portfolio and promotional materials.</label><label class="choice"><input type="radio" name="promotion" value="no">No, keep identifiable photos of me out of public promotions.</label></fieldset>
+            <div class="inset" id="group-promotion-note" hidden><h3>Each graduate has their own choice.</h3><p>Promotional permission will be collected separately from every graduate. Your signature here covers the group booking and payment responsibility, not anyone else’s permission.</p></div>
+            <div class="signature-section">
+            <h3>Your signature</h3>
+              <div class="field"><label for="signature-name">Type your full legal name <span>*</span></label><input id="signature-name" required maxlength="100" autocomplete="off" placeholder="Your full name"><div id="typed-signature" aria-hidden="true"></div></div>
+              <details class="draw-option"><summary>Add a drawn signature <span class="optional">optional</span></summary>
+            <p class="small muted">
+              Draw with your mouse or finger, or leave this blank to use your typed name.
+            </p>
+            <canvas id="signature-canvas" width="1400" height="300" aria-label="Optional drawn signature area"></canvas><button class="text-button" type="button" id="clear-signature">Clear drawing</button></details>
+            <label class="choice">
+              <input type="checkbox" id="agreement-consent" required>
+              <span>
+                I have reviewed the agreement and understand that my requested session
+                is subject to the photographer’s confirmation.
+              </span>
+            </label>
+            <label class="choice">
+              <input type="checkbox" id="electronic-consent" required>
+              <span>
+                I consent to signing electronically and receiving an electronic copy.
+              </span>
+            </label>
+            <p class="form-error" id="sign-error" role="alert"></p>
+            <div class="panel-actions">
+              <button class="secondary" type="button" data-back="2">Back</button>
+              <button class="primary" type="submit">
+                Submit preview request <span aria-hidden="true">→</span>
+              </button>
+            </div>
+          </form>
+        </section>
+        <section class="panel success" id="success" hidden aria-labelledby="success-heading"><div class="success-symbol" aria-hidden="true">✓</div><p class="eyebrow">PREVIEW COMPLETE</p><h2 id="success-heading" tabindex="-1">That’s the request experience.</h2><p>No request was sent — submission is connected in a later phase.</p><div id="success-facts" class="review-facts"></div></section>
+      </div>
+      <aside class="summary" aria-label="Your session summary"><img class="summary-image" id="summary-image" src="../images/services/graduation/graduation1.webp" alt="Graduation portrait by Cyberflight Studios"><div class="summary-body"><p class="eyebrow">YOUR SESSION</p><h2 id="summary-title">Choose a service</h2><button type="button" class="text-button" id="change-package" data-back="0">Change service</button><p class="summary-spec" id="summary-spec">Choose a service to begin.</p><dl><div><dt>Date</dt><dd id="summary-date">Choose a date</dd></div><div><dt id="summary-time-label">Time</dt><dd id="summary-time">Choose a time</dd></div><div><dt>Payment due</dt><dd id="summary-due">48 hours before</dd></div><div class="total"><dt id="summary-price-label">Package price</dt><dd id="summary-price">—</dd></div></dl>
+       <p class="small muted">
+        No payment today. Any applicable tax or travel fees will be confirmed
+        before you finalize your booking.
+      </p>
+
+      <div class="summary-note">
+        <strong>A request, then a confirmation.</strong>
+        <p>
+          I’ll review your requested time and location before confirming your session.
+          Choosing a time does not reserve it.
+        </p>
+      </div>
+      </div>
+    </aside>
+  </div>
+    <footer><span>CYBERFLIGHT STUDIOS</span><p>Not ready to book? <a href="../contact/">Ask a general question <span aria-hidden="true">↗</span></a></p></footer>
+  </main>
+  <noscript>
+  <p class="noscript">This page needs JavaScript enabled.</p></noscript>
+</body>
+<div class="booking-background" aria-hidden="true">
+  <video autoplay muted loop playsinline
+    poster="../images/bg.webp">
+    <source src="../videos/homepage_background.mp4"
+      type="video/mp4">
+  </video>
+</div>
+</html>
