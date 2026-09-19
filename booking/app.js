@@ -7,7 +7,7 @@ const timeLabel=minutes=>`${Math.floor(minutes/60)%12||12}:${String(minutes%60).
 const formatDate=(key,options={month:'short',day:'numeric',weekday:'short'})=>new Intl.DateTimeFormat('en-US',{...options,timeZone:'UTC'}).format(new Date(key+'T12:00:00Z'));
 const formatInstant=date=>new Intl.DateTimeFormat('en-US',{timeZone:C.zone,month:'short',day:'numeric',hour:'numeric',minute:'2-digit',timeZoneName:'short'}).format(date);
 const initialNow=new Date();
-const state={step:0,maxStep:0,service:null,package:'standard',count:2,tier:'t1',length:120,date:null,time:null,week:0,details:null,submittedAt:false,gradConfirmed:false,groupConfirmed:false,eventConfirmed:false};
+const state={step:0,maxStep:0,service:null,package:'standard',count:2,tier:'t1',length:120,date:null,time:null,week:0,details:null,submittedAt:false,groupConfirmed:false,eventConfirmed:false};
 const firstDay=C.addDays(C.dateKey(initialNow),5);
 let drawing=false,hasDrawing=false;
 const canvas=$('signature-canvas'),ctx=canvas.getContext('2d');
@@ -43,7 +43,7 @@ function updateSummary(){
   }
   $('summary-title').textContent=s.label;
   if(s.mode==='slots'){
-    if(state.service==='graduation')$('summary-spec').textContent=state.gradConfirmed?(state.package==='group'&&!state.groupConfirmed?'90 minutes · 2 – 4 graduates':`${C.packages[state.package].advertised} · ${participantsCount()} graduate${participantsCount()>1?'s':''}`):'30 min – 2 hours (depends on package)';
+    if(state.service==='graduation')$('summary-spec').textContent=state.package==='group'&&!state.groupConfirmed?'90 minutes · 2 – 4 graduates':`${C.packages[state.package].advertised} · ${participantsCount()} graduate${participantsCount()>1?'s':''}`;
     else $('summary-spec').textContent='90 minutes · property walkthrough';
   }else if(s.mode==='event'){
     $('summary-spec').textContent=state.eventConfirmed?`${state.length/60} hour${state.length>=120?'s':''}`:'2 hours – All Day';
@@ -89,8 +89,6 @@ function selectService(service,opts={}){
   $('choose-time').disabled=false;
   $('choose-time').innerHTML=`${serviceInfo().scheduleLabel} <span aria-hidden="true">→</span>`;
   if(state.service==='graduation'){
-    if(opts.package!==undefined)state.gradConfirmed=true;
-    else if(firstTime)state.gradConfirmed=false;
     const grad=(opts.package&&C.packages[opts.package])?opts.package:'standard';
     if(state.package!==grad){state.package=grad;state.time=null;state.maxStep=0;resetDownstream();if(grad==='group')state.groupConfirmed=false;}
     $('grad-package').value=state.package;
@@ -100,7 +98,7 @@ function selectService(service,opts={}){
   updateSummary();updateProgress();
 }
 document.querySelectorAll('[name=service]').forEach(el=>el.addEventListener('change',()=>selectService(el.value)));
-$('grad-package').addEventListener('change',()=>{state.gradConfirmed=true;selectService('graduation',{package:$('grad-package').value});});
+$('grad-package').addEventListener('change',()=>{selectService('graduation',{package:$('grad-package').value});});
 $('group-size').addEventListener('change',()=>{
   const value=Number($('group-size').value);
   if(!C.groupPrices[value])return;
