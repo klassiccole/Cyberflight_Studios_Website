@@ -32,7 +32,7 @@ test('agreement is server generated, safely escaped and contains agreed 48-hour 
   const s=setup();const p=booking();p.details.name='<img src=x onerror=alert(1)>';
   const r=await s.handlers.agreement(s.context({booking:p},'agreement'));assert.equal(r.status,200);
   const a=await r.json();assert.ok(a.html.includes('&lt;img'));assert.ok(!a.html.includes('<img'));
-  assert.ok(a.text.includes('48 hours'));assert.ok(!a.text.includes('72 hours'));assert.equal(a.draft,true);
+  assert.ok(a.text.includes('48 hours before the requested session'));assert.ok(a.text.includes('72 hours before the session'));assert.ok(!('draft' in a));
   assert.equal(a.hash,await sha256(a.text));s.sqlite.close();
 });
 test('submission stores actual inputs, typed/drawn signature, immutable agreement and queues notification',async()=>{
