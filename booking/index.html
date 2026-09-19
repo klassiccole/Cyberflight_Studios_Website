@@ -9,9 +9,9 @@
   <link rel="icon" href="../images/logo.webp">
   <link rel="stylesheet" href="../assets/css/fontawesome-all.min.css">
   <link rel="stylesheet" href="../assets/css/site-shell.css">
-  <link rel="stylesheet" href="booking.css?v=5">
-  <script defer src="booking-core.js?v=5"></script>
-  <script defer src="app.js?v=5"></script>
+  <link rel="stylesheet" href="booking.css?v=6">
+  <script defer src="booking-core.js?v=6"></script>
+  <script defer src="app.js?v=6"></script>
 </head>
 <body class="cf-booking">
   <main id="main">
@@ -145,16 +145,17 @@
                 I consent to signing electronically and receiving an electronic copy.
               </span>
             </label>
+            <div class="turnstile-box" id="turnstile-box" aria-label="Spam verification"></div>
             <p class="form-error" id="sign-error" role="alert"></p>
             <div class="panel-actions">
               <button class="secondary" type="button" data-back="2">Back</button>
               <button class="primary" type="submit">
-                Submit preview request <span aria-hidden="true">→</span>
+                Submit request <span aria-hidden="true">→</span>
               </button>
             </div>
           </form>
         </section>
-        <section class="panel success" id="success" hidden aria-labelledby="success-heading"><div class="success-symbol" aria-hidden="true">✓</div><p class="eyebrow">PREVIEW COMPLETE</p><h2 id="success-heading" tabindex="-1">That’s the request experience.</h2><p>No request was sent — submission is connected in a later phase.</p><div id="success-facts" class="review-facts"></div></section>
+        
       </div>
       <aside class="summary" aria-label="Your session summary"><img class="summary-image" id="summary-image" src="../images/services/graduation/graduation1.webp" alt="Graduation portrait by Cyberflight Studios"><div class="summary-body"><p class="eyebrow">YOUR SESSION</p><h2 id="summary-title">Choose a service</h2><p class="summary-spec" id="summary-spec">Choose a service to begin.</p><dl><div><dt>Date</dt><dd id="summary-date">Choose a date</dd></div><div><dt id="summary-time-label">Time</dt><dd id="summary-time">Choose a time</dd></div><div><dt>Payment due</dt><dd id="summary-due">48 hours before</dd></div><div class="total"><dt id="summary-price-label">Package price</dt><dd id="summary-price">—</dd></div></dl>
        <p class="small muted">
@@ -176,6 +177,7 @@
   </main>
   <noscript>
   <p class="noscript">This page needs JavaScript enabled.</p></noscript>
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </body>
 <div class="booking-background" aria-hidden="true">
   <video autoplay muted loop playsinline

@@ -7,9 +7,9 @@ const timeLabel=minutes=>`${Math.floor(minutes/60)%12||12}:${String(minutes%60).
 const formatDate=(key,options={month:'short',day:'numeric',weekday:'short'})=>new Intl.DateTimeFormat('en-US',{...options,timeZone:'UTC'}).format(new Date(key+'T12:00:00Z'));
 const formatInstant=date=>new Intl.DateTimeFormat('en-US',{timeZone:C.zone,month:'short',day:'numeric',hour:'numeric',minute:'2-digit',timeZoneName:'short'}).format(date);
 const initialNow=new Date();
-const state={step:0,maxStep:0,service:null,package:'standard',count:2,tier:'t1',length:120,date:null,time:null,week:0,details:null,submittedAt:false,groupConfirmed:false,eventConfirmed:false};
+const state={step:0,maxStep:0,service:null,package:'standard',count:2,tier:'t1',length:120,date:null,time:null,week:0,details:null,submittedAt:false,groupConfirmed:false,eventConfirmed:false,agreement:null,submissionKey:null,turnstileToken:null,turnstileId:null,turnstileWait:null,drawStrokes:[]};
 const firstDay=C.addDays(C.dateKey(initialNow),5);
-let drawing=false,hasDrawing=false;
+let drawing=false,hasDrawing=false;const drawStrokes=state.drawStrokes;
 const canvas=$('signature-canvas'),ctx=canvas.getContext('2d');
 ctx.lineWidth=4;ctx.lineCap='round';ctx.lineJoin='round';ctx.strokeStyle='#201931';
 
@@ -28,7 +28,7 @@ function resetSignature(){
   $('signature-name').value='';$('typed-signature').textContent='';
   $('agreement-consent').checked=false;$('electronic-consent').checked=false;
   document.querySelectorAll('[name=promotion]').forEach(el=>el.checked=false);
-  ctx.clearRect(0,0,canvas.width,canvas.height);hasDrawing=false;
+  ctx.clearRect(0,0,canvas.width,canvas.height);hasDrawing=false;drawStrokes.length=0;
 }
 function resetDownstream(){state.details=null;resetSignature();}
 function priceLabel(value){return value===null?'By Proposal':money(value);}
@@ -69,10 +69,9 @@ function updateProgress(){
 function showStep(step, moveFocus=true){
   state.step=step;state.maxStep=Math.max(state.maxStep,step);
   document.querySelectorAll('[data-panel]').forEach(el=>el.hidden=Number(el.dataset.panel)!==step);
-  $('success').hidden=true;
   if(step===1)renderSchedule();
   if(step===2)renderDetailsMode();
-  if(step===3)renderReview();
+  if(step===3){renderReview();loadServerAgreement();ensureTurnstile();}
   updateProgress();updateSummary();
   if(moveFocus){
     $(`heading-${step}`).focus({preventScroll:true});
@@ -327,79 +326,97 @@ function bookingFacts(){
   if(grad&&state.package!=='group')rows.push(fact('Graduate',state.details.graduate));
   return rows.join('');
 }
-function section(title,body){return `<section><h3>${escapeHTML(title)}</h3>${body}</section>`;}
-function paragraph(text){return `<p>${escapeHTML(text)}</p>`;}
-function graduationAgreement(){
-  const group=state.package==='group',p=C.packages[state.package],d=state.details;
-  const content=[
-    ['1. Parties and session',`This illustrative draft is between the Photographer, [legal contracting party to be confirmed], operating as Cyberflight Studios and represented by Daniel Cole Dorazio, and ${d.name}${group?', the Lead Client and booking organizer':''}. Requested session: ${formatDate(state.date,{month:'long',day:'numeric',year:'numeric'})}, ${timeLabel(state.time)}–${timeLabel(state.time+p.duration)} Charlotte time, at ${d.location}.`],
-    ['2. Included services',`${p.name}: ${p.advertised}, ${participantsCount()} graduate${participantsCount()>1?'s':''}, ${group?'individual and group portraits, ':''}and at least ${p.minimum} professionally edited high-resolution photographs${group?' across the entire group, not per person':''}. ${state.package==='standard'?'Approximately 20 – 25 or more images are anticipated; 90 minutes are reserved to allow the full advertised duration. ':''}${group?'Approximately 30 – 40 or more images are anticipated. Equal numbers per graduate or every group combination are not guaranteed. ':''}Movement between nearby spots and outfit changes take place within the session time. Additional coverage or services require written agreement.`],
-    ['3. Price and payment',`The selected package price is ${money(total())}. ${group?'The Lead Client is responsible for the entire amount. Reimbursement arrangements among friends are separate; other graduates do not owe the Photographer merely by being listed. ':''}No payment is collected by this form. If the request is accepted, an invoice will be sent separately through Zoho. Full payment is due by ${formatInstant(C.deadline(state.date,state.time))}, 48 hours before the requested session. Any applicable tax, travel fee, or other charge must be disclosed and accepted before a live agreement is signed; this prototype does not calculate them.`],
-    ['4. Request, hold, and confirmation','A submitted request is not a confirmed booking. In the proposed live flow, a time would be held for 72 hours from successful submission while the Photographer reviews the location and availability. Written approval within that period converts the request into a confirmed reservation with the stated payment deadline. If declined or not approved within 72 hours, the hold expires and the customer is notified. An expired request must not be approved without checking availability again. Material changes to date, price, or other terms require written acceptance.'],
-    ['5. Cancellation, rescheduling, and attendance','DRAFT POLICY TO COMPLETE BEFORE LAUNCH: cancellation and refund terms, rescheduling notice, late-arrival and nonattendance treatment, and consequences of missed payment have not yet been finalized. No automatic forfeiture or cancellation fee is established here. Notify the Photographer promptly about any requested change. Rescheduling depends on availability.'],
-    ...(group?[['6. Group changes','DRAFT POLICY TO COMPLETE BEFORE LAUNCH: participant withdrawals, substitutions, reduced group size, and any repricing deadline. The Lead Client coordinates changes, which require written confirmation. More than four graduates require a separate quote. Each participant provides their own promotional-use choice; the organizer does not grant permission for other adults.']]:[]),
-    [group?'7. Cooperation and access':'6. Cooperation and access','The Client provides accurate session information and arranges required private-property or restricted-location access unless otherwise agreed. Participants should arrive prepared and cooperate reasonably. Unsafe activities and photography prohibited by venue rules may be declined. Reduced coverage resulting from access restrictions, interference, or lack of reasonable cooperation is outside the Photographer’s responsibility.'],
-    [group?'8. Style, selection, and editing':'7. Style, selection, and editing','The Client has an opportunity to review the Photographer’s style. The Photographer retains reasonable creative discretion over posing, composition, lighting, selection, cropping, and normal editing. Particular expressions, poses, photographs, or backgrounds are not guaranteed unless accepted in writing. Duplicate, test, unsuitable, and rejected images are excluded. Extensive retouching, compositing, or additional work requires a separate agreement and may carry additional fees.'],
-    [group?'9. RAW and working files':'8. RAW and working files','RAW files, unedited photographs, rejected images, project files, and intermediate versions are not included unless expressly agreed. The Photographer is not obligated to retain or provide them after final delivery.'],
-    [group?'10. Delivery and backups':'9. Delivery and backups',`Included photographs are delivered through a high-resolution digital gallery within seven calendar days after the completed session. ${group?'Shared versus individual gallery access must be agreed before a live booking is signed. Individual contact details and signature records are not included in shared galleries. ':''}Past-due payment may delay release, with a release date provided after payment. Additional work may have a separate agreed schedule. Emergencies or technical delays will be communicated with a revised expected delivery date. Downloads remain available for at least 60 days after delivery. Recipients are responsible for backups; later redelivery, if available, may carry a separately disclosed fee.`],
-    [group?'11. Copyright and personal use':'10. Copyright and personal use','The Photographer retains copyright. Full payment grants the Client and listed graduates a nonexclusive license to download, store, display, share, and print delivered photographs for personal, noncommercial use. Sale, licensing, commercial exploitation, or claiming authorship requires written permission. Payment does not transfer copyright or authorize someone to grant rights over another person’s likeness.'],
-    [group?'12. Equipment and inability to perform':'11. Equipment and inability to perform','The Photographer takes reasonable equipment and image-protection precautions. If equipment failure or file loss prevents delivery, reasonable efforts will be made to recover material or arrange an appropriate remedy. If illness, injury, emergency, or another circumstance prevents performance, the Client will be notified promptly. A replacement or rescheduled session may be mutually agreed but is not guaranteed. If no acceptable alternative is reached, payments for services that cannot be performed will be refunded.'],
-    [group?'13. Weather and events beyond control':'12. Weather and events beyond control','Severe weather, venue closures, government restrictions, and similar events may require an alternate date or location. The parties will seek a reasonable alternative or resolution regarding payments, services already performed, and reasonably incurred nonrecoverable expenses. This does not reduce the preceding refund obligation where the Photographer cannot perform and no mutually acceptable alternative is reached.'],
-    [group?'14. Limitation of liability':'13. Limitation of liability',`To the fullest extent permitted by applicable law, the Photographer’s total liability ${group?'to the Lead Client ':''}for the affected services will not exceed the amount actually paid for them, and excludes indirect, incidental, consequential, special, or punitive damages. Liability that cannot legally be excluded or limited remains unaffected. ${group?'The Lead Client’s signature does not waive other participants’ independent rights. ':''}This provision is a draft requiring legal review.`],
-    [group?'15. Portfolio and promotional use':'14. Portfolio and promotional use',`${group?'Every graduate makes a separate choice. The organizer’s booking signature does not grant permission on behalf of others. ':'The photographed graduate or an appropriately authorized guardian makes the choice below; a different paying client does not grant permission merely by signing. '}Permission is optional and does not affect price, services, or deliverables. Missing permission is treated as not granted. The Photographer will only publicly use images where all identifiable participants have granted applicable permission. Permission covers the Photographer’s own portfolio, website, social media, samples, exhibitions, competitions, and reasonable promotional materials, not unrelated third-party advertising. Reasonable privacy concerns will be considered in good faith.`],
-    [group?'16. Agreement and signatures':'15. Agreement and signatures','The completed agreement and identified accepted booking details form the session agreement. Invoices bill the agreed terms and do not independently change them. Material changes require written acceptance. North Carolina law governs. Electronic signing requires the parties’ agreement and copies they can retain. The proposed live flow records the exact accepted terms and signing details and supplies copies to the parties. The Photographer’s acceptance/countersignature process and final legal business name must be settled before launch. THIS DEMONSTRATION DOES NOT CREATE A CONTRACT.']
-  ];
-  return '<p class="draft-notice"><strong>Prototype agreement — not ready for signing.</strong> This demonstration adapts the earlier drafts to the proposed booking flow. Cancellation, group changes, legal business name, taxes, and final acceptance wording still need review.</p>'+content.map(([title,body])=>section(title,paragraph(body))).join('');
-}
-function generalAgreement(){
-  const s=serviceInfo(),d=state.details;
-  const payment={
-    realestate:`The quoted price for the selected property tier is ${money(total())}. No payment is collected by this form. If the request is accepted, an invoice will be sent separately through Zoho, due before the shoot. Full payment is required before the session begins.`,
-    event:`Event coverage is priced by proposal based on the requested length (${state.length/60} hour${state.length>=120?'s':''}). No payment is collected by this form. If the proposal is accepted, a retainer is due at signing to secure the date, with the balance due seven days before the event. For bookings made less than two weeks out, the full amount is due before the session.`,
-    wedding:`Wedding coverage is priced by proposal agreed at the proposal meeting. No payment is collected by this form. A retainer is due at signing to secure the date, with the balance due two weeks before the wedding. For bookings made within one month of the date, the full amount is due at signing.`
-  };
-  const content=[
-    ['1. Parties and booking',`This illustrative draft is between the Photographer, [legal contracting party to be confirmed], operating as Cyberflight Studios and represented by Daniel Cole Dorazio, and ${d.name}. Requested booking: ${sessionText()}, at ${d.location}${s.mode==='event'?`, approximately ${state.length/60} hour${state.length>=120?'s':''} of coverage`:''}.`],
-    ['2. Included services',`${s.label} coverage as described in the accepted proposal or selected tier. Deliverables, galleries, and timelines are confirmed in writing before the session. Additional coverage or services require written agreement.`],
-    ['3. Price and payment',payment[state.service]],
-    ['4. Request and confirmation','A submitted request is not a confirmed booking. The Photographer reviews the request and confirms in writing. Material changes to date, price, or other terms require written acceptance.'],
-    ['5. Cancellation, rescheduling, and attendance','DRAFT POLICY TO COMPLETE BEFORE LAUNCH: cancellation and refund terms, rescheduling notice, late-arrival and nonattendance treatment, and consequences of missed payment have not yet been finalized. Notify the Photographer promptly about any requested change.'],
-    ['6. Cooperation and access','The Client provides accurate location information and arranges required private-property or restricted-location access unless otherwise agreed. Reduced coverage resulting from access restrictions, interference, or lack of reasonable cooperation is outside the Photographer’s responsibility.'],
-    ['7. Style, selection, and editing','The Client has an opportunity to review the Photographer’s style. The Photographer retains reasonable creative discretion over coverage, composition, lighting, selection, and normal editing. RAW files and unedited images are not included unless expressly agreed.'],
-    ['8. Delivery and backups','Deliverables are provided on the schedule stated in the accepted proposal. Past-due payment may delay release. Downloads remain available for at least 60 days after delivery. Recipients are responsible for backups.'],
-    ['9. Copyright and personal use','The Photographer retains copyright. Full payment grants the Client a nonexclusive license to download, store, display, share, and print delivered photographs for personal, noncommercial use. Commercial use requires written permission.'],
-    ['10. Limitation of liability','To the fullest extent permitted by applicable law, the Photographer’s total liability for the affected services will not exceed the amount actually paid for them, and excludes indirect, incidental, consequential, special, or punitive damages. This provision is a draft requiring legal review.'],
-    ['11. Agreement and signatures','The completed agreement and identified accepted booking details form the session agreement. Material changes require written acceptance. North Carolina law governs. Electronic signing requires the parties’ agreement and copies they can retain. THIS DEMONSTRATION DOES NOT CREATE A CONTRACT.']
-  ];
-  return '<p class="draft-notice"><strong>Draft agreement — not ready for signing.</strong> Cancellation policy, legal business name, taxes, and final acceptance wording still need review.</p>'+content.map(([title,body])=>section(title,paragraph(body))).join('');
-}
 function renderReview(){
   if(!state.details)return;
-  const grad=state.service==='graduation';
   $('review-facts').innerHTML=bookingFacts();
-  $('agreement-title').textContent=grad?(state.package==='group'?'Group graduation photography agreement':'Graduation photography agreement'):`${serviceInfo().label} services agreement`;
-  $('agreement-content').innerHTML=grad?graduationAgreement():generalAgreement();
-  $('promotion-field').hidden=grad&&state.package==='group';
-  $('group-promotion-note').hidden=!(grad&&state.package==='group');
+  $('promotion-field').hidden=state.service==='graduation'&&state.package==='group';
+  $('group-promotion-note').hidden=!(state.service==='graduation'&&state.package==='group');
+}
+async function loadServerAgreement(){
+  if(state.service!=='graduation'){
+    state.agreement=null;
+    $('agreement-title').textContent=`${serviceInfo().label} services agreement`;
+    $('agreement-content').innerHTML='<p class="draft-notice"><strong>Submissions for this service open with the next update.</strong> Contact us meanwhile and I will set everything up with you directly.</p>';
+    return;
+  }
+  try{
+    const response=await fetch('/api/booking/agreement',{method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({booking:submissionBooking()})});
+    if(!response.ok)throw new Error('unavailable');
+    const agreement=await response.json();
+    state.agreement={version:agreement.version,hash:agreement.hash};
+    $('agreement-title').textContent=agreement.title;
+    $('agreement-content').innerHTML=agreement.html;
+  }catch{
+    state.agreement=null;
+    $('agreement-content').innerHTML='<p class="form-error">The agreement could not be loaded. Refresh the page or contact us.</p>';
+  }
+}
+function submissionBooking(){
+  return {package:apiPackage(),count:state.service==='graduation'&&state.package==='group'?state.count:2,
+    date:state.date,time:state.time,
+    details:{name:state.details.name,email:state.details.email,phone:state.details.phone,
+      location:state.details.location,graduate:state.details.graduate,
+      notes:state.details.notes,participants:state.details.participants}};
+}
+function ensureTurnstile(){
+  if(state.turnstileId!==null)return;
+  const render=()=>{state.turnstileId=window.turnstile.render($('turnstile-box'),{sitekey:'0x4AAAAAAETDlK6Z2eQKAY43',
+    action:'booking_submit',
+    callback:token=>{state.turnstileToken=token;},
+    'expired-callback':()=>{state.turnstileToken=null;},
+    'error-callback':()=>{state.turnstileToken=null;}});
+    window.clearInterval(state.turnstileWait);};
+  if(window.turnstile)render();
+  else state.turnstileWait=window.setInterval(()=>{if(window.turnstile)render();},200);
+  window.setTimeout(()=>window.clearInterval(state.turnstileWait),15000);
 }
 $('signature-name').addEventListener('input',()=>{$('typed-signature').textContent=$('signature-name').value;$('signature-name').setCustomValidity('');});
 function point(e){const r=canvas.getBoundingClientRect();return {x:(e.clientX-r.left)*canvas.width/r.width,y:(e.clientY-r.top)*canvas.height/r.height};}
-canvas.addEventListener('pointerdown',e=>{if(e.button!==0)return;drawing=true;canvas.setPointerCapture(e.pointerId);const p=point(e);ctx.beginPath();ctx.moveTo(p.x,p.y);});
-canvas.addEventListener('pointermove',e=>{if(!drawing)return;const p=point(e);ctx.lineTo(p.x,p.y);});
+canvas.addEventListener('pointerdown',e=>{if(e.button!==0)return;drawing=true;canvas.setPointerCapture(e.pointerId);const p=point(e);ctx.beginPath();ctx.moveTo(p.x,p.y);drawStrokes.push([[+(p.x/canvas.width).toFixed(4),+(p.y/canvas.height).toFixed(4)]]);});
+canvas.addEventListener('pointermove',e=>{if(!drawing)return;const p=point(e);ctx.lineTo(p.x,p.y);drawStrokes[drawStrokes.length-1].push([+(p.x/canvas.width).toFixed(4),+(p.y/canvas.height).toFixed(4)]);});
 canvas.addEventListener('pointerup',()=>drawing=false);canvas.addEventListener('pointercancel',()=>drawing=false);
 $('clear-signature').addEventListener('click',()=>{ctx.clearRect(0,0,canvas.width,canvas.height);hasDrawing=false;});
-$('signature-form').addEventListener('submit',event=>{
+const SUBMIT_ERRORS={'time_unavailable':'That time was just taken. Go back and choose another available time.',
+  'agreement_changed_review_again':'The agreement changed. The current version has loaded below — review it and submit again.',
+  'consent_required':'Both consent boxes must be checked before submitting.',
+  'invalid_submission_key':'Something went wrong with the request. Refresh the page and try again.',
+  'request_too_large':'The drawn signature is too complex. Clear it and submit with your typed name.',
+  'booking_not_open_yet':'Booking requests are not open yet. Contact us directly.',
+  'booking_overlap':'That time was just taken. Go back and choose another available time.'};
+$('signature-form').addEventListener('submit',async event=>{
   event.preventDefault();
+  const button=$('signature-form').querySelector('.primary');
   if(!$('signature-name').value.trim()){$('signature-name').setCustomValidity('Please type your full name.');$('signature-name').reportValidity();return;}
   if(!$('signature-form').reportValidity())return;
   const s=serviceInfo();
-  if(s.mode==='slots'&&(state.time===null||!slotsFor(state.date).includes(state.time))){$('sign-error').textContent='Please choose a new available time before continuing.';return;}
-  if(s.mode==='event'&&calendarStatus==='ready'&&state.time===null){$('sign-error').textContent='Please choose a start time before continuing.';return;}
-  state.submittedAt=true;
-  document.querySelectorAll('[data-panel]').forEach(el=>el.hidden=true);
-  $('success-facts').innerHTML=bookingFacts();
-  updateProgress();
-  $('success-heading').focus({preventScroll:true});$('success').scrollIntoView({behavior:'auto',block:'start'});
+  if(state.service!=='graduation'){$('sign-error').textContent='Submissions for this service open with the next update. Contact us meanwhile.';return;}
+  if(state.time===null||!slotsFor(state.date).includes(state.time)){$('sign-error').textContent='Please choose a new available time before continuing.';return;}
+  if(!state.agreement){$('sign-error').textContent='The agreement has not loaded yet. Give it a moment and try again.';return;}
+  if(!state.turnstileToken&&window.turnstile){$('sign-error').textContent='Complete the verification checkbox before submitting.';return;}
+  button.disabled=true;$('sign-error').textContent='';
+  try{
+    const response=await fetch('/api/booking/submit',{method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({booking:submissionBooking(),
+        signature:{typedName:$('signature-name').value.trim(),agreementConsent:true,electronicConsent:true,
+          promotion:document.querySelector('[name=promotion]:checked')?.value??null,drawing:drawStrokes.slice(-100)},
+        agreementVersion:state.agreement.version,agreementHash:state.agreement.hash,
+        submissionKey:state.submissionKey||crypto.randomUUID(),turnstileToken:state.turnstileToken||undefined})});
+    const receipt=await response.json().catch(()=>({}));
+    if(response.status===201||(response.status===200&&receipt.replayed)){
+      location.href=`/booking/confirmed/?id=${encodeURIComponent(receipt.requestId)}&expires=${encodeURIComponent(receipt.expiresAt)}`;
+      return;
+    }
+    $('sign-error').textContent=SUBMIT_ERRORS[receipt.error]||'The request could not be submitted. Try again or contact us.';
+    if(receipt.error==='agreement_changed_review_again')await loadServerAgreement();
+  }catch{
+    $('sign-error').textContent='The request could not be submitted. Check your connection and try again, or contact us.';
+  }finally{
+    button.disabled=false;
+    if(window.turnstile&&state.turnstileId!==null){window.turnstile.reset(state.turnstileId);state.turnstileToken=null;}
+  }
 });
 $('nav-back').href=/[?&]service=graduation/.test(window.location.search)?'/services/graduation/':'/services/';
 const params=new URLSearchParams(window.location.search);

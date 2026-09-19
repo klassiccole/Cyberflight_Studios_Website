@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="robots" content="noindex,nofollow">
+  <meta name="description" content="Your Cyberflight Studios booking request receipt.">
   <title>Request received · Cyberflight Studios</title>
   <link rel="icon" href="../../images/logo.webp">
   <link rel="stylesheet" href="../../assets/css/fontawesome-all.min.css">
@@ -12,21 +13,50 @@
 </head>
 <body class="cf-booking">
   <main id="main">
-    <div class="booking-layout" style="grid-template-columns:minmax(0,1fr)">
+    <div class="booking-layout">
       <div class="workspace">
         <section class="panel success">
           <div class="success-symbol" aria-hidden="true">✓</div>
           <p class="eyebrow">REQUEST RECEIVED</p>
-          <h2 tabindex="-1">We have your request.</h2>
-          <p>Placeholder for Phase 3 — this page will read the submission receipt
-             by ID from the query string and display your held date, package, and
-             hold expiry.</p>
+          <h2 id="confirmed-heading" tabindex="-1">We have your request.</h2>
+          <p>Your requested time is being held. Cole will review it and reach out
+             by email to confirm or follow up.</p>
+          <div id="receipt-facts" class="review-facts"></div>
+          <ol class="next-steps">
+            <li><b>Request received</b><span id="receipt-hold">Your time is held for 48 hours.</span></li>
+            <li><b>Cole reviews your session</b><span>You'll hear back by email within the hold window.</span></li>
+            <li><b>Your invoice arrives separately</b><span>After approval, your Zoho invoice reflects the agreed terms.</span></li>
+          </ol>
+          <p class="small muted">
+            Keep this receipt. If the hold expires before confirmation, your time
+            is released and a new request is needed.
+          </p>
         </section>
       </div>
     </div>
-    <footer><span>CYBERFLIGHT STUDIOS</span><p><a href="/booking/">Back to booking <span aria-hidden="true">↗</span></a></p></footer>
+    <footer><span>CYBERFLIGHT STUDIOS</span><p><a href="/booking/">Back to booking <span aria-hidden="true">↗</span></a> · <a href="/contact/">Ask a general question <span aria-hidden="true">↗</span></a></p></footer>
   </main>
+  <noscript><p class="noscript">This page needs JavaScript enabled to show your receipt.</p></noscript>
 </body>
+<script defer>
+  (function(){
+    var params=new URLSearchParams(location.search);
+    var id=params.get('id'),expires=params.get('expires');
+    var facts=document.getElementById('receipt-facts');
+    if(!id||!expires){
+      document.querySelector('.panel.success h2').textContent='Receipt not found.';
+      document.querySelector('.panel.success p').textContent='This page needs a request receipt link from the booking form.';
+      return;
+    }
+    var fact=function(label,value){return '<div><dt>'+label+'</dt><dd>'+value+'</dd></div>';};
+    var expiry=new Date(expires);
+    var valid=!isNaN(expiry.getTime());
+    document.getElementById('receipt-facts').innerHTML=
+      fact('Request ID',id.replace(/[<>&"]/g,''))+
+      (valid?fact('Hold expires',new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',month:'short',day:'numeric',hour:'numeric',minute:'2-digit',timeZoneName:'short'}).format(expiry)):'');
+    if(valid)document.getElementById('receipt-hold').textContent='Your time is held until the expiry above, unless confirmed earlier.';
+  })();
+</script>
 <div class="booking-background" aria-hidden="true">
   <video autoplay muted loop playsinline poster="../../images/bg.webp">
     <source src="../../videos/homepage_background.mp4" type="video/mp4">
