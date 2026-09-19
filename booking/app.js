@@ -43,7 +43,7 @@ function updateSummary(){
   }
   $('summary-title').textContent=s.label;
   if(s.mode==='slots'){
-    if(state.service==='graduation')$('summary-spec').textContent=state.gradConfirmed?(state.package==='group'&&!state.groupConfirmed?'90 minutes · 2 – 4 graduates':`${C.packages[state.package].advertised} · ${participantsCount()} graduate${participantsCount()>1?'s':''}`):'30 min – 2 hours';
+    if(state.service==='graduation')$('summary-spec').textContent=state.gradConfirmed?(state.package==='group'&&!state.groupConfirmed?'90 minutes · 2 – 4 graduates':`${C.packages[state.package].advertised} · ${participantsCount()} graduate${participantsCount()>1?'s':''}`):'30 min – 2 hours (depends on package)';
     else $('summary-spec').textContent='90 minutes · property walkthrough';
   }else if(s.mode==='event'){
     $('summary-spec').textContent=state.eventConfirmed?`${state.length/60} hour${state.length>=120?'s':''}`:'2 hours – All Day';
