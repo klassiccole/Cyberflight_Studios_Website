@@ -464,12 +464,11 @@ body.cf-booking .package.service .package-title { font-size:1.18rem }
 body.cf-booking .package.service:has(input:disabled) { opacity:.55 }
 body.cf-booking .service-select-wrap { display:block;margin-top:13px }
 body.cf-booking .service-select-label { display:block;font-weight:600;font-size:.92rem;margin-bottom:6px }
-body.cf-booking .service-select-label::after { content:"\25BE";color:var(--muted);font-size:1.6em;line-height:0;margin-left:7px;vertical-align:middle }
-body.cf-booking .package.service:has(input:checked) .service-select-label::after { color:var(--accent) }
-body.cf-booking .service-select-wrap label { margin-bottom:6px }
+body.cf-booking .service-select-label .caret { color:var(--muted);font-size:1.6em;line-height:0;margin-left:7px;vertical-align:middle }
+body.cf-booking .package.service:has(input:checked) .service-select-label .caret { color:var(--accent) }
 body.cf-booking .service-select {
 	width:100%;min-height:44px;border:1px solid #5a626f;background:#15191f;border-radius:5px;
-	padding:9px 12px;font-weight:300;color:var(--text)
+	padding:9px 12px;font-weight:300;color:var(--text);appearance:none;-webkit-appearance:none
 }
 body.cf-booking .service-select:disabled { opacity:.5;pointer-events:none }
 body.cf-booking .service-select:focus { border-color:var(--accent) }

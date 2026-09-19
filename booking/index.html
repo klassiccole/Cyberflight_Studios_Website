@@ -9,7 +9,7 @@
   <link rel="icon" href="../images/logo.webp">
   <link rel="stylesheet" href="../assets/css/fontawesome-all.min.css">
   <link rel="stylesheet" href="../assets/css/site-shell.css">
-  <link rel="stylesheet" href="booking.css">
+  <link rel="stylesheet" href="booking.css?v=2">
   <script defer src="booking-core.js"></script>
   <script defer src="app.js"></script>
 </head>
@@ -55,12 +55,12 @@
           <p class="eyebrow">01 / YOUR SERVICE</p><h2 id="heading-0" tabindex="-1">What are we shooting?</h2><p class="muted">Every booking includes a reviewed time and location before it's confirmed. Pricing shown where it's fixed; larger jobs are quoted by proposal.</p>
           <fieldset class="package-options"><legend class="sr-only">Choose your service</legend>
             <label class="package service" data-service="graduation"><input type="radio" name="service" value="graduation"><span class="package-content"><span class="package-top"><span class="package-title">Graduation</span><span class="service-price" id="grad-price">$200</span></span><span class="package-description">Cap and gown, campus portraits, individual and group sessions.</span>
-              <span class="service-select-wrap"><span class="service-select-label">Session length</span><select id="grad-package" class="service-select" disabled><option value="mini">Mini — 10+ Photos — $125</option><option value="standard" selected>Standard — 20 – 25+ Photos — $200</option><option value="group">Group — 30 – 40+ Photos — from $280</option></select></span>
+              <span class="service-select-wrap"><span class="service-select-label">Session length<span class="caret" aria-hidden="true">▾</span></span><select id="grad-package" class="service-select" disabled><option value="mini">Mini — 10+ Photos — $125</option><option value="standard" selected>Standard — 20 – 25+ Photos — $200</option><option value="group">Group — 30 – 40+ Photos — from $280</option></select></span>
             </span></label>
             <label class="package service" data-service="event"><input type="radio" name="service" value="event"><span class="package-content"><span class="package-top"><span class="package-title">Event Coverage <small>BY PROPOSAL</small></span></span><span class="package-description">Parties, openings, races, conferences — you set the coverage length.</span><span class="specs"><span>2 hours – all day</span><span>Custom quote</span></span></span></label>
             <label class="package service" data-service="wedding"><input type="radio" name="service" value="wedding"><span class="package-content"><span class="package-top"><span class="package-title">Wedding <small>BY PROPOSAL</small></span></span><span class="package-description">Full-day coverage built around your timeline. Booked through a proposal meeting.</span><span class="specs"><span>Full day</span><span>1 month lead time</span></span></span></label>
             <label class="package service" data-service="realestate"><input type="radio" name="service" value="realestate"><span class="package-content"><span class="package-top"><span class="package-title">Real Estate</span><span class="service-price" id="re-price">$150</span></span><span class="package-description">Listings shot clean, bright, and ready for the market.</span>
-              <span class="service-select-wrap"><span class="service-select-label">Property size</span><select id="re-tier" class="service-select" disabled><option value="t1">Up to 2,000 sq ft — $150</option><option value="t2">2,000 – 3,500 sq ft — $200</option><option value="t3">Over 3,500 sq ft — from $250</option></select></span>
+              <span class="service-select-wrap"><span class="service-select-label">Property size<span class="caret" aria-hidden="true">▾</span></span><select id="re-tier" class="service-select" disabled><option value="t1">Up to 2,000 sq ft — $150</option><option value="t2">2,000 – 3,500 sq ft — $200</option><option value="t3">Over 3,500 sq ft — from $250</option></select></span>
             </span></label>
           </fieldset>
           <div class="panel-actions"><span class="small muted">No payment collected on this form.</span><button class="primary" type="button" id="choose-time" disabled>Choose a time <span aria-hidden="true">→</span></button></div>
