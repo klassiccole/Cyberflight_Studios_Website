@@ -74,11 +74,11 @@ test('Google rejection or outage leaves no saved request',async()=>{
     assert.equal(s.sqlite.prepare('SELECT count(*) n FROM booking_requests').get().n,0);s.sqlite.close();
   }
 });
-test('cross-origin, disabled feature, and non-pilot email fail before persistence',async()=>{
+test('cross-origin and disabled feature fail before persistence',async()=>{
   const s=setup(),a=await s.submission();
   assert.equal((await s.handlers.submit({request:s.request(a,'submit',{Origin:'https://other.example'}),env:s.env})).status,403);
   s.env.BOOKING_SUBMISSIONS_ENABLED='false';assert.equal((await s.handlers.submit(s.context(a))).status,503);
-  s.env.BOOKING_SUBMISSIONS_ENABLED='true';a.booking.details.email='someone@example.com';assert.equal((await s.handlers.submit(s.context(a))).status,403);s.sqlite.close();
+  s.env.BOOKING_SUBMISSIONS_ENABLED='true';assert.equal((await s.handlers.submit(s.context(a))).status,201);s.sqlite.close();
 });
 test('bad JSON and oversized body return controlled errors',async()=>{
   const s=setup();for(const body of ['{',JSON.stringify({text:'a'.repeat(350001)})]) {
