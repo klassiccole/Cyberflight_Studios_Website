@@ -7,7 +7,7 @@ const timeLabel=minutes=>`${Math.floor(minutes/60)%12||12}:${String(minutes%60).
 const formatDate=(key,options={month:'short',day:'numeric',weekday:'short'})=>new Intl.DateTimeFormat('en-US',{...options,timeZone:'UTC'}).format(new Date(key+'T12:00:00Z'));
 const formatInstant=date=>new Intl.DateTimeFormat('en-US',{timeZone:C.zone,month:'short',day:'numeric',hour:'numeric',minute:'2-digit',timeZoneName:'short'}).format(date);
 const initialNow=new Date();
-const state={step:0,maxStep:0,service:null,package:'standard',count:2,tier:'t1',length:180,date:null,time:null,week:0,details:null,submittedAt:false};
+const state={step:0,maxStep:0,service:null,package:'standard',count:2,tier:'t1',length:120,date:null,time:null,week:0,details:null,submittedAt:false,gradConfirmed:false,groupConfirmed:false,eventConfirmed:false};
 const firstDay=C.addDays(C.dateKey(initialNow),5);
 let drawing=false,hasDrawing=false;
 const canvas=$('signature-canvas'),ctx=canvas.getContext('2d');
@@ -31,7 +31,7 @@ function resetSignature(){
   ctx.clearRect(0,0,canvas.width,canvas.height);hasDrawing=false;
 }
 function resetDownstream(){state.details=null;resetSignature();}
-function priceLabel(value){return value===null?'By proposal':money(value);}
+function priceLabel(value){return value===null?'By Proposal':money(value);}
 function updateSummary(){
   const s=serviceInfo();
   if(!s){
@@ -43,15 +43,15 @@ function updateSummary(){
   }
   $('summary-title').textContent=s.label;
   if(s.mode==='slots'){
-    const p=C.packages[internalPackage()];
-    const isGrad=state.service==='graduation';
-    $('summary-spec').textContent=isGrad?`${p.advertised} · ${participantsCount()} graduate${participantsCount()>1?'s':''}`:'90 minutes · property walkthrough';
+    if(state.service==='graduation')$('summary-spec').textContent=state.gradConfirmed?(state.package==='group'&&!state.groupConfirmed?'90 minutes · 2 – 4 graduates':`${C.packages[state.package].advertised} · ${participantsCount()} graduate${participantsCount()>1?'s':''}`):'30 min – 2 hours';
+    else $('summary-spec').textContent='90 minutes · property walkthrough';
   }else if(s.mode==='event'){
-    $('summary-spec').textContent=`${state.length/60} hour${state.length>=120?'s':''} of coverage`;
+    $('summary-spec').textContent=state.eventConfirmed?`${state.length/60} hour${state.length>=120?'s':''}`:'2 hours – All Day';
   }else{
-    $('summary-spec').textContent='Full-day coverage · by proposal';
+    $('summary-spec').textContent='All Day · By Proposal';
   }
-  $('summary-price').textContent=priceLabel(total());
+  const groupOpen=state.service==='graduation'&&state.package==='group'&&!state.groupConfirmed;
+  $('summary-price').textContent=groupOpen?'from $280':priceLabel(total());
   $('summary-date').textContent=state.date?formatDate(state.date):'Choose a date';
   const hasTime=s.mode==='wedding'?false:state.time!==null;
   $('summary-time').textContent=hasTime()?`${timeLabel(state.time)}–${timeLabel(state.time+duration())}`:'—';
@@ -60,7 +60,6 @@ function updateSummary(){
 }
 function hasTime(){const s=serviceInfo();return s.mode==='wedding'?false:state.time!==null&&Number.isInteger(state.time);}
 function updateProgress(){
-  $('change-package').disabled=state.submittedAt;
   document.querySelectorAll('[data-step]').forEach(button=>{
     const n=Number(button.dataset.step);button.disabled=n>state.maxStep||state.submittedAt;
     button.classList.toggle('completed',n<state.step);
@@ -82,15 +81,18 @@ function showStep(step, moveFocus=true){
 }
 function selectService(service,opts={}){
   if(!C.services[service])throw new Error('Choose a service');
-  if(state.service!==service){state.service=service;state.date=null;state.time=null;state.week=0;state.maxStep=0;resetDownstream();}
+  const firstTime=state.service!==service;
+  if(state.service!==service){state.service=service;state.date=null;state.time=null;state.week=0;state.maxStep=0;resetDownstream();if(service==='event')state.eventConfirmed=false;}
   document.querySelectorAll('[name=service]').forEach(el=>el.checked=el.value===service);
   document.querySelectorAll('.package.service').forEach(el=>el.classList.toggle('selected',el.dataset.service===service));
   document.querySelectorAll('.service-select').forEach(el=>el.disabled=el.closest('.package').dataset.service!==service);
   $('choose-time').disabled=false;
   $('choose-time').innerHTML=`${serviceInfo().scheduleLabel} <span aria-hidden="true">→</span>`;
   if(state.service==='graduation'){
+    if(opts.package!==undefined)state.gradConfirmed=true;
+    else if(firstTime)state.gradConfirmed=false;
     const grad=(opts.package&&C.packages[opts.package])?opts.package:'standard';
-    if(state.package!==grad){state.package=grad;state.time=null;state.maxStep=0;resetDownstream();}
+    if(state.package!==grad){state.package=grad;state.time=null;state.maxStep=0;resetDownstream();if(grad==='group')state.groupConfirmed=false;}
     $('grad-package').value=state.package;
     $('grad-price').textContent=state.package==='group'?'from $280':money(C.price(state.package,state.count));
   }
@@ -98,7 +100,13 @@ function selectService(service,opts={}){
   updateSummary();updateProgress();
 }
 document.querySelectorAll('[name=service]').forEach(el=>el.addEventListener('change',()=>selectService(el.value)));
-$('grad-package').addEventListener('change',()=>{selectService('graduation',{package:$('grad-package').value});});
+$('grad-package').addEventListener('change',()=>{state.gradConfirmed=true;selectService('graduation',{package:$('grad-package').value});});
+$('group-size').addEventListener('change',()=>{
+  const value=Number($('group-size').value);
+  if(!C.groupPrices[value])return;
+  state.count=value;state.groupConfirmed=true;state.time=null;resetDownstream();
+  renderSlots();updateSummary();updateProgress();
+});
 $('re-tier').addEventListener('change',()=>{state.tier=$('re-tier').value;selectService('realestate');});
 document.querySelectorAll('[data-step]').forEach(el=>el.addEventListener('click',()=>showStep(Number(el.dataset.step))));
 document.querySelectorAll('[data-back]').forEach(el=>el.addEventListener('click',()=>showStep(Number(el.dataset.back))));
@@ -113,6 +121,7 @@ function slotsFor(key){
 async function renderSchedule(){
   const s=serviceInfo();
   $('group-options').hidden=!(state.service==='graduation'&&state.package==='group');
+  if(state.service==='graduation'&&state.package==='group')$('group-size').value=state.groupConfirmed?String(state.count):'';
   $('session-schedule').hidden=s.mode!=='slots';
   $('event-schedule').hidden=s.mode!=='event';
   $('wedding-schedule').hidden=s.mode!=='wedding';
@@ -194,10 +203,13 @@ function renderSlots(){
 function moveWeek(change){state.week=Math.max(0,Math.min(3,state.week+change));state.date=null;state.time=null;resetDownstream();renderDates();updateProgress();}
 $('previous-week').addEventListener('click',()=>moveWeek(-1));$('next-week').addEventListener('click',()=>moveWeek(1));
 
+function updateEventLengthLabel(){
+  $('event-length-label').textContent=state.length>=540?'All day':`${state.length/60} hours`;
+}
 function renderEventSchedule(){
   const minKey=C.addDays(C.dateKey(new Date()),5);
   $('event-date').min=minKey;
-  $('event-length-label').textContent=state.length>=120?`${state.length/60} hours`:'1 hour';
+  updateEventLengthLabel();
   $('event-duration-note').textContent=`${state.length} minutes reserved · 30-minute buffers included`;
   const chosen=state.date?state.date:null;
   $('event-time-heading').textContent=chosen?formatDate(chosen,{weekday:'long',month:'short',day:'numeric'}):'Start times';
@@ -237,7 +249,8 @@ function loadEventDay(){
 }
 $('event-length').addEventListener('input',()=>{
   state.length=Number($('event-length').value);
-  $('event-length-label').textContent=state.length>=120?`${state.length/60} hours`:'1 hour';
+  state.eventConfirmed=true;
+  updateEventLengthLabel();
   if(state.date&&calendarStatus==='ready'){state.time=null;renderEventSlots();}
   updateSummary();
 });
@@ -322,7 +335,7 @@ function graduationAgreement(){
   const group=state.package==='group',p=C.packages[state.package],d=state.details;
   const content=[
     ['1. Parties and session',`This illustrative draft is between the Photographer, [legal contracting party to be confirmed], operating as Cyberflight Studios and represented by Daniel Cole Dorazio, and ${d.name}${group?', the Lead Client and booking organizer':''}. Requested session: ${formatDate(state.date,{month:'long',day:'numeric',year:'numeric'})}, ${timeLabel(state.time)}–${timeLabel(state.time+p.duration)} Charlotte time, at ${d.location}.`],
-    ['2. Included services',`${p.name}: ${p.advertised}, ${participantsCount()} graduate${participantsCount()>1?'s':''}, ${group?'individual and group portraits, ':''}and at least ${p.minimum} professionally edited high-resolution photographs${group?' across the entire group, not per person':''}. ${state.package==='standard'?'Approximately 20–25 or more images are anticipated; 90 minutes are reserved to allow the full advertised duration. ':''}${group?'Approximately 30–40 or more images are anticipated. Equal numbers per graduate or every group combination are not guaranteed. ':''}Movement between nearby spots and outfit changes take place within the session time. Additional coverage or services require written agreement.`],
+    ['2. Included services',`${p.name}: ${p.advertised}, ${participantsCount()} graduate${participantsCount()>1?'s':''}, ${group?'individual and group portraits, ':''}and at least ${p.minimum} professionally edited high-resolution photographs${group?' across the entire group, not per person':''}. ${state.package==='standard'?'Approximately 20 – 25 or more images are anticipated; 90 minutes are reserved to allow the full advertised duration. ':''}${group?'Approximately 30 – 40 or more images are anticipated. Equal numbers per graduate or every group combination are not guaranteed. ':''}Movement between nearby spots and outfit changes take place within the session time. Additional coverage or services require written agreement.`],
     ['3. Price and payment',`The selected package price is ${money(total())}. ${group?'The Lead Client is responsible for the entire amount. Reimbursement arrangements among friends are separate; other graduates do not owe the Photographer merely by being listed. ':''}No payment is collected by this form. If the request is accepted, an invoice will be sent separately through Zoho. Full payment is due by ${formatInstant(C.deadline(state.date,state.time))}, 48 hours before the requested session. Any applicable tax, travel fee, or other charge must be disclosed and accepted before a live agreement is signed; this prototype does not calculate them.`],
     ['4. Request, hold, and confirmation','A submitted request is not a confirmed booking. In the proposed live flow, a time would be held for 72 hours from successful submission while the Photographer reviews the location and availability. Written approval within that period converts the request into a confirmed reservation with the stated payment deadline. If declined or not approved within 72 hours, the hold expires and the customer is notified. An expired request must not be approved without checking availability again. Material changes to date, price, or other terms require written acceptance.'],
     ['5. Cancellation, rescheduling, and attendance','DRAFT POLICY TO COMPLETE BEFORE LAUNCH: cancellation and refund terms, rescheduling notice, late-arrival and nonattendance treatment, and consequences of missed payment have not yet been finalized. No automatic forfeiture or cancellation fee is established here. Notify the Photographer promptly about any requested change. Rescheduling depends on availability.'],

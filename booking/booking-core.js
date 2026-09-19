@@ -3,8 +3,8 @@
 (function (root) {
   const packages = {
     mini: { name: 'Grad Mini', duration: 30, advertised: '30 minutes', minimum: 10, photos: '10+ photos', price: 125 },
-    standard: { name: 'Grad Standard', duration: 90, advertised: '60–90 minutes', minimum: 20, photos: '20–25+ photos', price: 200 },
-    group: { name: 'Grad Group', duration: 90, advertised: '90 minutes', minimum: 30, photos: '30–40+ photos total' }
+    standard: { name: 'Grad Standard', duration: 90, advertised: '60 – 90 minutes', minimum: 20, photos: '20 – 25+ photos', price: 200 },
+    group: { name: 'Grad Group', duration: 90, advertised: '90 minutes', minimum: 30, photos: '30 – 40+ photos total' }
   };
   const groupPrices = { 2: 280, 3: 340, 4: 380 };
   const zone = 'America/New_York';
@@ -16,7 +16,7 @@
     event: {
       label: 'Event Coverage', mode: 'event', scheduleLabel: 'Choose a date',
       summaryImage: { src: '../images/gallery/events/events_cover.webp', alt: 'Event coverage by Cyberflight Studios' },
-      minLength: 60, maxLength: 600, startEarliest: 480, startLatest: 1410, buffer: 30,
+      minLength: 120, maxLength: 1140, startEarliest: 480, startLatest: 1410, buffer: 30,
       payLabel: 'Retainer at booking, balance 7 days before'
     },
     wedding: {
