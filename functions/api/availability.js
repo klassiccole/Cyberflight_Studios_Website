@@ -102,21 +102,33 @@ function calculateDays(start, duration, openings, busy, now) {
 }
 /* Holds that expired without approval release their calendar event here, so
    no cron is needed. Missing events (already deleted by the owner) are fine. */
+/* Keeps the database consistent with the calendar, which the owner manages.
+   Expired holds: their HOLD events are deleted and the rows marked expired.
+   Holds whose calendar event has vanished (the owner deleted it to decline)
+   are marked declined, so the slot is free for re-booking immediately. */
 async function cleanupExpiredHolds(env) {
-  const expired = await env.BOOKING_DB.prepare(`SELECT id FROM booking_requests
-    WHERE status = 'pending' AND expires_at <= unixepoch()`).all();
-  if (!expired.success || !Array.isArray(expired.results) || !expired.results.length) return;
+  const pending = await env.BOOKING_DB.prepare(`SELECT id, expires_at, created_at FROM booking_requests
+    WHERE status = 'pending'`).all();
+  if (!pending.success || !Array.isArray(pending.results) || !pending.results.length) return;
+  const now = Math.floor(Date.now() / 1000);
   const signal = AbortSignal.timeout(15000);
   const token = await accessToken(env, signal);
-  for (const row of expired.results) {
+  for (const row of pending.results) {
     if (typeof row.id !== 'string' || !row.id) continue;
     const search = await googleJSON(`https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(env.GOOGLE_BOOKINGS_CALENDAR_ID)}/events?privateExtendedProperty=requestId:${encodeURIComponent(row.id)}`, { headers: { Authorization: `Bearer ${token}` } }, signal);
-    for (const event of (Array.isArray(search.items) ? search.items : [])) {
-      if (typeof event.id !== 'string' || !event.id) continue;
-      if (typeof event.summary === 'string' && !event.summary.startsWith('HOLD')) continue;
-      await fetch(`https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(env.GOOGLE_BOOKINGS_CALENDAR_ID)}/events/${encodeURIComponent(event.id)}`, { method: 'DELETE', signal, headers: { Authorization: `Bearer ${token}` } });
+    const items = Array.isArray(search.items) ? search.items : [];
+    const holdEvent = items.find(e => typeof e.summary === 'string' && e.summary.startsWith('HOLD'));
+    if (!holdEvent) {
+      // No event on the calendar means the owner removed it: a declined request.
+      // Brand-new submissions get a grace period in case the event write lags.
+      if (Number(row.created_at) < Math.floor(Date.now() / 1000) - 300) {
+        await env.BOOKING_DB.prepare(`UPDATE booking_requests SET status = 'declined', decision_at = unixepoch() WHERE id = ? AND status = 'pending'`).bind(row.id).run();
+      }
+      continue;
     }
-    await env.BOOKING_DB.prepare(`UPDATE booking_requests SET status = 'expired', decision_at = unixepoch() WHERE id = ?`).bind(row.id).run();
+    if (Number(row.expires_at) > Math.floor(Date.now() / 1000)) continue;
+    await fetch(`https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(env.GOOGLE_BOOKINGS_CALENDAR_ID)}/events/${encodeURIComponent(holdEvent.id)}`, { method: 'DELETE', signal, headers: { Authorization: `Bearer ${token}` } });
+    await env.BOOKING_DB.prepare(`UPDATE booking_requests SET status = 'expired', decision_at = unixepoch() WHERE id = ? AND status = 'pending'`).bind(row.id).run();
   }
 }
 export async function onRequest({ request, env }) {
