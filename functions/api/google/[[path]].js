@@ -1,7 +1,8 @@
 /* Cyberflight Google connection. Runs only in Cloudflare Pages Functions. */
 const SCOPES = ['openid', 'https://www.googleapis.com/auth/userinfo.email',
   'https://www.googleapis.com/auth/calendar.events.owned.readonly',
-  'https://www.googleapis.com/auth/calendar.events.freebusy'];
+  'https://www.googleapis.com/auth/calendar.events.freebusy',
+  'https://www.googleapis.com/auth/calendar.events'];
 const COOKIE = '__Host-cyberflight-oauth';
 const encoder = new TextEncoder();
 const encode = bytes => btoa(String.fromCharCode(...bytes));

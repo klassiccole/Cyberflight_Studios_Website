@@ -1,11 +1,9 @@
-/* Live graduation availability. Reads calendars and saved reservations. */
-const ZONE = 'America/New_York';
+/* Live availability. Reads Google calendars only: the calendar is the source of truth. */
+import {accessToken, googleJSON, ZONE} from '../../lib/google-auth.mjs';
 const MINUTE = 60000;
 const DURATIONS = { mini: 30, standard: 90, group: 90 };
-const encoder = new TextEncoder();
 const dateFormat = new Intl.DateTimeFormat('en-CA', { timeZone: ZONE, year: 'numeric', month: '2-digit', day: '2-digit' });
 const timeFormat = new Intl.DateTimeFormat('en-US', { timeZone: ZONE, hour: '2-digit', minute: '2-digit', hourCycle: 'h23' });
-const decode = value => Uint8Array.from(atob(value), c => c.charCodeAt(0));
 function dateKey(ms) {
   const parts = dateFormat.formatToParts(new Date(ms));
   return ['year', 'month', 'day'].map(type => parts.find(p => p.type === type).value).join('-');
@@ -31,41 +29,6 @@ function reply(body, status = 200) {
   return Response.json(body, { status, headers: {
     'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff'
   } });
-}
-async function googleJSON(url, options, signal) {
-  const result = await fetch(url, { ...options, signal, redirect: 'manual' });
-  if (!result.ok || !result.body) throw new Error(`http-${result.status}`);
-  const reader = result.body.getReader();
-  const chunks = []; let size = 0;
-  for (;;) {
-    const { value, done } = await reader.read();
-    if (done) break;
-    size += value.length;
-    if (size > 524288) { await reader.cancel(); throw new Error('response-size'); }
-    chunks.push(value);
-  }
-  const bytes = new Uint8Array(size); let offset = 0;
-  for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.length; }
-  return JSON.parse(new TextDecoder().decode(bytes));
-}
-async function accessToken(env, signal) {
-  const email = env.GOOGLE_ALLOWED_EMAIL.toLowerCase();
-  const row = await env.BOOKING_DB.prepare('SELECT encrypted_refresh_token FROM google_connections WHERE account_email = ?').bind(email).first();
-  if (!row) throw new Error('not-connected');
-  const keyBytes = decode(env.GOOGLE_TOKEN_ENCRYPTION_KEY);
-  if (keyBytes.length !== 32) throw new Error('key');
-  const key = await crypto.subtle.importKey('raw', keyBytes, 'AES-GCM', false, ['decrypt']);
-  const [version, iv, ciphertext] = row.encrypted_refresh_token.split('.');
-  if (version !== 'v1') throw new Error('key');
-  const refreshToken = new TextDecoder().decode(await crypto.subtle.decrypt({
-    name: 'AES-GCM', iv: decode(iv), additionalData: encoder.encode(`refresh:${email}`)
-  }, key, decode(ciphertext)));
-  const tokens = await googleJSON('https://oauth2.googleapis.com/token', {
-    method: 'POST', body: new URLSearchParams({ client_id: env.GOOGLE_CLIENT_ID,
-      client_secret: env.GOOGLE_CLIENT_SECRET, refresh_token: refreshToken, grant_type: 'refresh_token' })
-  }, signal);
-  if (typeof tokens.access_token !== 'string' || !tokens.access_token) throw new Error('token');
-  return tokens.access_token;
 }
 function interval(start, end) {
   // Require explicit offsets instead of interpreting a timestamp in the server timezone.
@@ -137,20 +100,24 @@ function calculateDays(start, duration, openings, busy, now) {
     return { key, slots: slots.sort((a, b) => a - b) };
   });
 }
-async function reservationWindows(db, timeMin, timeMax) {
-  // Saved intervals already include both buffers. Do not expand them again.
-  // Read the primary binding and use the database clock, as the insert guard does.
-  const result = await db.prepare(`SELECT busy_start, busy_end FROM booking_requests
-    WHERE (status = 'approved' OR (status = 'pending' AND expires_at > unixepoch()))
-      AND busy_start < ?1 AND busy_end > ?2`).bind(
-        Date.parse(timeMax) / 1000, Date.parse(timeMin) / 1000
-      ).all();
-  if (!result.success || !Array.isArray(result.results)) throw new Error('reservation-data');
-  return result.results.map(row => {
-    if (!Number.isSafeInteger(row.busy_start) || !Number.isSafeInteger(row.busy_end)
-      || row.busy_end <= row.busy_start) throw new Error('reservation-data');
-    return [row.busy_start * 1000, row.busy_end * 1000];
-  });
+/* Holds that expired without approval release their calendar event here, so
+   no cron is needed. Missing events (already deleted by the owner) are fine. */
+async function cleanupExpiredHolds(env) {
+  const expired = await env.BOOKING_DB.prepare(`SELECT id FROM booking_requests
+    WHERE status = 'pending' AND expires_at <= unixepoch()`).all();
+  if (!expired.success || !Array.isArray(expired.results) || !expired.results.length) return;
+  const signal = AbortSignal.timeout(15000);
+  const token = await accessToken(env, signal);
+  for (const row of expired.results) {
+    if (typeof row.id !== 'string' || !row.id) continue;
+    const search = await googleJSON(`https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(env.GOOGLE_BOOKINGS_CALENDAR_ID)}/events?privateExtendedProperty=requestId:${encodeURIComponent(row.id)}`, { headers: { Authorization: `Bearer ${token}` } }, signal);
+    for (const event of (Array.isArray(search.items) ? search.items : [])) {
+      if (typeof event.id !== 'string' || !event.id) continue;
+      if (typeof event.summary === 'string' && !event.summary.startsWith('HOLD')) continue;
+      await fetch(`https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(env.GOOGLE_BOOKINGS_CALENDAR_ID)}/events/${encodeURIComponent(event.id)}`, { method: 'DELETE', signal, headers: { Authorization: `Bearer ${token}` } });
+    }
+    await env.BOOKING_DB.prepare(`UPDATE booking_requests SET status = 'expired', decision_at = unixepoch() WHERE id = ?`).bind(row.id).run();
+  }
 }
 export async function onRequest({ request, env }) {
   if (request.method !== 'GET') return reply({ error: 'Method not allowed.' }, 405);
@@ -177,9 +144,10 @@ export async function onRequest({ request, env }) {
     const timeMax = new Date(midnight(addDays(start, 7)) + 120 * MINUTE).toISOString();
     stage = 'busy-calendars';
     const busy = await busyWindows(env, token, timeMin, timeMax, signal);
-    stage = 'saved-reservations';
-    const reservations = await reservationWindows(env.BOOKING_DB, timeMin, timeMax);
-    const busyAll = merge([...busy, ...reservations]);
+    stage = 'expired-holds';
+    const busyAll = merge([...busy]);
+    stage = 'expired-hold-cleanup';
+    try { await cleanupExpiredHolds(env); } catch(error) { console.error(JSON.stringify({event:'expired_cleanup_failed'})); }
     if (isEvent) {
       // Event coverage ignores opening hours; the client computes which start
       // times fit a chosen length inside these clear ranges (epoch ms).
