@@ -1,4 +1,4 @@
-/* Live graduation availability. Reads calendars; never creates a booking. */
+/* Live graduation availability. Reads calendars and saved reservations. */
 const ZONE = 'America/New_York';
 const MINUTE = 60000;
 const DURATIONS = { mini: 30, standard: 90, group: 90 };
@@ -137,17 +137,34 @@ function calculateDays(start, duration, openings, busy, now) {
     return { key, slots: slots.sort((a, b) => a - b) };
   });
 }
+async function reservationWindows(db, timeMin, timeMax) {
+  // Saved intervals already include both buffers. Do not expand them again.
+  // Read the primary binding and use the database clock, as the insert guard does.
+  const result = await db.prepare(`SELECT busy_start, busy_end FROM booking_requests
+    WHERE (status = 'approved' OR (status = 'pending' AND expires_at > unixepoch()))
+      AND busy_start < ?1 AND busy_end > ?2`).bind(
+        Date.parse(timeMax) / 1000, Date.parse(timeMin) / 1000
+      ).all();
+  if (!result.success || !Array.isArray(result.results)) throw new Error('reservation-data');
+  return result.results.map(row => {
+    if (!Number.isSafeInteger(row.busy_start) || !Number.isSafeInteger(row.busy_end)
+      || row.busy_end <= row.busy_start) throw new Error('reservation-data');
+    return [row.busy_start * 1000, row.busy_end * 1000];
+  });
+}
 export async function onRequest({ request, env }) {
   if (request.method !== 'GET') return reply({ error: 'Method not allowed.' }, 405);
   const requestId = crypto.randomUUID(); let stage = 'configuration';
   try {
     const url = new URL(request.url), now = Date.now();
     const start = url.searchParams.get('start'), packageId = url.searchParams.get('package');
-    if (!start || !/^\d{4}-\d{2}-\d{2}$/.test(start) || !Number.isFinite(Date.parse(`${start}T12:00:00Z`)) || addDays(start, 0) !== start || !Object.hasOwn(DURATIONS, packageId)) {
+    const isEvent = packageId === 'event';
+    if (!start || !/^\d{4}-\d{2}-\d{2}$/.test(start) || !Number.isFinite(Date.parse(`${start}T12:00:00Z`)) || addDays(start, 0) !== start || (!isEvent && !Object.hasOwn(DURATIONS, packageId))) {
       return reply({ error: 'Invalid date or package.' }, 400);
     }
     const today = dateKey(now);
-    if (start < today || start > addDays(today, 35)) return reply({ error: 'Date outside booking window.' }, 400);
+    const windowDays = isEvent ? 180 : 35;
+    if (start < today || start > addDays(today, windowDays)) return reply({ error: 'Date outside booking window.' }, 400);
     for (const name of ['GOOGLE_CLIENT_ID', 'GOOGLE_CLIENT_SECRET', 'GOOGLE_TOKEN_ENCRYPTION_KEY', 'GOOGLE_ALLOWED_EMAIL',
       'GOOGLE_AVAILABILITY_CALENDAR_ID', 'GOOGLE_BOOKINGS_CALENDAR_ID', 'GOOGLE_PERSONAL_CALENDAR_ID']) {
       if (typeof env[name] !== 'string' || !env[name].trim()) throw new Error('configuration');
@@ -158,13 +175,22 @@ export async function onRequest({ request, env }) {
     const token = await accessToken(env, signal);
     const timeMin = new Date(midnight(start) - 30 * MINUTE).toISOString();
     const timeMax = new Date(midnight(addDays(start, 7)) + 120 * MINUTE).toISOString();
-    stage = 'availability-calendar';
-    const openings = await openingWindows(env, token, timeMin, timeMax, signal);
     stage = 'busy-calendars';
     const busy = await busyWindows(env, token, timeMin, timeMax, signal);
+    stage = 'saved-reservations';
+    const reservations = await reservationWindows(env.BOOKING_DB, timeMin, timeMax);
+    const busyAll = merge([...busy, ...reservations]);
+    if (isEvent) {
+      // Event coverage ignores opening hours; the client computes which start
+      // times fit a chosen length inside these clear ranges (epoch ms).
+      return reply({ source: 'google', timeZone: ZONE, start, package: 'event',
+        checkedAt: new Date(now).toISOString(), busy: busyAll });
+    }
+    stage = 'availability-calendar';
+    const openings = await openingWindows(env, token, timeMin, timeMax, signal);
     stage = 'calculate';
     return reply({ source: 'google', timeZone: ZONE, start, package: packageId,
-      checkedAt: new Date(now).toISOString(), days: calculateDays(start, DURATIONS[packageId], openings, busy, now) });
+      checkedAt: new Date(now).toISOString(), days: calculateDays(start, DURATIONS[packageId], openings, busyAll, now) });
   } catch (error) {
     const message = error instanceof Error ? error.message : '';
     const safe = /^(http-\d{3}|not-connected|key|token|calendar-data|calendar-access|pagination-limit|response-size|configuration|date)$/.test(message);
