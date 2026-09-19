@@ -53,8 +53,8 @@ function updateSummary(){
   const groupOpen=state.service==='graduation'&&state.package==='group'&&!state.groupConfirmed;
   $('summary-price').textContent=groupOpen?'from $280':priceLabel(total());
   $('summary-date').textContent=state.date?formatDate(state.date):'Choose a date';
-  const hasTime=s.mode==='wedding'?false:state.time!==null;
-  $('summary-time').textContent=hasTime()?`${timeLabel(state.time)}–${timeLabel(state.time+duration())}`:'—';
+  const showTime=state.time!==null&&Number.isInteger(state.time)&&s.mode!=='wedding';
+  $('summary-time').textContent=showTime?`${timeLabel(state.time)}–${timeLabel(state.time+duration())}`:'—';
   $('summary-due').textContent=s.payLabel;
   $('summary-image').src=s.summaryImage.src;$('summary-image').alt=s.summaryImage.alt;
 }
