@@ -191,7 +191,7 @@ function renderSlots(){
   const slots=state.date?slotsFor(state.date):[];
   if(state.time!==null&&!slots.includes(state.time)){state.time=null;resetDownstream();}
   $('time-heading').textContent=state.date?formatDate(state.date,{weekday:'long',month:'short',day:'numeric'}):'Select a date above';
-  $('duration-note').textContent=apiPackage()==='mini'?'30-minute session':'90 minutes reserved';
+  $('duration-note').textContent='';
   $('slots').innerHTML=slots.length?slots.map(t=>`<button type="button" class="slot" data-time="${t}" aria-pressed="${state.time===t}">${timeLabel(t)}</button>`).join(''):'<p class="empty">No times fit this service on this date. Choose another available day.</p>';
   $('slots').querySelectorAll('button').forEach(el=>el.addEventListener('click',()=>{
     if(state.time!==Number(el.dataset.time)){state.time=Number(el.dataset.time);resetDownstream();}
