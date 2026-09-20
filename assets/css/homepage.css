@@ -413,3 +413,29 @@ opacity: 0;
 	word-break: break-word;
 }
 }
+/* Site footer on the home page: matches the shared footer styling */
+#footer .site-footer {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px 20px;
+	flex-wrap: wrap;
+	padding: 20px 0 0;
+	color: rgba(255, 255, 255, 0.6);
+	font-size: 0.85rem;
+	text-align: left;
+}
+
+#footer .site-footer-brand {
+	font-size: 0.7rem;
+	letter-spacing: 0.18em;
+}
+
+#footer .site-footer a {
+	color: inherit;
+	text-underline-offset: 5px;
+}
+
+#footer .site-footer a:hover {
+	color: #ffffff;
+}
