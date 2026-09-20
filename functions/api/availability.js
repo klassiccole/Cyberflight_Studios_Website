@@ -106,31 +106,34 @@ function calculateDays(start, duration, openings, busy, now) {
    Expired holds: their HOLD events are deleted and the rows marked expired.
    Holds whose calendar event has vanished (the owner deleted it to decline)
    are marked declined, so the slot is free for re-booking immediately. */
-async function cleanupExpiredHolds(env) {
-  const pending = await env.BOOKING_DB.prepare(`SELECT id, expires_at, created_at FROM booking_requests
-    WHERE status = 'pending'`).all();
-  if (!pending.success || !Array.isArray(pending.results) || !pending.results.length) return;
-  const now = Math.floor(Date.now() / 1000);
+/* Keeps the database consistent with the calendar. The owner manages bookings
+   by editing the Bookings Calendar directly: when an event is deleted there,
+   the saved request row is deleted too, removing all its information. Rows
+   without an event are also removed (event write failed or rolled back).
+   Fresh submissions get a short grace period before this check applies. */
+async function reconcileBookingsWithCalendar(env) {
+  const rows = await env.BOOKING_DB.prepare(`SELECT id, created_at FROM booking_requests`).all();
+  if (!rows.success || !Array.isArray(rows.results) || !rows.results.length) return;
   const signal = AbortSignal.timeout(15000);
   const token = await accessToken(env, signal);
-  for (const row of pending.results) {
+  const now = Math.floor(Date.now() / 1000);
+  for (const row of rows.results) {
     if (typeof row.id !== 'string' || !row.id) continue;
-    const search = await googleJSON(`https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(env.GOOGLE_BOOKINGS_CALENDAR_ID)}/events?privateExtendedProperty=requestId:${encodeURIComponent(row.id)}`, { headers: { Authorization: `Bearer ${token}` } }, signal);
-    const items = Array.isArray(search.items) ? search.items : [];
-    const holdEvent = items.find(e => typeof e.summary === 'string' && e.summary.startsWith('HOLD'));
-    if (!holdEvent) {
-      // No event on the calendar means the owner removed it: a declined request.
-      // Brand-new submissions get a grace period in case the event write lags.
-      if (Number(row.created_at) < Math.floor(Date.now() / 1000) - 300) {
-        await env.BOOKING_DB.prepare(`UPDATE booking_requests SET status = 'declined', decision_at = unixepoch() WHERE id = ? AND status = 'pending'`).bind(row.id).run();
-      }
+    if (Number(row.created_at) > now - 120) continue;
+    let items = null;
+    try {
+      const search = await googleJSON(`https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(env.GOOGLE_BOOKINGS_CALENDAR_ID)}/events?privateExtendedProperty=requestId:${encodeURIComponent(row.id)}`, { headers: { Authorization: `Bearer ${token}` } }, signal);
+      items = Array.isArray(search.items) ? search.items : null;
+    } catch(error) {
+      // A failed lookup must never delete a booking: skip this row.
       continue;
     }
-    if (Number(row.expires_at) > Math.floor(Date.now() / 1000)) continue;
-    await fetch(`https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(env.GOOGLE_BOOKINGS_CALENDAR_ID)}/events/${encodeURIComponent(holdEvent.id)}`, { method: 'DELETE', signal, headers: { Authorization: `Bearer ${token}` } });
-    await env.BOOKING_DB.prepare(`UPDATE booking_requests SET status = 'expired', decision_at = unixepoch() WHERE id = ? AND status = 'pending'`).bind(row.id).run();
+    if (items === null || items.length) continue;
+    await env.BOOKING_DB.prepare('DELETE FROM booking_jobs WHERE request_id=?').bind(row.id).run();
+    await env.BOOKING_DB.prepare('DELETE FROM booking_requests WHERE id=?').bind(row.id).run();
   }
 }
+
 export async function onRequest({ request, env }) {
   if (request.method !== 'GET') return reply({ error: 'Method not allowed.' }, 405);
   const requestId = crypto.randomUUID(); let stage = 'configuration';

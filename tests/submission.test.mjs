@@ -7,19 +7,42 @@ import {sha256} from '../lib/booking-input.mjs';
 
 const schema=readFileSync(new URL('../migrations/0001_booking_requests.sql',import.meta.url),'utf8');
 const now=Math.floor(Date.now()/1000);
+const calendarFixture=await (async()=>{
+  const keyBytes=crypto.getRandomValues(new Uint8Array(32));
+  const key=await crypto.subtle.importKey('raw',keyBytes,'AES-GCM',false,['encrypt']);
+  const iv=crypto.getRandomValues(new Uint8Array(12));
+  const cipher=await crypto.subtle.encrypt({name:'AES-GCM',iv,additionalData:new TextEncoder().encode('refresh:trial@example.com')},key,new TextEncoder().encode('local-fixture'));
+  const b64=bytes=>Buffer.from(bytes).toString('base64');
+  return {keyBytes,encrypted:`v1.${b64(iv)}.${b64(cipher)}`};
+})();
 const date=new Date((now+10*86400)*1000).toISOString().slice(0,10);
 const booking=()=>({package:'standard',count:2,date,time:900,details:{name:'Test Customer',email:'trial@example.com',phone:'704-555-0100',location:'UNC Charlotte campus',graduate:'Test Customer',notes:'<script>example</script>',participants:[]}});
 const signature=()=>({typedName:'Test Customer',agreementConsent:true,electronicConsent:true,promotion:'no',drawing:[[[0,0],[0.5,0.8]]]});
 function setup(options={}) {
   const sqlite=new DatabaseSync(':memory:');sqlite.exec('PRAGMA foreign_keys=ON');sqlite.exec(schema);
+  sqlite.exec(`CREATE TABLE IF NOT EXISTS google_connections (
+    account_email TEXT PRIMARY KEY, encrypted_refresh_token TEXT NOT NULL,
+    granted_scopes TEXT, connected_at INTEGER, updated_at INTEGER)`);
+  console.log('FIXTUREKEY-B64:',Buffer.from(calendarFixture.keyBytes).toString('base64').slice(0,20),'| ENCRYPTED-LEN:',calendarFixture.encrypted.length);
+  const tokenRow={encrypted_refresh_token:calendarFixture.encrypted};
   const db={prepare(sql){const statement=sqlite.prepare(sql);return {bind(...args){return {
-    async first(){return statement.get(...args)??null;},async run(){const r=statement.run(...args);return {success:true,meta:{changes:r.changes}};}
+    async first(){if(sql.includes('google_connections'))return tokenRow;return statement.get(...args)??null;},async run(){const r=statement.run(...args);return {success:true,meta:{changes:r.changes}};}
   };}};}};
   let checks=0,verifications=0;
   const handlers=createBookingHandlers({now:()=>now,
     readAvailability:async context=>{checks++;const url=new URL(context.request.url);return options.availability?.(context)??Response.json({source:'google',timeZone:'America/New_York',start:url.searchParams.get('start'),package:url.searchParams.get('package'),days:[{key:date,slots:[900,930]}]});},
     verify:async()=>{verifications++;if(options.rejectVerification)throw new Error('private verifier diagnostic');}});
-  const env={BOOKING_SUBMISSIONS_ENABLED:'true',BOOKING_ALLOWED_EMAIL:'trial@example.com',BOOKING_DB:db};
+  const env={BOOKING_SUBMISSIONS_ENABLED:'true',BOOKING_ALLOWED_EMAIL:'trial@example.com',BOOKING_DB:db,
+    GOOGLE_ALLOWED_EMAIL:'trial@example.com',GOOGLE_TOKEN_ENCRYPTION_KEY:Buffer.from(calendarFixture.keyBytes).toString('base64'),
+    GOOGLE_CLIENT_ID:'fixture',GOOGLE_CLIENT_SECRET:'fixture',GOOGLE_BOOKINGS_CALENDAR_ID:'bookings'};
+  globalThis.__eventCreates=0;
+  globalThis.__fetchToken=0;
+  globalThis.fetch=async(url,opts)=>{
+    const target=String(url);
+    if(target.includes('/token')){globalThis.__fetchToken++;return Response.json({access_token:'local-token'});}
+    if(target.includes('/bookings/events')&&opts?.method==='POST'){globalThis.__eventCreates++;return Response.json({id:'event-'+globalThis.__eventCreates});}
+    throw new Error('Unexpected fetch: '+target);
+  };
   const request=(body,path='submit',changes={})=>new Request(`https://cyberflight.studio/api/booking/${path}`,{method:'POST',headers:{'Content-Type':'application/json',Origin:'https://cyberflight.studio',...changes},body:JSON.stringify(body)});
   const context=(body,path='submit')=>({request:request(body,path),env});
   async function submission() {
@@ -41,13 +64,13 @@ test('submission stores actual inputs, typed/drawn signature, immutable agreemen
   assert.equal(row.id,receipt.requestId);assert.equal(row.expires_at-row.created_at,172800);assert.equal(row.price_cents,20000);
   assert.equal(JSON.parse(row.customer_json).email,'trial@example.com');assert.equal(JSON.parse(row.signature_json).typedName,'Test Customer');
   assert.deepEqual(JSON.parse(row.signature_json).drawing,input.signature.drawing);assert.equal(row.agreement_sha256,await sha256(row.agreement_text));
-  assert.equal(s.sqlite.prepare('SELECT kind FROM booking_jobs').get().kind,'notify_owner');assert.equal(s.checks(),1);s.sqlite.close();
+  assert.deepEqual(s.sqlite.prepare('SELECT kind FROM booking_jobs ORDER BY kind').all().map(x=>x.kind),['approve_delivery','notify_owner']);assert.equal(s.checks(),1);s.sqlite.close();
 });
 test('lost-response retry returns same ID without another verification, calendar call or job',async()=>{
   const s=setup(),input=await s.submission();const a=await(await s.handlers.submit(s.context(input))).json();
   const r=await s.handlers.submit(s.context({...input,turnstileToken:'used-token'}));assert.equal(r.status,200);
   const b=await r.json();assert.equal(a.requestId,b.requestId);assert.equal(b.replayed,true);assert.equal(s.checks(),1);assert.equal(s.verifications(),1);
-  assert.equal(s.sqlite.prepare('SELECT count(*) n FROM booking_jobs').get().n,1);s.sqlite.close();
+  assert.equal(s.sqlite.prepare('SELECT count(*) n FROM booking_jobs').get().n,2);s.sqlite.close();
 });
 test('idempotency key cannot be reused for changed signature or details',async()=>{
   const s=setup(),p=await s.submission();await s.handlers.submit(s.context(p));p.signature.typedName='Different Name';
@@ -57,7 +80,7 @@ test('simultaneous requests for overlapping slots save exactly one hold and one 
   const s=setup(),a=await s.submission(),b=await s.submission();
   const results=await Promise.all([s.handlers.submit(s.context(a)),s.handlers.submit(s.context(b))]);
   assert.deepEqual(results.map(r=>r.status).sort(),[201,409]);assert.equal(s.sqlite.prepare('SELECT count(*) n FROM booking_requests').get().n,1);
-  assert.equal(s.sqlite.prepare('SELECT count(*) n FROM booking_jobs').get().n,1);s.sqlite.close();
+  assert.equal(s.sqlite.prepare('SELECT count(*) n FROM booking_jobs').get().n,2);s.sqlite.close();
 });
 test('same-key concurrent requests converge on one receipt',async()=>{
   const s=setup(),a=await s.submission();const responses=await Promise.all([s.handlers.submit(s.context(a)),s.handlers.submit(s.context(a))]);
