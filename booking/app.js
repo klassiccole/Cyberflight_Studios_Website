@@ -420,7 +420,17 @@ $('signature-form').addEventListener('submit',async event=>{
     if(window.turnstile&&state.turnstileId!==null){window.turnstile.reset(state.turnstileId);state.turnstileToken=null;}
   }
 });
-$('nav-back').href=/[?&]service=graduation/.test(window.location.search)?'/services/graduation/':'/services/';
+// Back returns to the page the visitor came from. The static href stays as a
+// fallback for direct visits with no in-site history.
+(function(){
+  const sameOrigin=document.referrer&&new URL(document.referrer,location.href).origin===location.origin;
+  if(sameOrigin&&history.length>1){
+    $('nav-back').addEventListener('click',event=>{
+      event.preventDefault();
+      history.back();
+    });
+  }
+})();
 const params=new URLSearchParams(window.location.search);
 const requestedService=params.get('service');
 const requestedPackage=params.get('package');
