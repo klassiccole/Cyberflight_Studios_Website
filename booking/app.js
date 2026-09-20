@@ -93,7 +93,9 @@ function selectService(service,opts={}){
     $('grad-package').value=state.package;
     $('grad-price').textContent=state.package==='group'?'from $280':money(C.price(state.package,state.count));
   }
-  if(state.service==='realestate'){const tier=serviceInfo().tiers.find(t=>t.id===state.tier);$('re-tier').value=state.tier;$('re-price').textContent=(tier.id==='t3'?'from ':'')+money(tier.price);}
+  if(state.service==='realestate'){
+    if(opts.tier&&serviceInfo().tiers.some(t=>t.id===opts.tier)){state.tier=opts.tier;}
+    const tier=serviceInfo().tiers.find(t=>t.id===state.tier);$('re-tier').value=state.tier;$('re-price').textContent=(tier.id==='t3'?'from ':'')+money(tier.price);}
   updateSummary();updateProgress();
 }
 document.querySelectorAll('[name=service]').forEach(el=>el.addEventListener('change',()=>selectService(el.value)));
@@ -422,8 +424,9 @@ $('nav-back').href=/[?&]service=graduation/.test(window.location.search)?'/servi
 const params=new URLSearchParams(window.location.search);
 const requestedService=params.get('service');
 const requestedPackage=params.get('package');
+const requestedTier=params.get('tier');
 if(requestedService&&C.services[requestedService]){
-  selectService(requestedService,{package:requestedPackage});
-  if(requestedService==='graduation'&&C.packages[requestedPackage])showStep(1,false);
+  selectService(requestedService,{package:requestedPackage,tier:requestedTier});
+  if((requestedService==='graduation'&&C.packages[requestedPackage])||(requestedService==='realestate'&&serviceInfo().tiers.some(t=>t.id===requestedTier)))showStep(1,false);
 }
 updateSummary();updateProgress();
