@@ -321,10 +321,6 @@ function renderDetailsMode(){
   $('graduate-name').disabled=grad&&state.package==='group';
   const useAddress=state.service!=='graduation';
   $('grad-location-group').hidden=useAddress;
-  // Hidden required fields must be disabled, or form validation blocks the
-  // submit silently ("not focusable") because they can't be filled.
-  $('location').required=!useAddress;
-  $('location').disabled=useAddress;
   $('address-field').hidden=!useAddress;
   $('address').required=useAddress;
   $('address-label').firstChild.textContent=state.service==='realestate'?'Property address ':'Venue or location ';
