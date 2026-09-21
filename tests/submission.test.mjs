@@ -5,7 +5,7 @@ import {readFileSync} from 'node:fs';
 import {createBookingHandlers,verifyTurnstile} from '../lib/booking-submit.mjs';
 import {sha256} from '../lib/booking-input.mjs';
 
-const schema=readFileSync(new URL('../migrations/0001_booking_requests.sql',import.meta.url),'utf8');
+const schema=readFileSync(new URL('../migrations/0002_booking_services.sql',import.meta.url),'utf8');
 const now=Math.floor(Date.now()/1000);
 const calendarFixture=await (async()=>{
   const keyBytes=crypto.getRandomValues(new Uint8Array(32));

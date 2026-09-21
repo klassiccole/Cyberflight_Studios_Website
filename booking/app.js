@@ -215,12 +215,12 @@ function renderEventSchedule(){
   const minKey=C.addDays(C.dateKey(new Date()),5);
   $('event-date').min=minKey;
   updateEventLengthLabel();
-  $('event-duration-note').textContent=`${state.length} minutes reserved · 30-minute buffers included`;
+  $('event-duration-note').textContent='';
   const chosen=state.date?state.date:null;
   $('event-time-heading').textContent=chosen?formatDate(chosen,{weekday:'long',month:'short',day:'numeric'}):'Start times';
   const ready=chosen&&calendarStatus==='ready'&&calendarData?.start===chosen;
   if(!ready){
-    $('event-slots').innerHTML=chosen?'<p class="empty">Live event scheduling opens with the next update. For now, pick your date and length and submit — I’ll confirm times with you directly.</p>':'<p class="empty">Pick a date to see start times.</p>';
+    $('event-slots').innerHTML=chosen?'<p class="empty">No clear window fits that length on this date. Try another date or a shorter length.</p>':'<p class="empty">Pick a date to see start times.</p>';
     $('event-note').textContent='';
     $('enter-details').disabled=!chosen;
     return;
@@ -248,9 +248,33 @@ $('event-date').addEventListener('change',()=>{
   loadEventDay();
 });
 function loadEventDay(){
-  calendarStatus='pending';calendarData=null;$('time-error').textContent='';
-  resetDownstream();
-  renderEventSchedule();updateProgress();updateSummary();
+  const chosen=state.date;
+  if(!chosen){calendarStatus='idle';calendarData=null;renderEventSchedule();return;}
+  const attempt=++calendarRequest;
+  calendarController?.abort();
+  const controller=new AbortController();calendarController=controller;
+  calendarStatus='loading';calendarData=null;$('time-error').textContent='';
+  resetDownstream();renderEventSchedule();updateProgress();
+  const timer=window.setTimeout(()=>controller.abort(),25000);
+  (async()=>{
+    try{
+      const query=new URLSearchParams({start:chosen,package:'event'});
+      const response=await fetch(`/api/availability?${query}`,{signal:controller.signal,cache:'no-store'});
+      if(!response.ok)throw new Error('Availability request failed');
+      const data=await response.json();
+      if(data.source!=='google'||data.timeZone!==C.zone||data.start!==chosen||data.package!=='event'||!Array.isArray(data.busy)||!data.busy.every(p=>Array.isArray(p)&&p.length===2&&p.every(n=>Number.isFinite(n))))throw new Error('Unexpected availability response');
+      if(attempt!==calendarRequest)return;
+      calendarData={package:'event',busy:data.busy,start:chosen,loadedAt:Date.now()};
+      calendarStatus='ready';
+    }catch{
+      if(attempt!==calendarRequest)return;
+      calendarStatus='error';calendarData=null;
+      $('time-error').textContent='Availability could not be loaded. Please try again or contact us.';
+    }finally{
+      window.clearTimeout(timer);
+      if(attempt===calendarRequest){renderEventSchedule();updateProgress();}
+    }
+  })();
 }
 $('event-length').addEventListener('input',()=>{
   state.length=Number($('event-length').value);
@@ -362,11 +386,13 @@ async function loadServerAgreement(){
   }
 }
 function submissionBooking(){
-  return {package:apiPackage(),count:state.service==='graduation'&&state.package==='group'?state.count:2,
-    date:state.date,time:state.time,
-    details:{name:state.details.name,email:state.details.email,phone:state.details.phone,
+  const details={name:state.details.name,email:state.details.email,phone:state.details.phone,
       location:state.details.location,graduate:state.details.graduate,
-      notes:state.details.notes,participants:state.details.participants}};
+      notes:state.details.notes,participants:state.details.participants};
+  if(state.service==='event')return {package:'event',service:'event',count:1,length:state.length,
+    date:state.date,time:state.time,details};
+  return {package:apiPackage(),service:state.service,count:state.service==='graduation'&&state.package==='group'?state.count:2,
+    date:state.date,time:state.time,details};
 }
 function ensureTurnstile(){
   if(state.turnstileId!==null)return;
@@ -401,17 +427,17 @@ $('signature-form').addEventListener('submit',async event=>{
   const s=serviceInfo();
   if(state.service!=='graduation'){$('sign-error').textContent='Submissions for this service open with the next update. Contact us meanwhile.';return;}
   if(state.time===null||!slotsFor(state.date).includes(state.time)){$('sign-error').textContent='Please choose a new available time before continuing.';return;}
-  if(!state.agreement){$('sign-error').textContent='The agreement has not loaded yet. Give it a moment and try again.';return;}
+  if(state.service!=='event'&&!state.agreement){$('sign-error').textContent='The agreement has not loaded yet. Give it a moment and try again.';return;}
   if(!state.turnstileToken&&window.turnstile){$('sign-error').textContent='Complete the verification checkbox before submitting.';return;}
   button.disabled=true;$('sign-error').textContent='';
   try{
     const response=await fetch('/api/booking/submit',{method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({booking:submissionBooking(),
+      body:JSON.stringify(Object.assign({booking:submissionBooking(),
         signature:{typedName:$('signature-name').value.trim(),agreementConsent:true,electronicConsent:true,
           promotion:document.querySelector('[name=promotion]:checked')?.value??null,drawing:drawStrokes.slice(-100)},
-        agreementVersion:state.agreement.version,agreementHash:state.agreement.hash,
-        submissionKey:state.submissionKey||crypto.randomUUID(),turnstileToken:state.turnstileToken||undefined})});
+        submissionKey:state.submissionKey||crypto.randomUUID(),turnstileToken:state.turnstileToken||undefined},
+        state.service==='event'?{}:{agreementVersion:state.agreement.version,agreementHash:state.agreement.hash}))});
     const receipt=await response.json().catch(()=>({}));
     if(response.status===201||(response.status===200&&receipt.replayed)){
       location.href=`/booking/confirmed/?id=${encodeURIComponent(receipt.requestId)}&expires=${encodeURIComponent(receipt.expiresAt)}`;
