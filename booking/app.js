@@ -444,7 +444,8 @@ const SUBMIT_ERRORS={'time_unavailable':'That time was just taken. Go back and c
   'invalid_submission_key':'Something went wrong with the request. Refresh the page and try again.',
   'request_too_large':'The drawn signature is too complex. Clear it and submit with your typed name.',
   'booking_not_open_yet':'Booking requests are not open yet. Contact us directly.',
-  'booking_overlap':'That time was just taken. Go back and choose another available time.'};
+  'booking_overlap':'That time was just taken. Go back and choose another available time.',
+  'calendar_unavailable':'We could not reach the booking calendar. Try again in a minute — if it keeps failing, contact us directly.'};
 $('signature-form').addEventListener('submit',async event=>{
   event.preventDefault();
   const button=$('signature-form').querySelector('.primary');
