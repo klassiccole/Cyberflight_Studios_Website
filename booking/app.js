@@ -74,8 +74,6 @@ function updateProgress(){
 }
 function showStep(step, moveFocus=true){
   const signedFlow=state.service==='graduation'||state.service==='realestate';
-  const signItem=$('step-sign-item');
-  if(signItem)signItem.hidden=!signedFlow;
   state.step=step;state.maxStep=Math.max(state.maxStep,step);
   document.querySelectorAll('[data-panel]').forEach(el=>el.hidden=Number(el.dataset.panel)!==step);
   if(step===1)renderSchedule();
