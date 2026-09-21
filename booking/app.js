@@ -314,7 +314,7 @@ $('enter-details').addEventListener('click',()=>{
 function renderDetailsMode(){
   const grad=state.service==='graduation';
   const event=state.service==='event';
-  $('details-submit').innerHTML=event?'Book It <span aria-hidden="true">→</span>':'Review agreement <span aria-hidden="true">→</span>';
+  $('details-submit').innerHTML=(event||state.service==='wedding')?'Book It <span aria-hidden="true">→</span>':'Review agreement <span aria-hidden="true">→</span>';
   if(event){$('details-turnstile-box').hidden=false;ensureTurnstile('details-turnstile-box');state.submissionKey=state.submissionKey||crypto.randomUUID();}
   $('participants-field').hidden=!(grad&&state.package==='group');
   $('individual-graduate-field').hidden=!grad||state.package==='group';
@@ -365,7 +365,7 @@ $('details-form').addEventListener('submit',event=>{
   const location=grad?($('location').value==='Another Charlotte-area location'?$('custom-location').value.trim():$('location').value):$('address').value.trim();
   const d={name:$('client-name').value.trim(),email:$('client-email').value.trim(),phone:$('client-phone').value.trim(),location,graduate:$('graduate-name').value.trim()||$('client-name').value.trim(),notes:$('notes').value.trim(),participants:[...document.querySelectorAll('.participant-row')].map(row=>({name:row.querySelector('.participant-name').value.trim(),email:row.querySelector('.participant-email').value.trim()}))};
   if(JSON.stringify(d)!==JSON.stringify(state.details))resetSignature();state.details=d;
-  if(state.service==='event'){submitEventBooking();return;}
+  if(state.service==='event'||state.service==='wedding'){submitEventBooking();return;}
   showStep(3);
 });
 
@@ -417,6 +417,8 @@ function submissionBooking(){
       notes:state.details.notes,participants:state.details.participants};
   if(state.service==='event')return {package:'event',service:'event',count:1,length:state.length,
     date:state.date,time:state.time,details};
+  if(state.service==='wedding')return {package:'wedding',service:'wedding',count:1,
+    date:state.date,details};
   return {package:apiPackage(),service:state.service,count:state.service==='graduation'&&state.package==='group'?state.count:2,
     date:state.date,time:state.time,details};
 }
@@ -457,10 +459,10 @@ $('signature-form').addEventListener('submit',async event=>{
   if(!$('signature-name').value.trim()){$('signature-name').setCustomValidity('Please type your full name.');$('signature-name').reportValidity();return;}
   if(!$('signature-form').reportValidity())return;
   const s=serviceInfo();
-  if(state.service==='wedding'){$('sign-error').textContent='Submissions for this service open with the next update. Contact us meanwhile.';return;}
+
   if(s.mode==='slots'&&(state.time===null||!slotsFor(state.date).includes(state.time))){$('sign-error').textContent='Please choose a new available time before continuing.';return;}
   if(s.mode==='event'&&state.time===null){$('sign-error').textContent='Please choose a start time before continuing.';return;}
-  if(state.service!=='event'&&!state.agreement){$('sign-error').textContent='The agreement has not loaded yet. Give it a moment and try again.';return;}
+  if(!['event','wedding'].includes(state.service)&&!state.agreement){$('sign-error').textContent='The agreement has not loaded yet. Give it a moment and try again.';return;}
   if(!state.turnstileToken&&window.turnstile){$('sign-error').textContent='Complete the verification checkbox before submitting.';return;}
   button.disabled=true;$('sign-error').textContent='';
   try{
