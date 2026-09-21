@@ -331,8 +331,8 @@ $('address').disabled=false;
 $('details-form').addEventListener('input',()=>{state.details=null;state.maxStep=2;resetSignature();updateProgress();});
 async function submitEventBooking(){
   const button=$('details-submit');
-  if(!state.turnstileToken&&window.turnstile){$('time-error').textContent='Complete the verification box before submitting.';return;}
-  $('time-error').textContent='';
+  if(!state.turnstileToken&&window.turnstile){$('details-error').textContent='Complete the verification box before submitting.';return;}
+  $('details-error').textContent='';
   button.disabled=true;
   try{
     const response=await fetch('/api/booking/submit',{method:'POST',
@@ -344,9 +344,9 @@ async function submitEventBooking(){
       location.href=`/booking/confirmed/?id=${encodeURIComponent(receipt.requestId)}&expires=${encodeURIComponent(receipt.expiresAt)}`;
       return;
     }
-    $('time-error').textContent=SUBMIT_ERRORS[receipt.error]||'The request could not be submitted. Try again or contact us.';
+    $('details-error').textContent=SUBMIT_ERRORS[receipt.error]||'The request could not be submitted. Try again or contact us.';
   }catch{
-    $('time-error').textContent='The request could not be submitted. Check your connection and try again, or contact us.';
+    $('details-error').textContent='The request could not be submitted. Check your connection and try again, or contact us.';
   }finally{
     button.disabled=false;
     if(window.turnstile&&state.turnstileId!==null){window.turnstile.reset(state.turnstileId);state.turnstileToken=null;}

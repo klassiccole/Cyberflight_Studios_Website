@@ -9,9 +9,9 @@
   <link rel="icon" href="../images/logo.webp">
   <link rel="stylesheet" href="../assets/css/fontawesome-all.min.css">
   <link rel="stylesheet" href="../assets/css/site-shell.css">
-  <link rel="stylesheet" href="booking.css?v=16">
-  <script defer src="booking-core.js?v=16"></script>
-  <script defer src="app.js?v=16"></script>
+  <link rel="stylesheet" href="booking.css?v=17">
+  <script defer src="booking-core.js?v=17"></script>
+  <script defer src="app.js?v=17"></script>
 </head>
 <body class="cf-booking">
   <main id="main">
@@ -89,7 +89,8 @@
               Your location will be reviewed before your session is confirmed.
             </p>
             <div class="turnstile-box" id="details-turnstile-box" hidden></div>
-            <div class="panel-actions"><button class="secondary" type="button" data-back="1">Back</button><button class="primary" type="submit" id="details-submit">Review agreement <span aria-hidden="true">→</span></button></div>
+            <p class="form-error" id="details-error" role="alert"></p>
+            <div class="panel-actions"><button class="secondary" type="button" data-back="1">Back</button><button class="primary" type="submit" id="details-submit">Review agreement <span aria-hidden="true">→</span></button></div><button class="secondary" type="button" data-back="1">Back</button><button class="primary" type="submit" id="details-submit">Review agreement <span aria-hidden="true">→</span></button></div>
           </form>
         </section>
         <section class="panel" data-panel="3" aria-labelledby="heading-3" hidden>
