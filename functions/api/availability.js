@@ -112,6 +112,7 @@ function calculateDays(start, duration, openings, busy, now) {
    without an event are also removed (event write failed or rolled back).
    Fresh submissions get a short grace period before this check applies. */
 async function reconcileBookingsWithCalendar(env) {
+  console.error(JSON.stringify({event:'RECONCILE_CALLED'}));
   const rows = await env.BOOKING_DB.prepare(`SELECT id, created_at FROM booking_requests`).all();
   if (!rows.success || !Array.isArray(rows.results) || !rows.results.length) return;
   const signal = AbortSignal.timeout(15000);
@@ -162,7 +163,7 @@ export async function onRequest({ request, env }) {
     stage = 'expired-holds';
     const busyAll = merge([...busy]);
     stage = 'expired-hold-cleanup';
-    try { await cleanupExpiredHolds(env); } catch(error) { console.error(JSON.stringify({event:'expired_cleanup_failed'})); }
+    try { await reconcileBookingsWithCalendar(env); } catch(error) { console.error(JSON.stringify({event:'reconcile_failed',reason:String(error&&error.message||'unknown').slice(0,80)})); }
     if (isEvent) {
       // Event coverage ignores opening hours; the client computes which start
       // times fit a chosen length inside these clear ranges (epoch ms).
