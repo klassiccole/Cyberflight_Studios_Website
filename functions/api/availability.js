@@ -123,7 +123,7 @@ async function reconcileBookingsWithCalendar(env) {
     if (Number(row.created_at) > now - 120) continue;
     let items = null;
     try {
-      const search = await googleJSON(`https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(env.GOOGLE_BOOKINGS_CALENDAR_ID)}/events?privateExtendedProperty=requestId:${encodeURIComponent(row.id)}`, { headers: { Authorization: `Bearer ${token}` } }, signal);
+      const search = await googleJSON(`https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(env.GOOGLE_BOOKINGS_CALENDAR_ID)}/events?privateExtendedProperty=requestId=${encodeURIComponent(row.id)}`, { headers: { Authorization: `Bearer ${token}` } }, signal);
       items = Array.isArray(search.items) ? search.items : null;
     } catch(error) {
       // A failed lookup must never delete a booking: skip this row.
