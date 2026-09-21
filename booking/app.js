@@ -65,13 +65,7 @@ function updateSummary(){
   $('summary-image').src=s.summaryImage.src;$('summary-image').alt=s.summaryImage.alt;
 }
 function hasTime(){const s=serviceInfo();return s.mode==='wedding'?false:state.time!==null&&Number.isInteger(state.time);}
-function updateProgress(){
-  document.querySelectorAll('[data-step]').forEach(button=>{
-    const n=Number(button.dataset.step);button.disabled=n>state.maxStep||state.submittedAt;
-    button.classList.toggle('completed',n<state.step);
-    if(n===state.step)button.setAttribute('aria-current','step');else button.removeAttribute('aria-current');
-  });
-}
+function updateProgress(){}
 function showStep(step, moveFocus=true){
   const signedFlow=state.service==='graduation'||state.service==='realestate';
   state.step=step;state.maxStep=Math.max(state.maxStep,step);
@@ -82,7 +76,6 @@ function showStep(step, moveFocus=true){
   updateProgress();updateSummary();
   if(moveFocus){
     $(`heading-${step}`).focus({preventScroll:true});
-    document.querySelector('.steps').scrollIntoView({behavior:'auto',block:'start'});
   }
 }
 function selectService(service,opts={}){
