@@ -420,16 +420,21 @@ $('signature-form').addEventListener('submit',async event=>{
     if(window.turnstile&&state.turnstileId!==null){window.turnstile.reset(state.turnstileId);state.turnstileToken=null;}
   }
 });
-// Back returns to the page the visitor came from. The static href stays as a
-// fallback for direct visits with no in-site history.
+// Within the booking flow the arrow steps back through the form; from the
+// first step it leaves the page, returning to wherever the visitor came from.
 (function(){
-  const sameOrigin=document.referrer&&new URL(document.referrer,location.href).origin===location.origin;
-  if(sameOrigin&&history.length>1){
-    $('nav-back').addEventListener('click',event=>{
+  $('nav-back').addEventListener('click',event=>{
+    if(state.step>0){
+      event.preventDefault();
+      showStep(state.step-1);
+      return;
+    }
+    const sameOrigin=document.referrer&&new URL(document.referrer,location.href).origin===location.origin;
+    if(sameOrigin&&history.length>1){
       event.preventDefault();
       history.back();
-    });
-  }
+    }
+  });
 })();
 const params=new URLSearchParams(window.location.search);
 const requestedService=params.get('service');
