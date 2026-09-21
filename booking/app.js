@@ -425,8 +425,9 @@ $('signature-form').addEventListener('submit',async event=>{
   if(!$('signature-name').value.trim()){$('signature-name').setCustomValidity('Please type your full name.');$('signature-name').reportValidity();return;}
   if(!$('signature-form').reportValidity())return;
   const s=serviceInfo();
-  if(state.service!=='graduation'){$('sign-error').textContent='Submissions for this service open with the next update. Contact us meanwhile.';return;}
-  if(state.time===null||!slotsFor(state.date).includes(state.time)){$('sign-error').textContent='Please choose a new available time before continuing.';return;}
+  if(state.service==='wedding'){$('sign-error').textContent='Submissions for this service open with the next update. Contact us meanwhile.';return;}
+  if(s.mode==='slots'&&(state.time===null||!slotsFor(state.date).includes(state.time))){$('sign-error').textContent='Please choose a new available time before continuing.';return;}
+  if(s.mode==='event'&&state.time===null){$('sign-error').textContent='Please choose a start time before continuing.';return;}
   if(state.service!=='event'&&!state.agreement){$('sign-error').textContent='The agreement has not loaded yet. Give it a moment and try again.';return;}
   if(!state.turnstileToken&&window.turnstile){$('sign-error').textContent='Complete the verification checkbox before submitting.';return;}
   button.disabled=true;$('sign-error').textContent='';
