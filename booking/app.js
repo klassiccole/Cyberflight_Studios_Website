@@ -7,6 +7,12 @@ const timeLabel=minutes=>`${Math.floor(minutes/60)%12||12}:${String(minutes%60).
 const formatDate=(key,options={month:'short',day:'numeric',weekday:'short'})=>new Intl.DateTimeFormat('en-US',{...options,timeZone:'UTC'}).format(new Date(key+'T12:00:00Z'));
 const formatInstant=date=>new Intl.DateTimeFormat('en-US',{timeZone:C.zone,month:'short',day:'numeric',hour:'numeric',minute:'2-digit',timeZoneName:'short'}).format(date);
 const initialNow=new Date();
+// Clicking anywhere on a date box opens the browser's calendar picker
+// (showPicker is unsupported in some browsers, which fall back to default
+// click behavior).
+['event-date','wedding-date'].forEach(id=>{
+  $(id).addEventListener('click',()=>{try{$(id).showPicker();}catch{/* older browsers open the picker natively */}});
+});
 const state={step:0,maxStep:0,service:null,package:'standard',count:2,tier:'t1',length:120,date:null,time:null,week:0,details:null,submittedAt:false,groupConfirmed:false,eventConfirmed:false,agreement:null,submissionKey:null,turnstileToken:null,turnstileId:null,turnstileWait:null,drawStrokes:[]};
 const firstDay=C.addDays(C.dateKey(initialNow),5);
 let drawing=false,hasDrawing=false;const drawStrokes=state.drawStrokes;

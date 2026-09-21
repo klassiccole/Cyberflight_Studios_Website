@@ -484,3 +484,7 @@ body.cf-booking .package-top { align-items:baseline }
 body.cf-booking .range-field input[type=range] { width:100%;accent-color:var(--accent);min-height:0;padding:8px 0 }
 body.cf-booking .range-field .range-ends { display:flex;justify-content:space-between;font-size:.8rem;color:var(--muted) }
 body.cf-booking input[type=date] { color-scheme:dark }
+
+/* Whole date box opens the picker: clicks pass through to the input */
+body.cf-booking #event-date,
+body.cf-booking #wedding-date { cursor:pointer }
