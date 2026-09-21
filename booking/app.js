@@ -73,11 +73,14 @@ function updateProgress(){
   });
 }
 function showStep(step, moveFocus=true){
+  const signedFlow=state.service==='graduation'||state.service==='realestate';
+  const signItem=$('step-sign-item');
+  if(signItem)signItem.hidden=!signedFlow;
   state.step=step;state.maxStep=Math.max(state.maxStep,step);
   document.querySelectorAll('[data-panel]').forEach(el=>el.hidden=Number(el.dataset.panel)!==step);
   if(step===1)renderSchedule();
   if(step===2)renderDetailsMode();
-  if(step===3){renderReview();loadServerAgreement();ensureTurnstile();}
+  if(step===3){renderReview();if(state.service!=='event')loadServerAgreement();ensureTurnstile();}
   updateProgress();updateSummary();
   if(moveFocus){
     $(`heading-${step}`).focus({preventScroll:true});
@@ -319,6 +322,9 @@ $('enter-details').addEventListener('click',()=>{
 
 function renderDetailsMode(){
   const grad=state.service==='graduation';
+  const event=state.service==='event';
+  $('details-submit').innerHTML=event?'Book It <span aria-hidden="true">→</span>':'Review agreement <span aria-hidden="true">→</span>';
+  if(event){$('details-turnstile-box').hidden=false;ensureTurnstile('details-turnstile-box');state.submissionKey=state.submissionKey||crypto.randomUUID();}
   $('participants-field').hidden=!(grad&&state.package==='group');
   $('individual-graduate-field').hidden=!grad||state.package==='group';
   $('graduate-name').disabled=grad&&state.package==='group';
@@ -332,6 +338,29 @@ function renderDetailsMode(){
 }
 $('address').disabled=false;
 $('details-form').addEventListener('input',()=>{state.details=null;state.maxStep=2;resetSignature();updateProgress();});
+async function submitEventBooking(){
+  const button=$('details-submit');
+  if(!state.turnstileToken&&window.turnstile){$('time-error').textContent='Complete the verification box before submitting.';return;}
+  $('time-error').textContent='';
+  button.disabled=true;
+  try{
+    const response=await fetch('/api/booking/submit',{method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({booking:submissionBooking(),
+        submissionKey:state.submissionKey||crypto.randomUUID(),turnstileToken:state.turnstileToken||undefined})});
+    const receipt=await response.json().catch(()=>({}));
+    if(response.status===201||(response.status===200&&receipt.replayed)){
+      location.href=`/booking/confirmed/?id=${encodeURIComponent(receipt.requestId)}&expires=${encodeURIComponent(receipt.expiresAt)}`;
+      return;
+    }
+    $('time-error').textContent=SUBMIT_ERRORS[receipt.error]||'The request could not be submitted. Try again or contact us.';
+  }catch{
+    $('time-error').textContent='The request could not be submitted. Check your connection and try again, or contact us.';
+  }finally{
+    button.disabled=false;
+    if(window.turnstile&&state.turnstileId!==null){window.turnstile.reset(state.turnstileId);state.turnstileToken=null;}
+  }
+}
 $('details-form').addEventListener('submit',event=>{
   event.preventDefault();
   const textInputs=[...$('details-form').querySelectorAll('input[required]:not([type=email])')];
@@ -340,7 +369,9 @@ $('details-form').addEventListener('submit',event=>{
   const grad=state.service==='graduation';
   const location=grad?($('location').value==='Another Charlotte-area location'?$('custom-location').value.trim():$('location').value):$('address').value.trim();
   const d={name:$('client-name').value.trim(),email:$('client-email').value.trim(),phone:$('client-phone').value.trim(),location,graduate:$('graduate-name').value.trim()||$('client-name').value.trim(),notes:$('notes').value.trim(),participants:[...document.querySelectorAll('.participant-row')].map(row=>({name:row.querySelector('.participant-name').value.trim(),email:row.querySelector('.participant-email').value.trim()}))};
-  if(JSON.stringify(d)!==JSON.stringify(state.details))resetSignature();state.details=d;showStep(3);
+  if(JSON.stringify(d)!==JSON.stringify(state.details))resetSignature();state.details=d;
+  if(state.service==='event'){submitEventBooking();return;}
+  showStep(3);
 });
 
 function fact(label,value){return `<div><dt>${escapeHTML(label)}</dt><dd>${escapeHTML(value)}</dd></div>`;}
@@ -394,9 +425,9 @@ function submissionBooking(){
   return {package:apiPackage(),service:state.service,count:state.service==='graduation'&&state.package==='group'?state.count:2,
     date:state.date,time:state.time,details};
 }
-function ensureTurnstile(){
+function ensureTurnstile(container){
   if(state.turnstileId!==null)return;
-  const render=()=>{state.turnstileId=window.turnstile.render($('turnstile-box'),{sitekey:'0x4AAAAAAETDlK6Z2eQKAY43',
+  const render=()=>{state.turnstileId=window.turnstile.render($(typeof container==='string'?container:'turnstile-box'),{sitekey:'0x4AAAAAAETDlK6Z2eQKAY43',
     action:'booking_submit',
     callback:token=>{state.turnstileToken=token;},
     'expired-callback':()=>{state.turnstileToken=null;},
