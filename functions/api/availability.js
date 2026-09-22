@@ -120,7 +120,6 @@ async function reconcileBookingsWithCalendar(env) {
   const now = Math.floor(Date.now() / 1000);
   for (const row of rows.results) {
     if (typeof row.id !== 'string' || !row.id) continue;
-    if (Number(row.created_at) > now - 120) continue;
     let items = null;
     try {
       const search = await googleJSON(`https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(env.GOOGLE_BOOKINGS_CALENDAR_ID)}/events?privateExtendedProperty=requestId=${encodeURIComponent(row.id)}`, { headers: { Authorization: `Bearer ${token}` } }, signal);
