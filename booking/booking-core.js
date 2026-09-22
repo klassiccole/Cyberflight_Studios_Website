@@ -22,7 +22,7 @@
     wedding: {
       label: 'Wedding', mode: 'wedding', scheduleLabel: 'Choose a date',
       summaryImage: { src: '../images/services/photography_service_header.webp', alt: 'Wedding photography placeholder for Cyberflight Studios' },
-      minDaysAhead: 6, maxDaysAhead: 540,
+      minDaysAhead: 7, maxDaysAhead: 540,
       payLabel: 'Retainer at signing, balance 2 weeks before'
     },
     realestate: {
