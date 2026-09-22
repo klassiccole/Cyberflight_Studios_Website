@@ -112,7 +112,6 @@ function calculateDays(start, duration, openings, busy, now) {
    without an event are also removed (event write failed or rolled back).
    Fresh submissions get a short grace period before this check applies. */
 async function reconcileBookingsWithCalendar(env) {
-  console.error(JSON.stringify({event:'RECONCILE_CALLED'}));
   const rows = await env.BOOKING_DB.prepare(`SELECT id, created_at FROM booking_requests`).all();
   if (!rows.success || !Array.isArray(rows.results) || !rows.results.length) return;
   const signal = AbortSignal.timeout(15000);
