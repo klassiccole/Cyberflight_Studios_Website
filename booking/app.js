@@ -315,7 +315,7 @@ function renderDetailsMode(){
   const grad=state.service==='graduation';
   const event=state.service==='event';
   $('details-submit').innerHTML=(event||state.service==='wedding')?'Book It <span aria-hidden="true">→</span>':'Review agreement <span aria-hidden="true">→</span>';
-  if(event){$('details-turnstile-box').hidden=false;ensureTurnstile('details-turnstile-box');state.submissionKey=state.submissionKey||crypto.randomUUID();}
+  if(event||state.service==='wedding'){$('details-turnstile-box').hidden=false;ensureTurnstile('details-turnstile-box');state.submissionKey=state.submissionKey||crypto.randomUUID();}
   $('participants-field').hidden=!(grad&&state.package==='group');
   $('individual-graduate-field').hidden=!grad||state.package==='group';
   $('graduate-name').disabled=grad&&state.package==='group';
