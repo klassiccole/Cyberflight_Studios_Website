@@ -391,7 +391,7 @@ function renderReview(){
   $('group-promotion-note').hidden=!(state.service==='graduation'&&state.package==='group');
 }
 async function loadServerAgreement(){
-  if(state.service!=='graduation'){
+  if(!['graduation','realestate'].includes(state.service)){
     state.agreement=null;
     $('agreement-title').textContent=`${serviceInfo().label} services agreement`;
     $('agreement-content').innerHTML='<p class="draft-notice"><strong>Submissions for this service open with the next update.</strong> Contact us meanwhile and I will set everything up with you directly.</p>';
