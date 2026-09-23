@@ -1,0 +1,15 @@
+{
+  "name": "cyberflight-website",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler pages dev . --port 8788",
+    "test": "node --test tests/*.test.mjs",
+    "db:migrate:local": "wrangler d1 migrations apply BOOKING_DB --local",
+    "db:migrate:remote": "wrangler d1 migrations apply BOOKING_DB --remote",
+    "secrets:sync": "node scripts/sync-prod-secrets.mjs"
+  },
+  "devDependencies": {
+    "wrangler": "^4.0.0"
+  }
+}
