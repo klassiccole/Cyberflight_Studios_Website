@@ -10,7 +10,7 @@ Official website for **Cyberflight Studios LLC**, a photography, videography, dr
 
 This repository contains the source code and web assets for the Cyberflight Studios website.
 
-The site is built as a lightweight static website using HTML, CSS, and JavaScript. It is maintained through GitHub and currently hosted using GitHub Pages.
+The site is built as a lightweight static website using HTML, CSS, and JavaScript. It is maintained through GitHub and currently hosted using Cloudflare.
 
 The website originally began with the **Dimension** template by HTML5 UP but has since been substantially restructured and customized for Cyberflight Studios. The original single-page, hash-based layout has been replaced with a multi-page architecture using dedicated URLs for improved navigation, maintainability, performance, and search engine indexing.
 
