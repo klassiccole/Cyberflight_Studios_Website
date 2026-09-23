@@ -348,7 +348,7 @@ async function submitEventBooking(){
       location.href=`/booking/confirmed/?id=${encodeURIComponent(receipt.requestId)}&expires=${encodeURIComponent(receipt.expiresAt)}`;
       return;
     }
-    $('details-error').textContent=SUBMIT_ERRORS[receipt.error]||'The request could not be submitted. Try again or contact us.';
+    $('details-error').textContent=SUBMIT_ERRORS[receipt.error]||receipt.detail||'The request could not be submitted. Try again or contact us.';
   }catch{
     $('details-error').textContent='The request could not be submitted. Check your connection and try again, or contact us.';
   }finally{
@@ -478,7 +478,7 @@ $('signature-form').addEventListener('submit',async event=>{
       location.href=`/booking/confirmed/?id=${encodeURIComponent(receipt.requestId)}&expires=${encodeURIComponent(receipt.expiresAt)}`;
       return;
     }
-    $('sign-error').textContent=SUBMIT_ERRORS[receipt.error]||'The request could not be submitted. Try again or contact us.';
+    $('sign-error').textContent=SUBMIT_ERRORS[receipt.error]||receipt.detail||'The request could not be submitted. Try again or contact us.';
     if(receipt.error==='agreement_changed_review_again')await loadServerAgreement();
   }catch{
     $('sign-error').textContent='The request could not be submitted. Check your connection and try again, or contact us.';
