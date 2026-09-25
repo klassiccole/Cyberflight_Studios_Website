@@ -8,8 +8,8 @@
   "d1_databases": [
     {
       "binding": "BOOKING_DB",
-      "database_name": "cyberflight-bookings",
-      "database_id": "REPLACE_WITH_REAL_D1_ID"
+      "database_name": "cyberflight-booking",
+      "database_id": "80a9c1ef-3c01-45c5-8617-35815b087bf9"
     }
   ]
 }
