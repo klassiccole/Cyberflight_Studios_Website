@@ -861,6 +861,14 @@
 
 
 
+/* Contact page intro prompt */
+.contact-prompt {
+	text-align: center;
+	margin: 0 0 2rem 0;
+	font-size: 0.95rem;
+	opacity: 0.85;
+}
+
 /* Site footer: company name and general-contact link on every page */
 #footer .site-footer {
 	display: flex;

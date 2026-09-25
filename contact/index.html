@@ -46,6 +46,12 @@
 						/>
 					</span>
 
+					<p class="contact-prompt">
+						Have a date in mind? Head over to the
+						<a href="../booking/">booking page</a>
+						to get started, or ask me general questions below.
+					</p>
+
 					<form
 						id="contact-form"
 						method="POST"
@@ -235,10 +241,8 @@
 						throw new Error("Submission failed");
 					}
 
-					formStatus.textContent =
-						"Thank you! Your message has been sent to Cyberflight Studios.";
-
-					contactForm.reset();
+					window.location.href = "/contact/confirmed/";
+					return;
 
 				} catch (error) {
 					console.error(error);

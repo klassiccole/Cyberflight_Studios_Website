@@ -30,7 +30,7 @@ export async function onRequest({ request, env }) {
     if(typeof env.RESEND_API_KEY!=='string'||!env.RESEND_API_KEY)return json({error:'delivery_not_configured'},503);
     if(typeof env.BOOKING_OWNER_EMAIL!=='string'||!env.BOOKING_OWNER_EMAIL.trim())return json({error:'delivery_not_configured'},503);
     const safeText=v=>String(v).replace(/[<>]/g,'');
-    const lines=[`Contact form message from ${safeText(name)} (${email})`,'',
+    const lines=[`General question from ${safeText(name)} at ${safeText(email)}`,'',
       message,'','Reply directly to this visitor at their email address.'];
     const sendResponse=await fetch('https://api.resend.com/emails',{method:'POST',
       signal:AbortSignal.timeout(10000),
@@ -38,7 +38,7 @@ export async function onRequest({ request, env }) {
       body:JSON.stringify({from:'Cyberflight Studios <cole@cyberflight.studio>',
         to:[env.BOOKING_OWNER_EMAIL.trim()],
         reply_to:email,
-        subject:`Contact form — ${safeText(name)}`,text:lines.join('\n')})});
+        subject:`Contact Form — ${safeText(name)}`,text:lines.join('\n')})});
     if(!sendResponse.ok) {
       const body=await sendResponse.text().catch(()=>'');
       console.error(JSON.stringify({event:'contact_send_failed',status:sendResponse.status,body:body.slice(0,120)}));
