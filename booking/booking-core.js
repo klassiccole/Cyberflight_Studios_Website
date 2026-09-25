@@ -10,7 +10,7 @@
   const zone = 'America/New_York';
   const services = {
     graduation: {
-      label: 'Graduation', mode: 'slots', scheduleLabel: 'Choose a time',
+      label: 'Graduation Portraits', mode: 'slots', scheduleLabel: 'Choose a time',
       summaryImage: { src: '../images/services/graduation/graduation1.webp', alt: 'Graduation portrait by Cyberflight Studios' }
     },
     event: {

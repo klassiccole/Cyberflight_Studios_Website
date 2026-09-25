@@ -33,9 +33,15 @@ test('consents must be true booleans and typed name is required',()=>{
   const b=normalizeBooking(input());
   for(const update of [{agreementConsent:false},{electronicConsent:'true'},{typedName:' '}]) assert.throws(()=>normalizeSignature({...sign(),...update},b));
 });
-test('organizer cannot grant another graduate portfolio permission',()=>{
+test('payer may grant portfolio permission when the graduate differs',()=>{
   const p=input();p.details.graduate='Someone Else';
-  assert.throws(()=>normalizeSignature({...sign(),promotion:'yes'},normalizeBooking(p)),/permission_requires_graduate/);
+  assert.equal(normalizeSignature({...sign(),promotion:'yes'},normalizeBooking(p)).promotion,'yes');
+  assert.equal(normalizeSignature({...sign(),promotion:'no'},normalizeBooking(p)).promotion,'no');
+});
+test('typed signature must match the name on the booking form',()=>{
+  const b=normalizeBooking(input());
+  assert.throws(()=>normalizeSignature({...sign(),typedName:'Cole Dorazio'},b),/signature_name_mismatch/);
+  assert.equal(normalizeSignature({...sign(),typedName:'  cole '},b).typedName,'cole');
 });
 test('drawn signature retains points and rejects unbounded or invalid coordinates',()=>{
   const b=normalizeBooking(input()),drawing=[[[0,0],[0.5,0.7],[1,1]]];
