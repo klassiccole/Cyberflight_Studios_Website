@@ -203,7 +203,7 @@ function moveWeek(change){state.week=Math.max(0,Math.min(3,state.week+change));s
 $('previous-week').addEventListener('click',()=>moveWeek(-1));$('next-week').addEventListener('click',()=>moveWeek(1));
 
 function updateEventLengthLabel(){
-  $('event-length-label').textContent=state.length>=540?'All day':`${state.length/60} hours`;
+  $('event-length-label').textContent=state.length>=840?'All day':`${state.length/60} hours`;
 }
 function renderEventSchedule(){
   const minKey=C.addDays(C.dateKey(new Date()),5);
@@ -452,11 +452,14 @@ const SUBMIT_ERRORS={'time_unavailable':'That time was just taken. Go back and c
   'request_unavailable':'The request could not be completed. Try again or contact us.',
   'verification_failed':'The verification failed. Refresh the page and try again.',
   'verification_unavailable':'Verification is temporarily unavailable. Try again in a minute.',
-  'invalid_fields':'Some booking details were invalid. Refresh the page and try again.'};
+  'invalid_fields':'Some booking details were invalid. Refresh the page and try again.',
+  'signature_name_mismatch':'Your signature must match the name you entered on the booking form.'};
 $('signature-form').addEventListener('submit',async event=>{
   event.preventDefault();
   const button=$('signature-form').querySelector('.primary');
   if(!$('signature-name').value.trim()){$('signature-name').setCustomValidity('Please type your full name.');$('signature-name').reportValidity();return;}
+  const sigName=$('signature-name').value.trim().replace(/\s+/g,' ').toLowerCase();
+  if(sigName!==String(state.details&&state.details.name||'').trim().replace(/\s+/g,' ').toLowerCase()){$('sign-error').textContent='Your signature must match the first and last name you entered on the booking form.';return;}
   if(!$('signature-form').reportValidity())return;
   const s=serviceInfo();
 
@@ -488,18 +491,12 @@ $('signature-form').addEventListener('submit',async event=>{
   }
 });
 // Within the booking flow the arrow steps back through the form; from the
-// first step it leaves the page, returning to wherever the visitor came from.
+// first step it leaves the page to the services hub.
 (function(){
   $('nav-back').addEventListener('click',event=>{
     if(state.step>0){
       event.preventDefault();
       showStep(state.step-1);
-      return;
-    }
-    const sameOrigin=document.referrer&&new URL(document.referrer,location.href).origin===location.origin;
-    if(sameOrigin&&history.length>1){
-      event.preventDefault();
-      history.back();
     }
   });
 })();

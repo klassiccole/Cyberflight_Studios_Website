@@ -10,8 +10,8 @@
   <link rel="stylesheet" href="../assets/css/fontawesome-all.min.css">
   <link rel="stylesheet" href="../assets/css/site-shell.css">
   <link rel="stylesheet" href="booking.css?v=27">
-  <script defer src="booking-core.js?v=27"></script>
-  <script defer src="app.js?v=27"></script>
+  <script defer src="booking-core.js?v=28"></script>
+  <script defer src="app.js?v=30"></script>
 </head>
 <body class="cf-booking">
   <main id="main">
@@ -31,7 +31,7 @@
         <section class="panel" data-panel="0" aria-labelledby="heading-0">
           <p class="eyebrow">01 / YOUR SERVICE</p><h2 id="heading-0" tabindex="-1">What are we shooting?</h2><p class="muted">Every booking includes a reviewed time and location before it's confirmed. Pricing shown where it's fixed; larger jobs are quoted by proposal.</p>
           <fieldset class="package-options"><legend class="sr-only">Choose your service</legend>
-            <label class="package service" data-service="graduation"><input type="radio" name="service" value="graduation"><span class="package-content"><span class="package-top"><span class="package-title">Graduation</span><span class="service-price" id="grad-price">$200</span></span><span class="package-description">Cap and gown, campus portraits, individual and group sessions.</span>
+            <label class="package service" data-service="graduation"><input type="radio" name="service" value="graduation"><span class="package-content"><span class="package-top"><span class="package-title">Graduation Portraits</span><span class="service-price" id="grad-price">$200</span></span><span class="package-description">Cap and gown, campus portraits, individual and group sessions.</span>
               <span class="service-select-wrap"><span class="service-select-label">Session length<span class="caret" aria-hidden="true">▾</span></span><select id="grad-package" class="service-select" disabled><option value="mini">Mini — 10+ Photos — $125</option><option value="standard" selected>Standard — 20 – 25+ Photos — $200</option><option value="group">Group — 30 – 40+ Photos — from $280</option></select></span>
             </span></label>
             <label class="package service" data-service="event"><input type="radio" name="service" value="event"><span class="package-content"><span class="package-top"><span class="package-title">Event Coverage <small>BY PROPOSAL</small></span></span><span class="package-description">Parties, openings, races, conferences — you set the coverage length.</span><span class="specs"><span>2 hours – all day</span><span>Custom quote</span></span></span></label>
@@ -59,7 +59,7 @@
           </div>
           <div id="event-schedule" hidden>
             <div class="field"><label for="event-date">Event date</label><input type="date" id="event-date"></div>
-            <div class="field range-field"><label for="event-length">Coverage length: <strong id="event-length-label">2 hours</strong></label><input type="range" id="event-length" min="120" max="1140" step="30" value="120"><div class="range-ends" aria-hidden="true"><span>2 hours</span><span>All day</span></div></div>
+            <div class="field range-field"><label for="event-length">Coverage length: <strong id="event-length-label">2 hours</strong></label><input type="range" id="event-length" min="120" max="840" step="30" value="120"></div>
             <div class="time-heading"><h3 id="event-time-heading">Start times</h3><span class="small muted" id="event-duration-note"></span></div>
             <div id="event-slots" class="slots" role="group" aria-label="Available event start times"></div>
             <p class="small muted" id="event-note"></p>
@@ -101,7 +101,7 @@
           <div id="review-facts" class="review-facts"></div><button type="button" class="text-button" data-back="2">Edit your details</button>
           <details class="agreement" open><summary><span id="agreement-title">Session agreement</span></summary><div id="agreement-content"></div></details>
           <form id="signature-form">
-            <fieldset id="promotion-field"><legend>Portfolio permission</legend><p class="small muted">Optional and separate from your booking. Applies only to your own likeness. Leave unselected if signing for someone else.</p><label class="choice"><input type="radio" name="promotion" value="yes">Yes, photos of me may be used in the portfolio and promotional materials.</label><label class="choice"><input type="radio" name="promotion" value="no">No, keep identifiable photos of me out of public promotions.</label></fieldset>
+            <fieldset id="promotion-field"><legend>Portfolio permission</legend><p class="small muted">Optional and separate from your booking. Your signature below serves as your consent for these choices.</p><label class="choice"><input type="radio" name="promotion" value="yes">Yes, photos of me may be used in the portfolio and promotional materials.</label><label class="choice"><input type="radio" name="promotion" value="no">No, keep identifiable photos of me out of public promotions.</label></fieldset>
             <div class="inset" id="group-promotion-note" hidden><h3>Each graduate has their own choice.</h3><p>Promotional permission will be collected separately from every graduate. Your signature here covers the group booking and payment responsibility, not anyone else’s permission.</p></div>
             <div class="signature-section">
             <h3>Your signature</h3>

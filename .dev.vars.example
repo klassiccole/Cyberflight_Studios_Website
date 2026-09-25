@@ -1,0 +1,28 @@
+# Copy to .dev.vars and fill in. .dev.vars is gitignored; real prod values are fine here.
+# All vars below are what functions/api and lib/*.mjs read via env.*
+
+# D1 binding BOOKING_DB is configured in wrangler.jsonc (local SQLite copy, no value needed)
+
+# Turnstile official test keys: secret always passes verification locally.
+# (sitekey 1x00000000000000000000AA renders a visible "always passes" widget)
+TURNSTILE_SECRET=1x0000000000000000000000000000000AA
+
+# Paste real keys for full behavior; leave blank and email-sending steps fail gracefully.
+RESEND_API_KEY=
+BOOKING_OWNER_EMAIL=cole@cyberflight.studio
+BOOKING_SUBMISSIONS_ENABLED=true
+
+# Google service account / OAuth — copy real values from Cloudflare secrets if you
+# need calendar reads/writes locally. Leave blank and calendar endpoints fail with
+# a clear error while everything else still works.
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+GOOGLE_REDIRECT_URI=http://localhost:8788/api/google/callback
+GOOGLE_ALLOWED_EMAIL=cole@cyberflight.studio
+GOOGLE_TOKEN_ENCRYPTION_KEY=
+GOOGLE_AVAILABILITY_CALENDAR_ID=
+GOOGLE_BOOKINGS_CALENDAR_ID=
+GOOGLE_PERSONAL_CALENDAR_ID=
+
+# Never set this outside throwaway testing:
+# BOOKING_SKIP_TURNSTILE=

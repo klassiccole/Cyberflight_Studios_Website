@@ -1,0 +1,15 @@
+// Cloudflare Pages local-dev config. Lets `npm run dev` serve the static site
+// AND functions/api/* AND a local D1 copy, so nothing has to be pushed to test.
+// database_id is only used for remote deploys; local dev uses a local SQLite copy.
+{
+  "name": "cyberflight-website",
+  "pages_build_output_dir": ".",
+  "compatibility_date": "2025-01-01",
+  "d1_databases": [
+    {
+      "binding": "BOOKING_DB",
+      "database_name": "cyberflight-bookings",
+      "database_id": "REPLACE_WITH_REAL_D1_ID"
+    }
+  ]
+}

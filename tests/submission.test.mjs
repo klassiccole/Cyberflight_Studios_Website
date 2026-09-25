@@ -73,8 +73,12 @@ test('lost-response retry returns same ID without another verification, calendar
   assert.equal(s.sqlite.prepare('SELECT count(*) n FROM booking_jobs').get().n,2);s.sqlite.close();
 });
 test('idempotency key cannot be reused for changed signature or details',async()=>{
-  const s=setup(),p=await s.submission();await s.handlers.submit(s.context(p));p.signature.typedName='Different Name';
-  assert.equal((await s.handlers.submit(s.context(p))).status,409);s.sqlite.close();
+  const s=setup(),p=await s.submission();await s.handlers.submit(s.context(p));
+  p.signature.typedName='Different Name';
+  assert.equal((await s.handlers.submit(s.context(p))).status,400); // rejected before replay: wrong signature name
+  p.signature.typedName='Test Customer';p.booking.details.notes='changed';
+  assert.equal((await s.handlers.submit(s.context(p))).status,409); // same key, different payload, valid signature
+  s.sqlite.close();
 });
 test('simultaneous requests for overlapping slots save exactly one hold and one job',async()=>{
   const s=setup(),a=await s.submission(),b=await s.submission();
