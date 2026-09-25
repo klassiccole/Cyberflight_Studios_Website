@@ -350,12 +350,13 @@ body.cf-booking .booking-intro-tile {
   background: rgba(27, 31, 34, 0.85);
   border: 1px solid var(--line);
   border-radius: 12px;
-  padding: 30px;
+  padding: 30px 30px 16px;
   margin-bottom: 26px;
 }
 
 body.cf-booking .booking-intro-tile .page-intro {
-  margin-bottom: 24px;
+  margin-bottom: 18px;
+  text-align: center;
 }
 
 body.cf-booking .booking-intro-tile .page-intro p {
@@ -364,6 +365,11 @@ body.cf-booking .booking-intro-tile .page-intro p {
 
 body.cf-booking .booking-intro-tile .steps {
   margin-bottom: 0;
+}
+
+body.cf-booking .booking-intro-tile .page-banner {
+  max-width: 880px;
+  margin: 0 auto 2rem;
 }
 
 

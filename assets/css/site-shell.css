@@ -1223,7 +1223,7 @@ Page Banners
 		display: block;
 		margin: 0 0 2rem 0;
 		overflow: hidden;
-		border-radius: 6px;
+		border-radius: 12px;
 	}
 
 	.page-banner img {
@@ -1231,7 +1231,7 @@ Page Banners
 		width: 100%;
 		height: auto;
 		max-width: 100%;
-		border-radius: 6px;
+		border-radius: 12px;
 	}
 
 /* Page Header Banners - Desktop */
@@ -1359,10 +1359,11 @@ body.standalone-page #main article {
 	width: 60rem;
 	max-width: 100%;
 
-	padding: 4.5rem 2.5rem 1.5rem 2.5rem;
+	padding: 5.5rem 2.5rem 1.5rem 2.5rem;
 
-	background-color: rgba(27, 31, 34, 0.85);
-	border-radius: 4px;
+	background-color: rgba(27, 31, 37, 0.85);
+	border: 1px solid #3b414c;
+	border-radius: 12px;
 
 	opacity: 1;
 	transform: none;
@@ -1374,7 +1375,20 @@ body.standalone-page #main article {
 @media screen and (max-width: 736px) {
 
 	body.standalone-page #main article {
-		padding: 3.5rem 2rem 0.5rem 2rem;
+		padding: 4.75rem 2rem 0.5rem 2rem;
+	}
+
+	#main article .page-back,
+	#main article .page-home {
+		top: 20px;
+	}
+
+	#main article .page-back {
+		left: 20px;
+	}
+
+	#main article .page-home {
+		right: 20px;
 	}
 
 }
@@ -1385,7 +1399,20 @@ body.standalone-page #main article {
 @media screen and (max-width: 480px) {
 
 	body.standalone-page #main article {
-		padding: 3rem 1.5rem 0.5rem 1.5rem;
+		padding: 4.5rem 1.5rem 0.5rem 1.5rem;
+	}
+
+	#main article .page-back,
+	#main article .page-home {
+		top: 20px;
+	}
+
+	#main article .page-back {
+		left: 20px;
+	}
+
+	#main article .page-home {
+		right: 20px;
 	}
 
 }
@@ -1402,7 +1429,7 @@ body.standalone-page #main article {
 #main article .page-back,
 #main article .page-home {
 	position: absolute;
-	top: 0.75rem;
+	top: 30px;
 
 	display: flex;
 	align-items: center;
@@ -1425,12 +1452,12 @@ body.standalone-page #main article {
 }
 
 #main article .page-back {
-	left: 0.75rem;
+	left: 30px;
 	font-size: var(--cf-back-icon-size);
 }
 
 #main article .page-home {
-	right: 0.75rem;
+	right: 30px;
 	font-size: var(--cf-home-icon-size);
 }
 

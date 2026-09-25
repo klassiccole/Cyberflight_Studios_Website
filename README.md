@@ -39,6 +39,7 @@ lib/                       Shared logic imported by the functions
 migrations/                D1 migrations 0001-0003 (plain SQL)
 tests/                     node:test suites (unit + storage + submission)
 assets/ images/ videos/    Static media
+components/                Shared HTML fragments + include loader (see "Shared fragments" below)
 staging/                   Working copies mid-migration (booking-universal)
 wrangler.jsonc             Local dev config (bindings; DB id for remote ops)
 .dev.vars.example          Template for local secrets (copy to .dev.vars)
@@ -102,7 +103,29 @@ Remote D1 migrations are run manually, in order, when a new migration file lands
 npm run db:migrate:remote
 ```
 
-**Cache-busting convention:** booking scripts/styles are loaded with a query version (`booking/app.js?v=NN`). Any change to a cached asset requires bumping that `v=` in the pages that load it. Forgetting this makes correct fixes appear broken (stale browser JS), and has wasted entire sessions before. Check it every time.
+**Cache-busting convention:** booking scripts/styles are loaded with a query version (`booking/app.js?v=NN`), and every `data-include` fragment URL carries one too (`components/footer.html?v=NN`). Any change to a cached asset requires bumping that `v=` in the pages that load it. Forgetting this makes correct fixes appear broken (stale browser JS), and has wasted entire sessions before. Check it every time.
+
+## Shared fragments (components/)
+
+Shared HTML lives in `components/` so it is written once and adopted per page. No build step: each page holds a placeholder plus the loader, and the loader swaps the placeholder for the fetched fragment at runtime.
+
+```html
+<div data-include="/components/footer.html?v=1"></div>
+<script src="/components/html-include.js?v=1"></script>
+```
+
+Current fragments:
+
+- `footer.html` — standard site footer (`footer#footer` > `.site-footer`: brand + "Contact Me"). Used by about, gallery/*, services/*. Footer styling lives in `assets/css/site-pages.css` (`#footer .site-footer` rules); do not duplicate it into other stylesheets.
+- `footer-brand.html` — brand-only variant (no link), used by contact/index.html only.
+
+Not adopted (deliberately): the homepage (`index.html`) and the booking flow pages (`booking/`, `booking/confirmed/`, `contact/confirmed/`) keep their own inline footers and styles (`homepage.css`, `booking/booking.css`). `site-shell.css` is loaded by all pages including those, so do not move fragment-specific CSS there — it would leak onto the excluded pages.
+
+Conventions:
+
+- Bump `?v=` on the `data-include` attribute in every page that references a fragment whenever that fragment's markup changes (same rule as booking assets, above).
+- Links inside fragments use absolute paths (`/contact/`); all pages are served from the domain root, so fragments need no per-page path logic.
+- The pattern is not footer-specific: any future shared fragment (e.g. a shared header) follows the same form — one placeholder + one fragment file in `components/`, styled by whichever stylesheet family the adopting pages already load.
 
 ## Variables
 
