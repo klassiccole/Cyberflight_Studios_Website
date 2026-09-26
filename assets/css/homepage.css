@@ -174,7 +174,7 @@ text-align: center;
 		-webkit-transition-delay: 0.25s;
 		-ms-transition-delay: 0.25s;
 		transition-delay: 0.25s;
-		padding: 3rem 2rem;
+		padding: 2rem 2rem;
 		max-height: 40rem;
 		overflow: hidden;
 	}
@@ -319,6 +319,13 @@ opacity: 0;
 			height: calc(2rem + 1px);
 		}
 
+		/* The socials box keeps a tighter 1.75rem margin, so its connector
+		   must be sized to its actual gap or it bleeds into the nav. */
+		#header .home-socials:before {
+			top: calc(-1.75rem - 1px);
+			height: calc(1.75rem + 1px);
+		}
+
 	#header .logo {
 		width: 4.75rem;
 		height: 4.75rem;
@@ -326,7 +333,7 @@ opacity: 0;
 	}
 
 	#header .content .inner {
-		padding: 2.5rem 1rem;
+		padding: 2rem 1rem;
 	}
 
 	#header .content p {
@@ -339,7 +346,7 @@ opacity: 0;
 @media screen and (max-width: 480px) {
 
 #header {
-	padding: 1.5rem 0;
+	padding: 1.5rem 0 0;
 }
 
 	#header nav ul {
@@ -400,7 +407,7 @@ opacity: 0;
 #header .content .inner {
 	width: 100%;
 	max-width: 100%;
-	padding: 2.5rem 1rem;
+	padding: 2rem 1rem;
 }
 
 #header nav {
@@ -421,9 +428,27 @@ opacity: 0;
 	gap: 12px 20px;
 	flex-wrap: wrap;
 	padding: 20px 0 0;
+	border-top: 1px solid #ffffff;
 	color: rgba(255, 255, 255, 0.6);
 	font-size: 0.85rem;
 	text-align: left;
+}
+
+/* Vertical line rising from the footer rule to the socials box.
+   The connector is a flex item in #wrapper, so it grows to span the
+   full variable gap between the socials box and the footer at any
+   viewport height, keeping both ends connected. */
+#footer-connector {
+	flex: 1 0 2.5rem;
+	align-self: center;
+	width: 1px;
+	background: #ffffff;
+}
+
+/* The connector owns the spacing between the socials box and the
+   footer; the footer margin would otherwise break the connection. */
+#footer {
+	margin-top: 0;
 }
 
 #footer .site-footer-brand {

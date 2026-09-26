@@ -65,7 +65,7 @@ body.cf-booking .brand b { display:block;font-size:.7rem;letter-spacing:.3em }
 body.cf-booking .quiet-link { font-size:.88rem;color:var(--muted) }
 body.cf-booking main { max-width:1240px;margin:auto;padding:25px 24px 0 }
 body.cf-booking .eyebrow { font-size:.75rem;letter-spacing:.16em;color:var(--accent);font-weight:600;margin-bottom:12px }
-body.cf-booking .page-intro>p:last-child { color:var(--muted);font-size:1.08rem }
+body.cf-booking .page-intro>p:last-child { color:var(--text);opacity:.85;font-size:.95rem }
 body.cf-booking .page-intro { margin-bottom:30px }
 body.cf-booking .steps { margin-bottom:26px }
 body.cf-booking .steps ol { padding:0;margin:0;display:grid;grid-template-columns:repeat(4,1fr);list-style:none;border-top:1px solid var(--line);border-bottom:1px solid var(--line) }
@@ -257,7 +257,7 @@ body.cf-booking .brand img { width:38px;height:38px }
 body.cf-booking .quiet-link { font-size:.82rem;max-width:140px;text-align:right }
 body.cf-booking main { padding:15px 16px 0 }
 body.cf-booking .page-intro { margin-bottom:22px }
-body.cf-booking .page-intro>p:last-child { font-size:1rem }
+body.cf-booking .page-intro>p:last-child { font-size:.95rem }
 body.cf-booking .steps ol { gap:0 }
 body.cf-booking .steps button { flex-direction:column;gap:3px;text-align:center;font-size:.82rem;padding:11px 2px }
 body.cf-booking .booking-layout { grid-template-columns:1fr }
@@ -381,6 +381,13 @@ body.cf-booking .booking-intro-tile .page-banner {
     padding: 24px 0;
   }
 
+  /* site-shell.css forces #main to full-bleed width at <=480px (ID specificity
+     beats body.cf-booking main); re-assert the booking gutters on phones. */
+  body.cf-booking main#main {
+    width: calc(100% - 32px);
+    max-width: none;
+  }
+
   body.cf-booking .booking-intro-tile {
     padding: 20px;
   }
@@ -399,7 +406,7 @@ body.cf-booking .booking-page-nav {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 28px;
+    margin-bottom: 18px;
 }
 
 body.cf-booking .booking-page-back,

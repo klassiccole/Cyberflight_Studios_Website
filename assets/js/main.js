@@ -71,6 +71,9 @@
         if (!article)
             return;
 
+        if (article.querySelector('.page-nav .page-home'))
+            return;
+
         const homeButton = document.createElement('a');
 
         homeButton.href = '/';
@@ -79,6 +82,43 @@
         homeButton.setAttribute('title', 'Home');
 
         article.appendChild(homeButton);
+
+    });
+
+/*
+* History-Aware Back Links
+*
+* Page-back arrows return to the page the visitor came from when that
+* page is on this site (real browser history). Otherwise the link's
+* hardcoded href (the page's parent hub) is followed as the fallback,
+* e.g. when the page was opened directly in a new tab.
+*/
+    document.addEventListener('click', function (event) {
+
+        const back = event.target.closest('a.page-back');
+
+        if (!back)
+            return;
+
+        if (!document.referrer)
+            return;
+
+        let from;
+
+        try {
+            from = new URL(document.referrer);
+        } catch (e) {
+            return;
+        }
+
+        if (from.origin !== window.location.origin)
+            return;
+
+        if (from.pathname === window.location.pathname)
+            return;
+
+        event.preventDefault();
+        window.history.back();
 
     });
 

@@ -1674,3 +1674,87 @@ transition: none !important;
 	}
 
 }
+
+/* ============================================================
+   Floating Box Layout (opt-in)
+============================================================ */
+
+/*
+	Opt in per page via the body class "floating-boxes". The article
+	shell becomes a transparent container and content lives in floating
+	boxes, matching the booking page.
+
+	Box anatomy (booking-parity):
+	- .intro-tile  — page-nav + header text + banner, top of page
+	- .content-box — generic floating panel for prose/sections
+	Card grids (.service-item, .gallery-item) already box themselves.
+*/
+
+body.standalone-page.floating-boxes #main article {
+	background: none;
+	border: 0;
+	padding: 0;
+}
+
+body.standalone-page.floating-boxes .intro-tile {
+	background: rgba(27, 31, 37, 0.85);
+	border: 1px solid #3b414c;
+	border-radius: 12px;
+	padding: 30px;
+	margin-bottom: 26px;
+}
+
+body.standalone-page.floating-boxes .intro-tile .page-nav {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 18px;
+}
+
+body.standalone-page.floating-boxes #main article .intro-tile .page-back,
+body.standalone-page.floating-boxes #main article .intro-tile .page-home {
+	position: static;
+}
+
+body.standalone-page.floating-boxes .intro-tile .page-banner {
+	margin-bottom: 2rem;
+	max-width: 880px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+body.standalone-page.floating-boxes .intro-tile .intro-prompt {
+	text-align: center;
+	margin: 0;
+	font-size: 0.95rem;
+	opacity: 0.85;
+}
+
+/* Banner height returned to the shared 190px default; the 220px
+	trial on the five main pages was rejected. */
+
+body.standalone-page.floating-boxes .content-box {
+	background: rgba(27, 31, 37, 0.85);
+	border: 1px solid #3b414c;
+	border-radius: 12px;
+	padding: 2rem 2.5rem;
+	margin-bottom: 26px;
+}
+
+body.standalone-page.floating-boxes .gallery-grid,
+body.standalone-page.floating-boxes .services-grid {
+	margin-top: 0;
+	margin-bottom: 26px;
+}
+
+@media screen and (max-width: 736px) {
+
+	body.standalone-page.floating-boxes .intro-tile {
+		padding: 20px;
+	}
+
+	body.standalone-page.floating-boxes .content-box {
+		padding: 1.5rem;
+	}
+
+}

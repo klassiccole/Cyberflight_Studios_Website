@@ -491,12 +491,23 @@ $('signature-form').addEventListener('submit',async event=>{
   }
 });
 // Within the booking flow the arrow steps back through the form; from the
-// first step it leaves the page to the services hub.
+// first step it returns to the page the visitor came from (same-site history),
+// falling back to the services hub when there is nowhere to go back to.
 (function(){
   $('nav-back').addEventListener('click',event=>{
     if(state.step>0){
       event.preventDefault();
       showStep(state.step-1);
+      return;
+    }
+    if(document.referrer){
+      try{
+        const from=new URL(document.referrer);
+        if(from.origin===location.origin&&from.pathname!==location.pathname){
+          event.preventDefault();
+          history.back();
+        }
+      }catch(e){/* unparseable referrer: follow the services fallback */}
     }
   });
 })();
