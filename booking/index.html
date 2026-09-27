@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="../assets/css/site-shell.css">
   <link rel="stylesheet" href="booking.css?v=30">
   <script defer src="booking-core.js?v=28"></script>
-  <script defer src="app.js?v=31"></script>
+  <script defer src="app.js?v=33"></script>
 </head>
 <body class="cf-booking">
   <main id="main">
@@ -49,7 +49,7 @@
           <h2 id="heading-1" tabindex="-1">Find your time.</h2>
           <p class="muted">
             All times are shown in Eastern Time, local to Charlotte, NC.
-            Please choose a date at least 5 days in advance.
+            <span id="lead-hint">Please choose a date at least 3 days in advance.</span>
           </p>
           <div id="group-options" class="inset" hidden><label for="group-size">How many graduates?</label><select id="group-size"><option value="">Group size — 2 to 4 graduates</option><option value="2">2 graduates — $280 total</option><option value="3">3 graduates — $340 total</option><option value="4">4 graduates — $380 total</option></select><p class="small muted">One organizer signs and pays for the group. Friends arrange their own split.</p></div>
           <div id="session-schedule">
@@ -68,7 +68,7 @@
           </div>
           <div id="wedding-schedule" hidden>
             <div class="field"><label for="wedding-date">Wedding date</label><input type="date" id="wedding-date"></div>
-            <div class="inset"><p>Weddings require <strong>at least one month of planning</strong>. Availability isn't shown here — I reach every couple directly to build the day around your timeline before anything is confirmed.</p></div>
+            <div class="inset"><p>Weddings require <strong>at least 1 month of planning</strong>; earlier requests may be subject to higher cost. Availability isn't shown here — I reach every couple directly to build the day around your timeline before anything is confirmed.</p></div>
           </div>
           <p class="form-error" id="time-error" role="alert"></p>
           <div class="panel-actions"><button class="secondary" type="button" data-back="0">Back</button><button class="primary" type="button" id="enter-details" disabled>Your details <span aria-hidden="true">→</span></button></div>

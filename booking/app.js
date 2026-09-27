@@ -14,7 +14,7 @@ const initialNow=new Date();
   $(id).addEventListener('click',()=>{try{$(id).showPicker();}catch{/* older browsers open the picker natively */}});
 });
 const state={step:0,maxStep:0,service:null,package:'standard',count:2,tier:'t1',length:120,date:null,time:null,week:0,details:null,submittedAt:false,groupConfirmed:false,eventConfirmed:false,agreement:null,submissionKey:null,turnstileToken:null,turnstileId:null,turnstileWait:null,drawStrokes:[]};
-const firstDay=C.addDays(C.dateKey(initialNow),5);
+const firstDay=C.addDays(C.dateKey(initialNow),3);
 let drawing=false,hasDrawing=false;const drawStrokes=state.drawStrokes;
 const canvas=$('signature-canvas'),ctx=canvas.getContext('2d');
 ctx.lineWidth=4;ctx.lineCap='round';ctx.lineJoin='round';ctx.strokeStyle='#201931';
@@ -121,6 +121,9 @@ async function renderSchedule(){
   const s=serviceInfo();
   $('group-options').hidden=!(state.service==='graduation'&&state.package==='group');
   if(state.service==='graduation'&&state.package==='group')$('group-size').value=state.groupConfirmed?String(state.count):'';
+  $('lead-hint').textContent=s.mode==='wedding'
+    ?'Please choose a date at least 1 month in advance; earlier requests may be subject to higher cost.'
+    :'Please choose a date at least 3 days in advance.';
   $('session-schedule').hidden=s.mode!=='slots';
   $('event-schedule').hidden=s.mode!=='event';
   $('wedding-schedule').hidden=s.mode!=='wedding';
@@ -206,7 +209,7 @@ function updateEventLengthLabel(){
   $('event-length-label').textContent=state.length>=840?'All day':`${state.length/60} hours`;
 }
 function renderEventSchedule(){
-  const minKey=C.addDays(C.dateKey(new Date()),5);
+  const minKey=C.addDays(C.dateKey(new Date()),3);
   $('event-date').min=minKey;
   updateEventLengthLabel();
   $('event-duration-note').textContent='';
@@ -293,7 +296,7 @@ $('wedding-date').addEventListener('change',()=>{
   const value=$('wedding-date').value;
   if(!value)return;
   const {min,max}=weddingBounds();
-  if(value<min||value>max){$('wedding-date').value=state.date||'';$('time-error').textContent='Weddings need at least one month of lead time.';return;}
+  if(value<min||value>max){$('wedding-date').value=state.date||'';$('time-error').textContent='Weddings need at least 1 week of lead time; earlier requests may be subject to higher cost.';return;}
   state.date=value;state.time=null;resetDownstream();
   $('time-error').textContent='';updateSummary();updateProgress();
   $('enter-details').disabled=!state.date;
