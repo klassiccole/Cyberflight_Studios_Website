@@ -83,12 +83,15 @@ async function busyWindows(env, token, timeMin, timeMax, signal) {
   return merge(ranges);
 }
 function calculateDays(start, duration, openings, busy, now) {
+  // Slots must fall on the third calendar day ahead or later (Charlotte
+  // time): nothing on today, tomorrow, or the day after is bookable.
+  const minTime = midnight(addDays(dateKey(now), 3));
   return Array.from({ length: 7 }, (_, i) => {
     const key = addDays(start, i), dayStart = midnight(key), dayEnd = midnight(addDays(key, 1));
     const slots = [], seen = new Set();
     for (let t = dayStart; t < dayEnd; t += 30 * MINUTE) {
       const a = t - 30 * MINUTE, b = t + (duration + 30) * MINUTE;
-      if (t < now + 120 * 60 * MINUTE) continue;
+      if (t < minTime) continue;
       if (!openings.some(([x, y]) => a >= x && b <= y)) continue;
       if (busy.some(([x, y]) => a < y && b > x)) continue;
       const minute = localMinutes(t);
