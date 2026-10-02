@@ -7,6 +7,10 @@ const timeLabel=minutes=>`${Math.floor(minutes/60)%12||12}:${String(minutes%60).
 const formatDate=(key,options={month:'short',day:'numeric',weekday:'short'})=>new Intl.DateTimeFormat('en-US',{...options,timeZone:'UTC'}).format(new Date(key+'T12:00:00Z'));
 const formatInstant=date=>new Intl.DateTimeFormat('en-US',{timeZone:C.zone,month:'short',day:'numeric',hour:'numeric',minute:'2-digit',timeZoneName:'short'}).format(date);
 const initialNow=new Date();
+// Page fade-in: matches the site-wide is-preload behavior in main.js.
+document.addEventListener('DOMContentLoaded',function(){
+  window.setTimeout(function(){document.body.classList.remove('is-preload');},100);
+});
 // Clicking anywhere on a date box opens the browser's calendar picker
 // (showPicker is unsupported in some browsers, which fall back to default
 // click behavior).
