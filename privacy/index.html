@@ -1,0 +1,193 @@
+<!DOCTYPE HTML>
+<!--
+	Dimension by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license
+-->
+<html lang="en">
+	<head>
+		<title>Privacy Policy | Cyberflight Studios</title>
+
+		<meta charset="utf-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1, user-scalable=no"
+		/>
+
+		<!-- SEO -->
+		<meta
+			name="description"
+			content="How Cyberflight Studios collects, uses, and protects the information you share through cyberflight.studio."
+		/>
+
+		<link rel="icon" type="image/png" href="../images/favicon.png" />
+		<link rel="stylesheet" href="../assets/css/fontawesome-all.min.css" />
+		<link rel="stylesheet" href="../assets/css/site-shell.css" />
+		<link rel="stylesheet" href="../assets/css/site-pages.css" />
+		<noscript>
+			<link rel="stylesheet" href="../assets/css/noscript.css" />
+		</noscript>
+	</head>
+
+	<body class="standalone-page floating-boxes">
+
+		<!-- Wrapper -->
+		<div id="wrapper">
+
+			<!-- Main -->
+			<div id="main">
+
+				<!-- Privacy -->
+				<article id="privacy">
+
+					<!-- Header -->
+					<div class="intro-tile">
+						<nav class="page-nav" aria-label="Page navigation">
+							<a
+								href="../"
+								class="page-back"
+								aria-label="Back to home"
+								title="Back to Home"
+							>
+								&#8592;
+							</a>
+							<a
+								href="/"
+								class="page-home icon solid fa-home"
+								aria-label="Home"
+								title="Home"
+							></a>
+						</nav>
+
+						<h1>Privacy Policy</h1>
+
+						<p class="intro-prompt">How Cyberflight Studios handles your information.</p>
+					</div>
+
+					<section class="content-box">
+						<p>
+							Cyberflight Studios LLC ("I", "me") operates cyberflight.studio.
+							This policy explains what information the site collects, why, and
+							what happens to it. The short version: I only collect what I need
+							to answer your questions and schedule your sessions, I don't sell
+							or share it, and you can ask me to remove it at any time.
+						</p>
+
+						<h2>What the site collects</h2>
+						<p>
+							<strong>Contact form.</strong> Your name, email address, and the
+							message you write. This is sent to my mailbox so I can reply to
+							you by email.
+						</p>
+						<p>
+							<strong>Booking form.</strong> The service you request, your
+							preferred date and time, and the details needed to run the
+							session — such as the session location or address, participant
+							names, a promotion code if you have one, and, for services that
+							require it, your signed service agreement (your typed name and
+							signature).
+						</p>
+						<p>
+							<strong>Spam protection.</strong> Forms are protected by
+							Cloudflare Turnstile, which may process limited technical data to
+							verify that you are human.
+						</p>
+						<p>
+							The site does not use advertising cookies, analytics trackers, or
+							third-party advertising of any kind.
+						</p>
+
+						<h2>How your information is used</h2>
+						<ul>
+							<li>To answer the questions you send me.</li>
+							<li>To schedule, prepare for, and confirm your session.</li>
+							<li>To place confirmed bookings on my scheduling calendar.</li>
+							<li>To store booking records for services that require a signed
+								agreement, so your session details and agreement are on hand.</li>
+							<li>To email you about your inquiry or booking.</li>
+						</ul>
+
+						<h2>Where your information lives</h2>
+						<p>
+							The site is hosted on Cloudflare Pages. Form submissions are
+							delivered through Cloudflare and Resend to my mailbox at Zoho
+							Mail. Booking records for agreement-based services are stored in
+							a Cloudflare D1 database, and confirmed sessions appear as events
+							on my Google Calendar. These providers process data on my behalf
+							only — your information is not sold, rented, or shared for
+							advertising.
+						</p>
+
+						<h2>How long it is kept</h2>
+						<p>
+							Booking records are kept as business records for the sessions
+							they describe. If you would like your information removed or
+							corrected, email me and I will take care of it, unless I am
+							required to retain it for tax or legal purposes.
+						</p>
+
+						<h2>Contact</h2>
+						<p>
+							Questions about this policy, or a request to remove your
+							information: <a href="mailto:cole@cyberflight.studio">cole@cyberflight.studio</a>.
+						</p>
+
+						<p>
+							<em>Effective October 3, 2026. If this policy changes, the new
+							version will be posted on this page.</em>
+						</p>
+					</section>
+
+				</article>
+
+			</div>
+
+			<!-- Footer -->
+			<div data-include="/components/footer.html?v=2"></div>
+
+		</div>
+
+		<!-- Background -->
+		<div id="bg">
+
+			<video
+				id="homepage-video"
+				muted
+				loop
+				playsinline
+				preload="none"
+				poster="../images/bg.webp"
+				aria-hidden="true">
+			</video>
+
+			<script>
+				window.addEventListener("load", function () {
+
+					const video = document.getElementById("homepage-video");
+
+					const source = document.createElement("source");
+					source.src = "../videos/homepage_background.mp4";
+					source.type = "video/mp4";
+
+					video.appendChild(source);
+					video.load();
+
+					video.addEventListener("canplay", function () {
+						video.play().catch(function () {
+							// Poster remains visible if autoplay is unavailable.
+						});
+					}, { once: true });
+
+				});
+			</script>
+
+		</div>
+
+	<!-- Site JavaScript -->
+		<script src="../assets/js/main.js">
+		</script>
+
+
+	<script src="/components/html-include.js?v=1"></script>
+	</body>
+</html>

@@ -1,0 +1,189 @@
+<!DOCTYPE HTML>
+<!--
+	Dimension by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license
+-->
+<html lang="en">
+	<head>
+		<title>Terms of Service | Cyberflight Studios</title>
+
+		<meta charset="utf-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1, user-scalable=no"
+		/>
+
+		<!-- SEO -->
+		<meta
+			name="description"
+			content="Terms of service for booking and working with Cyberflight Studios, a Charlotte, NC photography, videography, and drone media studio."
+		/>
+
+		<link rel="icon" type="image/png" href="../images/favicon.png" />
+		<link rel="stylesheet" href="../assets/css/fontawesome-all.min.css" />
+		<link rel="stylesheet" href="../assets/css/site-shell.css" />
+		<link rel="stylesheet" href="../assets/css/site-pages.css" />
+		<noscript>
+			<link rel="stylesheet" href="../assets/css/noscript.css" />
+		</noscript>
+	</head>
+
+	<body class="standalone-page floating-boxes">
+
+		<!-- Wrapper -->
+		<div id="wrapper">
+
+			<!-- Main -->
+			<div id="main">
+
+				<!-- Terms -->
+				<article id="terms">
+
+					<!-- Header -->
+					<div class="intro-tile">
+						<nav class="page-nav" aria-label="Page navigation">
+							<a
+								href="../"
+								class="page-back"
+								aria-label="Back to home"
+								title="Back to Home"
+							>
+								&#8592;
+							</a>
+							<a
+								href="/"
+								class="page-home icon solid fa-home"
+								aria-label="Home"
+								title="Home"
+							></a>
+						</nav>
+
+						<h1>Terms of Service</h1>
+
+						<p class="intro-prompt">The terms that apply when you book with Cyberflight Studios.</p>
+					</div>
+
+					<section class="content-box">
+						<p>
+							These terms govern your use of cyberflight.studio and the booking
+							process it provides. Cyberflight Studios LLC is operated by Cole
+							Dorazio in Charlotte, NC.
+						</p>
+
+						<h2>Requests and confirmations</h2>
+						<p>
+							Submitting the booking form is a request, not a confirmed
+							appointment. Every request is reviewed, and the date, time, and
+							location are confirmed with you before the session is final.
+							Services priced on the site are shown in US dollars; services
+							requiring a custom quote are priced by proposal.
+						</p>
+
+						<h2>Service agreements</h2>
+						<p>
+							Some services require signing a service agreement through the
+							site. The agreement you sign for your session is the controlling
+							document for that booking — it sets the specifics of the work,
+							and these general terms apply where the agreement doesn't
+							address them.
+						</p>
+
+						<h2>Payments</h2>
+						<p>
+							Payment is due 48 hours before the scheduled session unless your
+							proposal or agreement states otherwise.
+						</p>
+
+						<h2>Reschedules and cancellations</h2>
+						<p>
+							Scheduling conflicts happen — if you need to move or cancel a
+							session, contact me as early as you can and I will work with you
+							on a new date.
+						</p>
+
+						<h2>Your content</h2>
+						<p>
+							The media delivered to you from your session is yours to use as
+							agreed in your service agreement or proposal.
+						</p>
+
+						<h2>Site availability</h2>
+						<p>
+							I work to keep the site available, but bookings are confirmed by
+							exchange, not automatically. If the site or its scheduling tools
+							are unavailable when you submit, your request is not lost —
+							follow up by email and I will take care of it.
+						</p>
+
+						<h2>Changes to these terms</h2>
+						<p>
+							These terms may be updated from time to time; the current
+							version is always the one on this page. The terms in effect when
+							you submit a booking are the ones that apply to that booking.
+						</p>
+
+						<h2>Contact</h2>
+						<p>
+							Questions about these terms:
+							<a href="mailto:cole@cyberflight.studio">cole@cyberflight.studio</a>.
+						</p>
+
+						<p>
+							<em>Effective October 3, 2026.</em>
+						</p>
+					</section>
+
+				</article>
+
+			</div>
+
+			<!-- Footer -->
+			<div data-include="/components/footer.html?v=2"></div>
+
+		</div>
+
+		<!-- Background -->
+		<div id="bg">
+
+			<video
+				id="homepage-video"
+				muted
+				loop
+				playsinline
+				preload="none"
+				poster="../images/bg.webp"
+				aria-hidden="true">
+			</video>
+
+			<script>
+				window.addEventListener("load", function () {
+
+					const video = document.getElementById("homepage-video");
+
+					const source = document.createElement("source");
+					source.src = "../videos/homepage_background.mp4";
+					source.type = "video/mp4";
+
+					video.appendChild(source);
+					video.load();
+
+					video.addEventListener("canplay", function () {
+						video.play().catch(function () {
+							// Poster remains visible if autoplay is unavailable.
+						});
+					}, { once: true });
+
+				});
+			</script>
+
+		</div>
+
+	<!-- Site JavaScript -->
+		<script src="../assets/js/main.js">
+		</script>
+
+
+	<script src="/components/html-include.js?v=1"></script>
+	</body>
+</html>

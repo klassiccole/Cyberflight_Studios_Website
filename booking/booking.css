@@ -323,20 +323,12 @@ body.cf-booking .booking-background video {
   object-fit: cover;
 }
 
-/* Darken the footage slightly for readable text. The overlay starts
-   black and lifts on a delayed transition so the footage fades in
-   after the content, matching the site-wide page-load choreography. */
+/* Darken the footage slightly for readable text */
 body.cf-booking .booking-background::after {
   content: "";
   position: absolute;
   inset: 0;
   background: rgba(18, 21, 27, 0.4);
-  transition: background-color 2.5s ease-in-out;
-  transition-delay: 0.75s;
-}
-
-body.cf-booking.is-preload .booking-background::after {
-  background: #000000;
 }
 
 /* Translucent content panels */
@@ -403,7 +395,6 @@ body.cf-booking .booking-intro-tile .page-banner {
 
 @media(prefers-reduced-motion:reduce) {
 body.cf-booking * { scroll-behavior:auto!important;transition:none!important }
-body.cf-booking .booking-background::after { transition:none!important }
 }
 
 /* Booking Page Navigation
