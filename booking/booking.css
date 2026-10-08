@@ -129,17 +129,12 @@ body.cf-booking .summary-note strong { display:block;margin-bottom:7px }
 body.cf-booking .summary-note p { color:var(--muted);margin:0 }
 body.cf-booking .availability-note { background:#c5b6ff0c;border-left:2px solid var(--accent);padding:12px 15px;display:flex;flex-direction:column;gap:5px;font-size:.87rem;margin:23px 0 }
 body.cf-booking .sample-label { font-size:.68rem;letter-spacing:.1em;color:var(--accent);font-weight:600 }
-body.cf-booking .date-navigation { display:flex;justify-content:space-between;align-items:center;gap:12px;margin:25px 0 16px }
-body.cf-booking .date-navigation h3 { margin:0 }
-body.cf-booking .icon-button { background:var(--raised);color:white;width:38px;height:38px;border:1px solid var(--line);border-radius:4px;margin-left:5px }
-body.cf-booking .date-grid { display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:7px }
-body.cf-booking .date-button { display:flex;flex-direction:column;align-items:center;padding:11px 4px;border:1px solid var(--line);border-radius:6px;background:transparent;color:var(--text);gap:2px }
-body.cf-booking .date-button span:first-child { font-size:.8rem }
-body.cf-booking .date-button strong { font-size:1.4rem }
-body.cf-booking .date-button small { font-size:.68rem }
-body.cf-booking .date-button[aria-pressed=true],
+/* Slot start-time buttons: the selected time fills with the accent color. */
 body.cf-booking .slot[aria-pressed=true] { background:var(--accent);color:var(--ink);border-color:var(--accent) }
-body.cf-booking .date-button:disabled { opacity:.38 }
+
+/* Native date inputs (session/event/wedding): the pop-out calendar is
+   opened by showPicker() on click, so the whole field reads as clickable. */
+body.cf-booking #session-date,body.cf-booking #event-date,body.cf-booking #wedding-date { cursor:pointer;min-width:0;max-width:100%;width:100% }
 body.cf-booking .time-heading { display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:25px }
 body.cf-booking .time-heading h3 { margin-bottom:14px }
 body.cf-booking .slots { display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:17px }
@@ -226,12 +221,6 @@ body.cf-booking .form-error { color:var(--error);margin:0 }
 body.cf-booking .form-error:empty { display:none }
 body.cf-booking .submit-note { text-align:center;margin:12px 0 0 }
 body.cf-booking .success-symbol { font-size:2rem;width:60px;height:60px;background:#c5b6ff1c;color:var(--accent);border:1px solid var(--accent);border-radius:50%;display:grid;place-items:center;margin-bottom:22px }
-body.cf-booking .next-steps { list-style:none;counter-reset:next;padding:0;margin:25px 0 }
-body.cf-booking .next-steps li { counter-increment:next;position:relative;padding:0 0 22px 42px }
-body.cf-booking .next-steps li:before { content:counter(next);position:absolute;left:0;top:0;width:27px;height:27px;border:1px solid var(--line);border-radius:50%;text-align:center;color:var(--accent) }
-body.cf-booking .next-steps b,
-body.cf-booking .next-steps span { display:block }
-body.cf-booking .next-steps span { color:var(--muted);font-size:.94rem }
 body.cf-booking .email-preview { border-top:1px solid var(--line);padding:16px 0 }
 body.cf-booking .email-preview summary { cursor:pointer;font-weight:600 }
 body.cf-booking .email-preview>div { padding:16px;background:#ffffff04;margin-top:14px;overflow-wrap:anywhere }
@@ -250,6 +239,9 @@ body.cf-booking .specs { gap:6px 9px }
 body.cf-booking .specs span:not(:first-child) { padding-left:9px }
 }
 @media(max-width:760px) {
+/* The sidebar summary stacks dead at the page bottom on mobile; the
+   booking flow reads cleaner without it, so it is hidden here only. */
+body.cf-booking .booking-layout .summary { display:none }
 body.cf-booking .prototype-banner { flex-direction:column;gap:3px;text-align:center;padding:8px 14px }
 body.cf-booking .site-header { padding:20px }
 body.cf-booking .brand { font-size:.75rem }
@@ -277,13 +269,9 @@ body.cf-booking .summary-spec { font-size:.88rem }
 body.cf-booking .summary dl { margin-top:15px }
 body.cf-booking .summary-note { display:none }
 body.cf-booking .summary-body>.small { font-size:.8rem }
-body.cf-booking .date-grid { gap:4px }
-body.cf-booking .date-button { padding:9px 2px }
-body.cf-booking .date-button small { font-size:.64rem }
-body.cf-booking .date-button span:first-child { font-size:.73rem }
-body.cf-booking .date-button strong { font-size:1.25rem }
-body.cf-booking .date-navigation h3 { font-size:1rem }
-body.cf-booking .icon-button { width:34px;height:34px }
+
+/* On mobile the sidebar summary is hidden entirely (element stays in the
+   DOM, so updateSummary() writes keep landing; only the layout changes). */
 body.cf-booking .field-grid { grid-template-columns:1fr }
 body.cf-booking .participant-row .field { margin-bottom:14px }
 body.cf-booking .participant-row .field:last-child { margin-bottom:0 }
@@ -496,8 +484,5 @@ body.cf-booking .package-top { align-items:baseline }
 /* Duration slider for event coverage */
 body.cf-booking .range-field input[type=range] { width:100%;accent-color:var(--accent);min-height:0;padding:8px 0 }
 body.cf-booking .range-field .range-ends { display:flex;justify-content:space-between;font-size:.8rem;color:var(--muted) }
+/* Dark scheme so the native pop-out calendar matches the dark theme. */
 body.cf-booking input[type=date] { color-scheme:dark }
-
-/* Whole date box opens the picker: clicks pass through to the input */
-body.cf-booking #event-date,
-body.cf-booking #wedding-date { cursor:pointer }

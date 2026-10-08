@@ -9,9 +9,9 @@
   <link rel="icon" href="../images/logo.webp">
   <link rel="stylesheet" href="../assets/css/fontawesome-all.min.css">
   <link rel="stylesheet" href="../assets/css/site-shell.css">
-  <link rel="stylesheet" href="booking.css?v=31">
+  <link rel="stylesheet" href="booking.css?v=36">
   <script defer src="booking-core.js?v=28"></script>
-  <script defer src="app.js?v=35"></script>
+  <script defer src="app.js?v=40"></script>
 </head>
 <body class="cf-booking">
   <main id="main">
@@ -53,9 +53,8 @@
           </p>
           <div id="group-options" class="inset" hidden><label for="group-size">How many graduates?</label><select id="group-size"><option value="">Group size — 2 to 4 graduates</option><option value="2">2 graduates — $280 total</option><option value="3">3 graduates — $340 total</option><option value="4">4 graduates — $380 total</option></select><p class="small muted">One organizer signs and pays for the group. Friends arrange their own split.</p></div>
           <div id="session-schedule">
-            <div class="date-navigation"><h3 id="date-range"></h3><div><button type="button" class="icon-button" id="previous-week" aria-label="Previous week">←</button><button type="button" class="icon-button" id="next-week" aria-label="Next week">→</button></div></div>
-            <div class="date-grid" id="date-grid" role="group" aria-label="Choose a date"></div>
-            <div class="time-heading"><h3 id="time-heading">Select a date above</h3><span class="small muted" id="duration-note"></span></div>
+            <div class="field"><label for="session-date">Session date</label><input type="date" id="session-date"></div>
+            <div class="time-heading"><h3 id="time-heading">Pick a date above</h3><span class="small muted" id="duration-note"></span></div>
             <div id="slots" class="slots" role="group" aria-label="Available session start times"></div>
             <p class="small muted" id="slot-explanation" hidden></p>
           </div>

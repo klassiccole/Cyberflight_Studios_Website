@@ -6,15 +6,7 @@ const money=value=>'$'+value;
 const timeLabel=minutes=>`${Math.floor(minutes/60)%12||12}:${String(minutes%60).padStart(2,'0')} ${minutes<720?'AM':'PM'}`;
 const formatDate=(key,options={month:'short',day:'numeric',weekday:'short'})=>new Intl.DateTimeFormat('en-US',{...options,timeZone:'UTC'}).format(new Date(key+'T12:00:00Z'));
 const formatInstant=date=>new Intl.DateTimeFormat('en-US',{timeZone:C.zone,month:'short',day:'numeric',hour:'numeric',minute:'2-digit',timeZoneName:'short'}).format(date);
-const initialNow=new Date();
-// Clicking anywhere on a date box opens the browser's calendar picker
-// (showPicker is unsupported in some browsers, which fall back to default
-// click behavior).
-['event-date','wedding-date'].forEach(id=>{
-  $(id).addEventListener('click',()=>{try{$(id).showPicker();}catch{/* older browsers open the picker natively */}});
-});
-const state={step:0,maxStep:0,service:null,package:'standard',count:2,tier:'t1',length:120,date:null,time:null,week:0,details:null,submittedAt:false,groupConfirmed:false,eventConfirmed:false,agreement:null,submissionKey:null,turnstileToken:null,turnstileId:null,turnstileWait:null,drawStrokes:[]};
-const firstDay=C.addDays(C.dateKey(initialNow),3);
+const state={step:0,maxStep:0,service:null,package:'standard',count:2,tier:'t1',length:120,date:null,time:null,details:null,submittedAt:false,groupConfirmed:false,eventConfirmed:false,agreement:null,submissionKey:null,turnstileToken:null,turnstileId:null,turnstileWait:null,drawStrokes:[]};
 let drawing=false,hasDrawing=false;const drawStrokes=state.drawStrokes;
 const canvas=$('signature-canvas'),ctx=canvas.getContext('2d');
 ctx.lineWidth=4;ctx.lineCap='round';ctx.lineJoin='round';ctx.strokeStyle='#201931';
@@ -81,7 +73,7 @@ function showStep(step, moveFocus=true){
 function selectService(service,opts={}){
   if(!C.services[service])throw new Error('Choose a service');
   const firstTime=state.service!==service;
-  if(state.service!==service){state.service=service;state.date=null;state.time=null;state.week=0;state.maxStep=0;resetDownstream();if(service==='event')state.eventConfirmed=false;}
+  if(state.service!==service){state.service=service;state.date=null;state.time=null;state.maxStep=0;resetDownstream();if(service==='event')state.eventConfirmed=false;}
   document.querySelectorAll('[name=service]').forEach(el=>el.checked=el.value===service);
   document.querySelectorAll('.package.service').forEach(el=>el.classList.toggle('selected',el.dataset.service===service));
   document.querySelectorAll('.service-select').forEach(el=>el.disabled=el.closest('.package').dataset.service!==service);
@@ -133,54 +125,28 @@ async function renderSchedule(){
   if(s.mode==='wedding')renderWeddingSchedule();
   updateSummary();
 }
-async function renderDates(){
-  const start=C.addDays(firstDay,state.week*7);
-  const packageId=apiPackage();
-  if(calendarStatus==='ready'&&calendarData?.start===start&&calendarData.package===packageId&&Date.now()-calendarData.loadedAt<30000){renderDateButtons();return;}
-  const attempt=++calendarRequest;
-  calendarController?.abort();
-  const controller=new AbortController();calendarController=controller;
-  calendarStatus='loading';calendarData=null;state.time=null;resetDownstream();
-  $('time-error').textContent='';
-  renderDateButtons();updateProgress();
-  const timer=window.setTimeout(()=>controller.abort(),25000);
-  try{
-    const query=new URLSearchParams({start,package:packageId});
-    const response=await fetch(`/api/availability?${query}`,{signal:controller.signal,cache:'no-store'});
-    if(!response.ok)throw new Error('Availability request failed');
-    const data=await response.json();
-    if(data.source!=='google'||data.timeZone!==C.zone||data.start!==start||data.package!==packageId||!Array.isArray(data.days)||data.days.length!==7||!data.days.every((day,i)=>day.key===C.addDays(start,i)&&Array.isArray(day.slots)&&day.slots.every(t=>Number.isInteger(t)&&t>=0&&t<1440&&t%30===0)))throw new Error('Unexpected availability response');
-    if(attempt!==calendarRequest)return;
-    calendarData={...data,loadedAt:Date.now()};
-    calendarStatus='ready';
-    state.date=data.days.find(day=>day.key===state.date&&day.slots.length)?.key||data.days.find(day=>day.slots.length)?.key||null;
-  }catch{
-    if(attempt!==calendarRequest)return;
-    calendarStatus='error';calendarData=null;state.date=null;
-    $('time-error').textContent='Availability could not be loaded. Go back to Service and try again, or contact us.';
-  }finally{
-    window.clearTimeout(timer);
-    if(attempt===calendarRequest){renderDateButtons();updateProgress();}
-  }
-}
-function renderDateButtons(){
-  const weekStart=C.addDays(firstDay,state.week*7);
-  const end=C.addDays(weekStart,6);
-  $('date-range').textContent=`${formatDate(weekStart,{month:'short',day:'numeric'})} – ${formatDate(end,{month:'short',day:'numeric',year:'numeric'})}`;
-  $('previous-week').disabled=state.week===0;$('next-week').disabled=state.week===3;
-  const days=Array.from({length:7},(_,i)=>C.addDays(weekStart,i));
-  if(!state.date)state.date=days.find(key=>slotsFor(key).length>0)||null;
-  $('date-grid').innerHTML=days.map(key=>{
-    const available=slotsFor(key).length>0;
-    return `<button type="button" class="date-button" data-date="${key}" aria-label="${escapeHTML(formatDate(key,{weekday:'long',month:'long',day:'numeric'}))}${available?'':', unavailable'}" aria-pressed="${state.date===key}" ${available?'':'disabled'}><span>${formatDate(key,{weekday:'short'})}</span><strong>${Number(key.slice(-2))}</strong><small>${available?'Available':calendarStatus==='ready'?'Closed':'Unavailable'}</small></button>`;
-  }).join('');
-  $('date-grid').querySelectorAll('button').forEach(el=>el.addEventListener('click',()=>{
-    if(state.date!==el.dataset.date){state.date=el.dataset.date;state.time=null;resetDownstream();}
-    $('time-error').textContent='';renderDates();updateSummary();updateProgress();
-  }));
-  renderSlots();
+function renderDates(){
+  /* Slots-mode date picking uses the same native date input as the event
+     and wedding flows: the browser/OS supplies the pop-out calendar on
+     desktop and the platform picker on mobile. Bounds mirror the server:
+     3-day lead, one-year ceiling. */
+  const {min,max}=slotsBounds();
+  $('session-date').min=min;$('session-date').max=max;
+  $('session-date').value=state.date||'';
+  if(state.date)loadDateSlots();else{calendarStatus='idle';calendarData=null;renderSlots();}
 }
 function renderSlots(){
+
+  // No date chosen yet: prompt for the picker instead of reporting a failure.
+  if(!state.date){
+    $('enter-details').disabled=true;
+    $('time-heading').textContent='Pick a date above';
+    $('duration-note').textContent='';
+    $('slots').innerHTML='<p class="empty">Choose your session date, then your start time.</p>';
+    $('slot-explanation').textContent='';
+    updateSummary();
+    return;
+  }
   const p=C.packages[apiPackage()];
   $('enter-details').disabled=calendarStatus!=='ready'||state.time===null;
   if(calendarStatus!=='ready'){
@@ -202,8 +168,73 @@ function renderSlots(){
   $('slot-explanation').textContent=state.time!==null?`Your session: ${timeLabel(state.time)}–${timeLabel(state.time+duration())}. With buffers, the calendar keeps ${timeLabel(state.time-30)}–${timeLabel(state.time+duration()+30)} clear.`:'Choose a start time. Both 30-minute buffers are included when checking availability.';
   updateSummary();
 }
-function moveWeek(change){state.week=Math.max(0,Math.min(3,state.week+change));state.date=null;state.time=null;resetDownstream();renderDates();updateProgress();}
-$('previous-week').addEventListener('click',()=>moveWeek(-1));$('next-week').addEventListener('click',()=>moveWeek(1));
+/* Slots-mode date bounds: 3-day lead (managed by the server), one-year
+   ceiling — same window every service shares. The native date input gets
+   min/max attributes so the pop-out calendar dims unbookable days. */
+function slotsBounds(){
+  const today=C.dateKey(new Date());
+  return {min:C.addDays(today,3),max:C.addDays(today,365)};
+}
+/* Desktop nicety: clicking anywhere in a date field pops the calendar,
+   not just the small calendar icon at the field's right edge. Modern
+   desktop browsers expose showPicker() on date inputs; feature-guarded so
+   browsers without it simply keep their default behavior. */
+['session-date','event-date','wedding-date'].forEach(id=>{
+  $(id).addEventListener('click',()=>{
+    if(typeof $(id).showPicker==='function'){
+      try{$(id).showPicker();}catch{/* Some browsers throw if the picker is
+          already open from the same gesture; the click still opens it. */}
+    }
+  });
+});
+$('session-date').addEventListener('change',()=>{
+  const value=$('session-date').value;
+  if(!value)return;
+  const {min,max}=slotsBounds();
+  if(value<min||value>max){
+    $('session-date').value=state.date||'';
+    $('time-error').textContent='Sessions can be booked from 3 days out to one year ahead.';
+    return;
+  }
+  state.date=value;state.time=null;resetDownstream();
+  $('time-error').textContent='';
+  updateSummary();updateProgress();
+  loadDateSlots();
+});
+/* Fetch availability for the chosen date. The response covers the chosen
+   date through the end of its calendar month; the client reads slot times
+   for the selected day only. */
+function loadDateSlots(){
+  const chosen=state.date;
+  if(!chosen){calendarStatus='idle';calendarData=null;return;}
+  const attempt=++calendarRequest;
+  calendarController?.abort();
+  const controller=new AbortController();calendarController=controller;
+  calendarStatus='loading';calendarData=null;$('time-error').textContent='';
+  renderSlots();updateProgress();
+  const timer=window.setTimeout(()=>controller.abort(),25000);
+  (async()=>{
+    try{
+      const query=new URLSearchParams({start:chosen,package:apiPackage()});
+      const response=await fetch(`/api/availability?${query}`,{signal:controller.signal,cache:'no-store'});
+      if(!response.ok)throw new Error('Availability request failed');
+      const data=await response.json();
+      const monthEndDay=new Date(Date.UTC(Number(chosen.slice(0,4)),Number(chosen.slice(5,7)),0)).getUTCDate();
+      const expectedDays=monthEndDay-Number(chosen.slice(8,10))+1;
+      if(data.source!=='google'||data.timeZone!==C.zone||data.start!==chosen||data.package!==apiPackage()||!Array.isArray(data.days)||data.days.length!==expectedDays||!data.days.every((day,i)=>day.key===C.addDays(chosen,i)&&Array.isArray(day.slots)&&day.slots.every(t=>Number.isInteger(t)&&t>=0&&t<1440&&t%30===0)))throw new Error('Unexpected availability response');
+      if(attempt!==calendarRequest)return;
+      calendarData={...data,loadedAt:Date.now()};
+      calendarStatus='ready';
+    }catch{
+      if(attempt!==calendarRequest)return;
+      calendarStatus='error';calendarData=null;state.date=null;
+      $('time-error').textContent='Availability could not be loaded. Please try again or contact us.';
+    }finally{
+      window.clearTimeout(timer);
+      if(attempt===calendarRequest){renderSlots();updateProgress();}
+    }
+  })();
+}
 
 function updateEventLengthLabel(){
   $('event-length-label').textContent=state.length>=840?'All day':`${state.length/60} hours`;

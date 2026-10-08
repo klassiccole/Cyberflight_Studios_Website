@@ -1,7 +1,20 @@
-/* Live availability. Reads Google calendars only: the calendar is the source of truth. */
+/* Live availability. Reads Google calendars only: the calendar is the source of truth.
+
+  One handler serves two modes:
+
+  - Detail mode (start=YYYY-MM-DD&package=P): returns one `days[]` entry per
+    calendar day from `start` through the end of `start`'s calendar month.
+    The client always sends the first of a month, so each response is a full
+    month of slots. Event coverage (package=event) gets the same month span
+    for its `busy[]` ranges; the client filters busy time to the chosen day.
+
+  - The booking window is one calendar year for every service. Per-service
+    caps (e.g. the wedding flow's 540-day maximum) live in booking-core.js;
+    this endpoint only enforces the shared ceiling. */
 import {accessToken, googleJSON, ZONE} from '../../lib/google-auth.mjs';
 const MINUTE = 60000;
 const DURATIONS = { mini: 30, standard: 90, group: 90 };
+const WINDOW_DAYS = 365;   // How far ahead any service may be requested.
 const dateFormat = new Intl.DateTimeFormat('en-CA', { timeZone: ZONE, year: 'numeric', month: '2-digit', day: '2-digit' });
 const timeFormat = new Intl.DateTimeFormat('en-US', { timeZone: ZONE, hour: '2-digit', minute: '2-digit', hourCycle: 'h23' });
 function dateKey(ms) {
@@ -12,6 +25,25 @@ function addDays(key, days) {
   const d = new Date(`${key}T12:00:00Z`);
   d.setUTCDate(d.getUTCDate() + days);
   return d.toISOString().slice(0, 10);
+}
+// First day of the calendar month containing `key`, in Charlotte time.
+function monthStart(key) {
+  return key.slice(0, 8) + '01';
+}
+// Days from `start` through the end of `start`'s calendar month. Ranges
+// always begin at `start` and stop at month end, so responses cover exactly
+// one month grid and the client can align day cells with keys directly.
+function monthSpan(start) {
+  /* Counting from `start` (which may be mid-month) through the last day of
+  its calendar month. Both anchors are pinned to 12:00 UTC: a date-only string
+  parses as UTC midnight, and mixing midnight with a noon anchor measures
+  every month half a day short, which the rounding then bumps up a day. */
+  const first = new Date(`${start}T12:00:00Z`);
+  const anchor = new Date(`${monthStart(start)}T12:00:00Z`);
+  const last = new Date(anchor);
+  last.setUTCMonth(last.getUTCMonth() + 1);
+  last.setUTCDate(0);   // Last day of the month.
+  return Math.round((Date.parse(last) - Date.parse(first)) / 86400000) + 1;
 }
 function localMinutes(ms) {
   const parts = timeFormat.formatToParts(new Date(ms));
@@ -86,13 +118,17 @@ function calculateDays(start, duration, openings, busy, now) {
   // Slots must fall on the third calendar day ahead or later (Charlotte
   // time): nothing on today, tomorrow, or the day after is bookable.
   const minTime = midnight(addDays(dateKey(now), 3));
-  return Array.from({ length: 7 }, (_, i) => {
+  return Array.from({ length: monthSpan(start) }, (_, i) => {
     const key = addDays(start, i), dayStart = midnight(key), dayEnd = midnight(addDays(key, 1));
     const slots = [], seen = new Set();
+    // Fast path: skip the 30-minute sweep entirely when no opening window
+    // reaches this day (buffered slot boundaries extend 30 min each side).
+    const dayOpenings = openings.filter(([x, y]) => y > dayStart - 30 * MINUTE && x < dayEnd + 30 * MINUTE);
+    if (!dayOpenings.length) return { key, slots };
     for (let t = dayStart; t < dayEnd; t += 30 * MINUTE) {
       const a = t - 30 * MINUTE, b = t + (duration + 30) * MINUTE;
       if (t < minTime) continue;
-      if (!openings.some(([x, y]) => a >= x && b <= y)) continue;
+      if (!dayOpenings.some(([x, y]) => a >= x && b <= y)) continue;
       if (busy.some(([x, y]) => a < y && b > x)) continue;
       const minute = localMinutes(t);
       if (dayEnd - dayStart > 24 * 60 * MINUTE && minute >= 60 && minute < 120) continue;
@@ -139,9 +175,13 @@ export async function onRequest({ request, env }) {
     if (!start || !/^\d{4}-\d{2}-\d{2}$/.test(start) || !Number.isFinite(Date.parse(`${start}T12:00:00Z`)) || addDays(start, 0) !== start || (!isEvent && !Object.hasOwn(DURATIONS, packageId))) {
       return reply({ error: 'Invalid date or package.' }, 400);
     }
+    // One-year ceiling for every service. `start` may sit in the past (the
+    // client requests whole months, and the current month begins before
+    // today); only the far edge is bounded. Slot math below zeroes out days
+    // inside the 3-day lead time.
     const today = dateKey(now);
-    const windowDays = isEvent ? 180 : 35;
-    if (start < today || start > addDays(today, windowDays)) return reply({ error: 'Date outside booking window.' }, 400);
+    if (start > addDays(today, WINDOW_DAYS)) return reply({ error: 'Date outside booking window.' }, 400);
+    const span = monthSpan(start);
     for (const name of ['GOOGLE_CLIENT_ID', 'GOOGLE_CLIENT_SECRET', 'GOOGLE_TOKEN_ENCRYPTION_KEY', 'GOOGLE_ALLOWED_EMAIL',
       'GOOGLE_AVAILABILITY_CALENDAR_ID', 'GOOGLE_BOOKINGS_CALENDAR_ID', 'GOOGLE_PERSONAL_CALENDAR_ID']) {
       if (typeof env[name] !== 'string' || !env[name].trim()) throw new Error('configuration');
@@ -150,8 +190,10 @@ export async function onRequest({ request, env }) {
     const signal = AbortSignal.timeout(20000);
     stage = 'refresh-token';
     const token = await accessToken(env, signal);
+    // The month's calendar span, buffered 30 min before and 2 h after so
+    // opening hours that butt against the month edges are fully visible.
     const timeMin = new Date(midnight(start) - 30 * MINUTE).toISOString();
-    const timeMax = new Date(midnight(addDays(start, 7)) + 120 * MINUTE).toISOString();
+    const timeMax = new Date(midnight(addDays(start, span)) + 120 * MINUTE).toISOString();
     stage = 'busy-calendars';
     const busy = await busyWindows(env, token, timeMin, timeMax, signal);
     stage = 'reconcile';
@@ -171,7 +213,7 @@ export async function onRequest({ request, env }) {
   } catch (error) {
     const message = error instanceof Error ? error.message : '';
     const safe = /^(http-\d{3}|not-connected|key|token|calendar-data|calendar-access|pagination-limit|response-size|configuration|date)$/.test(message);
-    console.error(JSON.stringify({ event: 'availability-failed', requestId, stage, reason: safe ? message : 'runtime-error' }));
+    console.error(JSON.stringify({ event: "availability-failed", requestId, stage, reason: safe ? message : "runtime-error" }));
     return reply({ error: 'Availability could not be loaded. Please try again or contact us.', requestId }, 503);
   }
 }
