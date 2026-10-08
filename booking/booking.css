@@ -243,6 +243,7 @@ body.cf-booking .specs span:not(:first-child) { padding-left:9px }
    booking flow reads cleaner without it, so it is hidden here only. */
 body.cf-booking .booking-layout .summary { display:none }
 body.cf-booking .prototype-banner { flex-direction:column;gap:3px;text-align:center;padding:8px 14px }
+body.cf-booking .service-slot .package-actions .primary { width:100%;justify-content:center }
 body.cf-booking .site-header { padding:20px }
 body.cf-booking .brand { font-size:.75rem }
 body.cf-booking .brand img { width:38px;height:38px }
@@ -472,6 +473,18 @@ body.cf-booking .service-select {
 	padding:9px 12px;font-weight:300;color:var(--text);appearance:none;-webkit-appearance:none
 }
 body.cf-booking .service-select:disabled { opacity:.5;pointer-events:none }
+
+/* Per-tile continue buttons: hidden until their tile is selected (pure
+   CSS via :has — no JS visibility logic), then shown under the selected
+   tile with each service's own schedule label. */
+body.cf-booking .service-slot { display:flex;flex-direction:column;gap:12px }
+/* The shared shell stylesheet gives every label a 1rem bottom margin (the
+   form-label rhythm); on the service tiles that margin stacks with the slot
+   gap and doubles the space above the continue button, so this rule
+   zeroes it for the tile labels only. */
+body.cf-booking .service-slot .package { margin:0 }
+body.cf-booking .service-slot .package-actions { display:none }
+body.cf-booking .service-slot .package.service:has(input:checked)+.package-actions { display:flex;justify-content:center;align-self:stretch }
 body.cf-booking .service-select:focus { border-color:var(--accent) }
 body.cf-booking .package.service:has(input:checked) .service-select { border-color:var(--accent) }
 body.cf-booking .service-price { font-size:1.15rem;white-space:nowrap;font-weight:600 }

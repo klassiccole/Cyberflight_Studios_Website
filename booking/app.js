@@ -77,8 +77,6 @@ function selectService(service,opts={}){
   document.querySelectorAll('[name=service]').forEach(el=>el.checked=el.value===service);
   document.querySelectorAll('.package.service').forEach(el=>el.classList.toggle('selected',el.dataset.service===service));
   document.querySelectorAll('.service-select').forEach(el=>el.disabled=el.closest('.package').dataset.service!==service);
-  $('choose-time').disabled=false;
-  $('choose-time').innerHTML=`${serviceInfo().scheduleLabel} <span aria-hidden="true">→</span>`;
   if(state.service==='graduation'){
     const grad=(opts.package&&C.packages[opts.package])?opts.package:'standard';
     if(state.package!==grad){state.package=grad;state.time=null;state.maxStep=0;resetDownstream();if(grad==='group')state.groupConfirmed=false;}
@@ -101,7 +99,12 @@ $('group-size').addEventListener('change',()=>{
 $('re-tier').addEventListener('change',()=>{state.tier=$('re-tier').value;selectService('realestate');});
 document.querySelectorAll('[data-step]').forEach(el=>el.addEventListener('click',()=>showStep(Number(el.dataset.step))));
 document.querySelectorAll('[data-back]').forEach(el=>el.addEventListener('click',()=>showStep(Number(el.dataset.back))));
-$('choose-time').addEventListener('click',()=>{state.maxStep=1;showStep(1);});
+/* One continue button per service tile (visible only on the selected
+   tile via CSS :has). Each button carries its service's own schedule
+   label from booking-core, so no text swapping is needed. */
+$('.package-options').addEventListener('click',event=>{
+  if(event.target.closest('button[data-service]')){state.maxStep=1;showStep(1);}
+});
 
 let calendarRequest=0,calendarData=null,calendarStatus='idle',calendarController=null;
 function apiPackage(){return internalPackage();}
