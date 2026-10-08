@@ -102,7 +102,7 @@ document.querySelectorAll('[data-back]').forEach(el=>el.addEventListener('click'
 /* One continue button per service tile (visible only on the selected
    tile via CSS :has). Each button carries its service's own schedule
    label from booking-core, so no text swapping is needed. */
-$('.package-options').addEventListener('click',event=>{
+document.querySelector('.package-options').addEventListener('click',event=>{
   if(event.target.closest('button[data-service]')){state.maxStep=1;showStep(1);}
 });
 
