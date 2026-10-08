@@ -36,7 +36,7 @@ lib/                       Shared logic imported by the functions
   booking-submit.mjs       Submission pipeline
   booking-agreement.mjs    Agreement builder (per service)
   google-auth.mjs          Token decryption + bounded Google JSON fetch
-migrations/                D1 migrations 0001-0003 (plain SQL)
+migrations/                D1 migrations 0001-0004 (plain SQL)
 tests/                     node:test suites (unit + storage + submission)
 assets/ images/ videos/    Static media
 components/                Shared HTML fragments + include loader (see "Shared fragments" below)

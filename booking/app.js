@@ -348,7 +348,7 @@ async function submitEventBooking(){
         submissionKey:state.submissionKey||crypto.randomUUID(),turnstileToken:state.turnstileToken||undefined})});
     const receipt=await response.json().catch(()=>({}));
     if(response.status===201||(response.status===200&&receipt.replayed)){
-      location.href=`/booking/confirmed/?id=${encodeURIComponent(receipt.requestId)}&expires=${encodeURIComponent(receipt.expiresAt)}`;
+      location.href=`/booking/confirmed/?id=${encodeURIComponent(receipt.requestId)}`;
       return;
     }
     $('details-error').textContent=SUBMIT_ERRORS[receipt.error]||receipt.detail||'The request could not be submitted. Try again or contact us.';
@@ -443,13 +443,13 @@ canvas.addEventListener('pointerdown',e=>{if(e.button!==0)return;drawing=true;ca
 canvas.addEventListener('pointermove',e=>{if(!drawing)return;const p=point(e);ctx.lineTo(p.x,p.y);drawStrokes[drawStrokes.length-1].push([+(p.x/canvas.width).toFixed(4),+(p.y/canvas.height).toFixed(4)]);});
 canvas.addEventListener('pointerup',()=>drawing=false);canvas.addEventListener('pointercancel',()=>drawing=false);
 $('clear-signature').addEventListener('click',()=>{ctx.clearRect(0,0,canvas.width,canvas.height);hasDrawing=false;});
-const SUBMIT_ERRORS={'time_unavailable':'That time was just taken. Go back and choose another available time.',
+const SUBMIT_ERRORS={'time_unavailable':'That time is no longer available. Go back and choose another time.',
   'agreement_changed_review_again':'The agreement changed. The current version has loaded below — review it and submit again.',
   'consent_required':'Both consent boxes must be checked before submitting.',
   'invalid_submission_key':'Something went wrong with the request. Refresh the page and try again.',
   'request_too_large':'The drawn signature is too complex. Clear it and submit with your typed name.',
   'booking_not_open_yet':'Booking requests are not open yet. Contact us directly.',
-  'booking_overlap':'That time was just taken. Go back and choose another available time.',
+  'booking_overlap':'That time is no longer available. Go back and choose another time.',
   'calendar_unavailable':'We could not reach the booking calendar. Try again in a minute — if it keeps failing, contact us directly.',
   'send_failed':'The booking was received but the confirmation email failed. Try again or contact us.',
   'request_unavailable':'The request could not be completed. Try again or contact us.',
@@ -481,7 +481,7 @@ $('signature-form').addEventListener('submit',async event=>{
         state.service==='event'?{}:{agreementVersion:state.agreement.version,agreementHash:state.agreement.hash}))});
     const receipt=await response.json().catch(()=>({}));
     if(response.status===201||(response.status===200&&receipt.replayed)){
-      location.href=`/booking/confirmed/?id=${encodeURIComponent(receipt.requestId)}&expires=${encodeURIComponent(receipt.expiresAt)}`;
+      location.href=`/booking/confirmed/?id=${encodeURIComponent(receipt.requestId)}`;
       return;
     }
     $('sign-error').textContent=SUBMIT_ERRORS[receipt.error]||receipt.detail||'The request could not be submitted. Try again or contact us.';

@@ -103,17 +103,11 @@ function calculateDays(start, duration, openings, busy, now) {
     return { key, slots: slots.sort((a, b) => a - b) };
   });
 }
-/* Holds that expired without approval release their calendar event here, so
-   no cron is needed. Missing events (already deleted by the owner) are fine. */
-/* Keeps the database consistent with the calendar, which the owner manages.
-   Expired holds: their HOLD events are deleted and the rows marked expired.
-   Holds whose calendar event has vanished (the owner deleted it to decline)
-   are marked declined, so the slot is free for re-booking immediately. */
-/* Keeps the database consistent with the calendar. The owner manages bookings
-   by editing the Bookings Calendar directly: when an event is deleted there,
-   the saved request row is deleted too, removing all its information. Rows
-   without an event are also removed (event write failed or rolled back).
-   Fresh submissions get a short grace period before this check applies. */
+/* Keeps the database consistent with the calendar, which is the source of
+   truth. The owner manages bookings by editing the Bookings Calendar
+   directly: when an event is deleted there, the saved request row (and its
+   signed agreement) is deleted too. Rows without any event are also removed
+   (event write failed or rolled back). */
 async function reconcileBookingsWithCalendar(env) {
   const rows = await env.BOOKING_DB.prepare(`SELECT id, created_at FROM booking_requests`).all();
   if (!rows.success || !Array.isArray(rows.results) || !rows.results.length) return;
@@ -131,7 +125,6 @@ async function reconcileBookingsWithCalendar(env) {
       continue;
     }
     if (items === null || items.length) continue;
-    await env.BOOKING_DB.prepare('DELETE FROM booking_jobs WHERE request_id=?').bind(row.id).run();
     await env.BOOKING_DB.prepare('DELETE FROM booking_requests WHERE id=?').bind(row.id).run();
   }
 }
@@ -161,9 +154,8 @@ export async function onRequest({ request, env }) {
     const timeMax = new Date(midnight(addDays(start, 7)) + 120 * MINUTE).toISOString();
     stage = 'busy-calendars';
     const busy = await busyWindows(env, token, timeMin, timeMax, signal);
-    stage = 'expired-holds';
+    stage = 'reconcile';
     const busyAll = merge([...busy]);
-    stage = 'expired-hold-cleanup';
     try { await reconcileBookingsWithCalendar(env); } catch(error) { console.error(JSON.stringify({event:'reconcile_failed',reason:String(error&&error.message||'unknown').slice(0,80)})); }
     if (isEvent) {
       // Event coverage ignores opening hours; the client computes which start
