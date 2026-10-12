@@ -1424,6 +1424,13 @@ body.standalone-page #main article {
 /*
 	Canonical Back and Home controls used throughout
 	Cyberflight Studios standalone pages.
+
+	NOTE: services/graduation, services/realestate and
+	services/videography still use the old standalone template
+	(no floating-boxes intro tile) and rely on these absolute
+	positions plus the JS-injected Home button in main.js.
+	If those pages are converted to the shared header component,
+	this absolute-position block becomes dead code and can go.
 */
 
 #main article .page-back,
@@ -1696,15 +1703,21 @@ body.standalone-page.floating-boxes #main article {
 	padding: 0;
 }
 
-body.standalone-page.floating-boxes .intro-tile {
+/* The booking page keeps its own class names but shares this header
+   component's styling through the co-listed selectors below. */
+
+body.standalone-page.floating-boxes .intro-tile,
+body.cf-booking .booking-intro-tile {
 	background: rgba(27, 31, 37, 0.85);
 	border: 1px solid #3b414c;
 	border-radius: 12px;
 	padding: 30px;
 	margin-bottom: 26px;
+	position: relative;
 }
 
-body.standalone-page.floating-boxes .intro-tile .page-nav {
+body.standalone-page.floating-boxes .intro-tile .page-nav,
+body.cf-booking .booking-intro-tile .booking-page-nav {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
@@ -1712,26 +1725,107 @@ body.standalone-page.floating-boxes .intro-tile .page-nav {
 }
 
 body.standalone-page.floating-boxes #main article .intro-tile .page-back,
-body.standalone-page.floating-boxes #main article .intro-tile .page-home {
+body.standalone-page.floating-boxes #main article .intro-tile .page-home,
+body.cf-booking .booking-intro-tile .booking-page-back,
+body.cf-booking .booking-intro-tile .booking-page-home {
 	position: static;
 }
 
-body.standalone-page.floating-boxes .intro-tile .page-banner {
-	margin-bottom: 2rem;
-	max-width: 880px;
-	margin-left: auto;
-	margin-right: auto;
+/* When a tile contains a full-bleed banner, the controls leave the flow
+   and sit on the image's top corners on a translucent disc. Tiles with
+   no banner keep the static nav row above the header text. */
+
+body.standalone-page.floating-boxes .intro-tile:has(> .page-banner) .page-nav,
+body.cf-booking .booking-intro-tile .booking-page-nav {
+	position: absolute;
+	top: 12px;
+	left: 12px;
+	right: 12px;
+	margin-bottom: 0;
+	z-index: 2;
 }
 
-body.standalone-page.floating-boxes .intro-tile .intro-prompt {
-	text-align: center;
-	margin: 0;
-	font-size: 0.95rem;
-	opacity: 0.85;
+body.standalone-page.floating-boxes #main article .intro-tile:has(> .page-banner) .page-back,
+body.standalone-page.floating-boxes #main article .intro-tile:has(> .page-banner) .page-home,
+body.cf-booking .booking-intro-tile .booking-page-back,
+body.cf-booking .booking-intro-tile .booking-page-home {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	width: var(--cf-nav-size);
+	height: var(--cf-nav-size);
+
+	border: 0;
+	border-radius: 50%;
+	background: rgba(27, 31, 37, 0.55);
+
+	color: #ffffff;
+	line-height: 1;
+
+	text-decoration: none;
+	cursor: pointer;
+
+	transition: background-color var(--cf-transition-speed) ease-in-out;
 }
 
-/* Banner height returned to the shared 190px default; the 220px
-	trial on the five main pages was rejected. */
+body.standalone-page.floating-boxes #main article .intro-tile:has(> .page-banner) .page-back,
+body.cf-booking .booking-intro-tile .booking-page-back {
+	font-size: var(--cf-back-icon-size);
+}
+
+body.standalone-page.floating-boxes #main article .intro-tile:has(> .page-banner) .page-home,
+body.cf-booking .booking-intro-tile .booking-page-home {
+	font-size: var(--cf-home-icon-size);
+}
+
+body.standalone-page.floating-boxes #main article .intro-tile:has(> .page-banner) .page-back:hover,
+body.standalone-page.floating-boxes #main article .intro-tile:has(> .page-banner) .page-home:hover,
+body.cf-booking .booking-intro-tile .booking-page-back:hover,
+body.cf-booking .booking-intro-tile .booking-page-home:hover {
+	background: rgba(27, 31, 37, 0.75);
+}
+
+body.standalone-page.floating-boxes #main article .intro-tile:has(> .page-banner) .page-back:active,
+body.standalone-page.floating-boxes #main article .intro-tile:has(> .page-banner) .page-home:active,
+body.cf-booking .booking-intro-tile .booking-page-back:active,
+body.cf-booking .booking-intro-tile .booking-page-home:active {
+	background: rgba(27, 31, 37, 0.9);
+}
+
+body.standalone-page.floating-boxes #main article .intro-tile:has(> .page-banner) .page-back:focus-visible,
+body.standalone-page.floating-boxes #main article .intro-tile:has(> .page-banner) .page-home:focus-visible,
+body.cf-booking .booking-intro-tile .booking-page-back:focus-visible,
+body.cf-booking .booking-intro-tile .booking-page-home:focus-visible {
+	outline: 2px solid currentColor;
+	outline-offset: 3px;
+}
+
+/* Full-bleed banner: the image edges become the tile edges and the top
+   corners take the tile's radius. The 190px desktop crop is set in the
+   shared Page Banners block above. Page captions were removed to make
+   room for a future navigation bar under the banner, so nothing follows
+   the image inside the tile. */
+
+body.standalone-page.floating-boxes .intro-tile:has(> .page-banner) .page-banner,
+body.cf-booking .booking-intro-tile .page-banner {
+	max-width: none;
+	margin: -30px -30px 0 -30px;
+	border-radius: 12px 12px 0 0;
+}
+
+body.standalone-page.floating-boxes .intro-tile:has(> .page-banner) .page-banner img,
+body.cf-booking .booking-intro-tile .page-banner img {
+	border-radius: 12px 12px 0 0;
+}
+
+/* Gallery sub-page titles keep their Dimension-style h2.major underline.
+   The top margin restores the gap the banner's old 2rem bottom margin
+   used to provide now that the banner sits flush at the tile's bottom. */
+
+body.standalone-page.floating-boxes .intro-tile h2.major {
+	margin-top: 1.5rem;
+}
 
 body.standalone-page.floating-boxes .content-box {
 	background: rgba(27, 31, 37, 0.85);
@@ -1749,8 +1843,14 @@ body.standalone-page.floating-boxes .services-grid {
 
 @media screen and (max-width: 736px) {
 
-	body.standalone-page.floating-boxes .intro-tile {
+	body.standalone-page.floating-boxes .intro-tile,
+	body.cf-booking .booking-intro-tile {
 		padding: 20px;
+	}
+
+	body.standalone-page.floating-boxes .intro-tile:has(> .page-banner) .page-banner,
+	body.cf-booking .booking-intro-tile .page-banner {
+		margin: -20px -20px 0 -20px;
 	}
 
 	body.standalone-page.floating-boxes .content-box {

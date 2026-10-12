@@ -15,7 +15,7 @@
     },
     event: {
       label: 'Event Coverage', mode: 'event', scheduleLabel: 'Choose a date',
-      summaryImage: { src: '../images/gallery/events/events_cover.webp', alt: 'Event coverage by Cyberflight Studios' },
+      summaryImage: { src: '../images/gallery/events_cover.webp', alt: 'Event coverage by Cyberflight Studios' },
       minLength: 120, maxLength: 1140, startEarliest: 480, startLatest: 1410, buffer: 30,
       payLabel: 'Retainer at booking, balance 7 days before'
     },

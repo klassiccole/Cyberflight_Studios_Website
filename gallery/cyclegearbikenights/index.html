@@ -19,19 +19,20 @@
 			name="description"
 			content="Photography from Cycle Gear Bike Nights by Cyberflight Studios in the Charlotte, NC area."
 		/>
+		<link rel="canonical" href="https://cyberflight.studio/gallery/cyclegearbikenights/" />
 
-		<link rel="icon" type="image/png" href="../../../images/favicon.png" />
+		<link rel="icon" type="image/png" href="../../images/favicon.png" />
 
 		<!-- Styles -->
-		<link rel="stylesheet" href="../../../assets/css/fontawesome-all.min.css" />
-		<link rel="stylesheet" href="../../../assets/css/site-shell.css" />
-		<link rel="stylesheet" href="../../../assets/css/site-pages.css" />
+		<link rel="stylesheet" href="../../assets/css/fontawesome-all.min.css" />
+		<link rel="stylesheet" href="../../assets/css/site-shell.css" />
+		<link rel="stylesheet" href="../../assets/css/site-pages.css" />
 		<noscript>
-			<link rel="stylesheet" href="../../../assets/css/noscript.css" />
+			<link rel="stylesheet" href="../../assets/css/noscript.css" />
 		</noscript>
 	</head>
 
-	<body class="standalone-page">
+	<body class="standalone-page floating-boxes">
 
 		<!-- Wrapper -->
 		<div id="wrapper">
@@ -42,56 +43,73 @@
 				<!-- Cycle Gear Bike Nights -->
 				<article id="gallery-cyclegear">
 
-					<h2 class="major">Cycle Gear Bike Nights</h2>
+					<!-- Gallery Header -->
+					<div class="intro-tile">
+						<nav class="page-nav" aria-label="Page navigation">
+							<a
+								href="../"
+								class="page-back"
+								aria-label="Back to gallery"
+								title="Back to Gallery"
+							>
+								&#8592;
+							</a>
+							<a
+								href="/"
+								class="page-home icon solid fa-home"
+								aria-label="Home"
+								title="Home"
+							></a>
+						</nav>
+
+						<span class="image page-banner">
+							<img
+								src="../../images/headers/gallery.webp"
+								alt="Cyberflight Studios Gallery"
+							/>
+						</span>
+
+						<h2 class="major">Cycle Gear Bike Nights</h2>
+					</div>
 
 					<div class="gallery-grid">
 
 						<img
-							src="../../../images/gallery/events/cyclegearbikenight/cyclegear1.jpg"
+							src="../../images/gallery/cyclegearbikenights/cyclegear1.jpg"
 							alt="Cycle Gear Bike Night 1"
 							loading="lazy"
 							decoding="async"
 						/>
 
 						<img
-							src="../../../images/gallery/events/cyclegearbikenight/cyclegear2.jpg"
+							src="../../images/gallery/cyclegearbikenights/cyclegear2.jpg"
 							alt="Cycle Gear Bike Night 2"
 							loading="lazy"
 							decoding="async"
 						/>
 
 						<img
-							src="../../../images/gallery/events/cyclegearbikenight/cyclegear3.jpg"
+							src="../../images/gallery/cyclegearbikenights/cyclegear3.jpg"
 							alt="Cycle Gear Bike Night 3"
 							loading="lazy"
 							decoding="async"
 						/>
 
 						<img
-							src="../../../images/gallery/events/cyclegearbikenight/cyclegear4.jpg"
+							src="../../images/gallery/cyclegearbikenights/cyclegear4.jpg"
 							alt="Cycle Gear Bike Night 4"
 							loading="lazy"
 							decoding="async"
 						/>
 
 						<img
-							src="../../../images/gallery/events/cyclegearbikenight/cyclegear5.jpg"
+							src="../../images/gallery/cyclegearbikenights/cyclegear5.jpg"
 							alt="Cycle Gear Bike Night 5"
 							loading="lazy"
 							decoding="async"
 						/>
 
 					</div>
-
-					<!-- Back to Events -->
-					<a
-						href="../"
-						class="page-back"
-						aria-label="Back to events"
-						title="Back to Events"
-					>
-						&#8592;
-					</a>
 
 				</article>
 
@@ -109,7 +127,7 @@
 				loop
 				playsinline
 				preload="none"
-				poster="../../../images/bg.webp"
+				poster="../../images/bg.webp"
 				aria-hidden="true">
 			</video>
 
@@ -119,7 +137,7 @@
 					const video = document.getElementById("homepage-video");
 
 					const source = document.createElement("source");
-					source.src = "../../../videos/gallery_background.mp4";
+					source.src = "../../videos/gallery_background.mp4";
 					source.type = "video/mp4";
 
 					video.appendChild(source);
@@ -136,8 +154,7 @@
 			
 		</div>
 	<!-- Site JavaScript -->
-		<script src="../../../assets/js/main.js"></script>
-
+		<script src="../../assets/js/main.js"></script>
 
 	<script src="/components/html-include.js?v=1"></script>
 	</body>

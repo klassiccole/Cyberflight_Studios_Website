@@ -1,0 +1,7 @@
+# The gallery events level was flattened; the three event galleries now
+# live directly under /gallery/. Old URLs 301 to their new homes.
+
+/gallery/events/cyclegearbikenights/  /gallery/cyclegearbikenights/  301
+/gallery/events/hyattshootingcompetitions/  /gallery/hyattshootingcompetitions/  301
+/gallery/events/monroeairshow/  /gallery/monroeairshow/  301
+/gallery/events/  /gallery/  301

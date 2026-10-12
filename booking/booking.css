@@ -334,34 +334,10 @@ body.cf-booking main {
   padding: 48px 0;
 }
 
-/* Introduction and progress steps share one tile */
-body.cf-booking .booking-intro-tile {
-  background: rgba(27, 31, 34, 0.85);
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 30px 30px 16px;
-  margin-bottom: 26px;
-}
-
-body.cf-booking .booking-intro-tile .page-intro {
-  margin-bottom: 18px;
-  text-align: center;
-}
-
-body.cf-booking .booking-intro-tile .page-intro p {
-  margin-bottom: 0;
-}
-
-body.cf-booking .booking-intro-tile .steps {
-  margin-bottom: 0;
-}
-
-body.cf-booking .booking-intro-tile .page-banner {
-  max-width: 880px;
-  margin: 0 auto 2rem;
-}
-
-
+/* The intro tile's chrome (background, border, nav, banner) is shared
+   with the rest of the site from site-shell.css; nothing page-specific
+   remains. Captions were removed site-wide to make room for a future
+   nav bar under the banner. */
 
 /* Smaller screens */
 @media (max-width: 736px) {
@@ -377,89 +353,12 @@ body.cf-booking .booking-intro-tile .page-banner {
     max-width: none;
   }
 
-  body.cf-booking .booking-intro-tile {
-    padding: 20px;
-  }
 }
 
 @media(prefers-reduced-motion:reduce) {
 body.cf-booking * { scroll-behavior:auto!important;transition:none!important }
 }
 
-/* Booking Page Navigation
-   Matches the navigation controls used throughout
-   the main Cyberflight Studios website.
-*/
-
-body.cf-booking .booking-page-nav {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 18px;
-}
-
-body.cf-booking .booking-page-back,
-body.cf-booking .booking-page-home {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    width: 2.5rem;
-    height: 2.5rem;
-
-    border: 0;
-    border-radius: 50%;
-    background: transparent;
-
-    color: #ffffff;
-    line-height: 1;
-
-    text-decoration: none;
-    cursor: pointer;
-
-    transition: background-color 0.2s ease-in-out;
-}
-
-body.cf-booking .booking-page-back {
-    font-size: 1.35rem;
-}
-
-body.cf-booking .booking-page-home {
-    font-size: 1.15rem;
-}
-
-body.cf-booking .booking-page-home.icon {
-    position: relative;
-    border-bottom: none;
-}
-
-body.cf-booking .booking-page-home.icon::before {
-    display: inline-block;
-    font-family: "Font Awesome 5 Free";
-    font-style: normal;
-    font-variant: normal;
-    font-weight: 900;
-    line-height: 1;
-    text-rendering: auto;
-    -webkit-font-smoothing: antialiased;
-}
-
-body.cf-booking .booking-page-back:hover,
-body.cf-booking .booking-page-home:hover {
-    color: #ffffff;
-    background-color: rgba(255, 255, 255, 0.075);
-}
-
-body.cf-booking .booking-page-back:active,
-body.cf-booking .booking-page-home:active {
-    background-color: rgba(255, 255, 255, 0.175);
-}
-
-body.cf-booking .booking-page-back:focus-visible,
-body.cf-booking .booking-page-home:focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 3px;
-}
 /* Universal step 1: one tile per service. Tiles reuse .package styling;
    selected tiles keep their dropdown enabled. */
 body.cf-booking .package.service .package-title { font-size:1.18rem }

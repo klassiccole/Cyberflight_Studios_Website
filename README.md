@@ -2,7 +2,7 @@
 
 Source for [cyberflight.studio](https://cyberflight.studio), the site of Cyberflight Studios LLC (photography, videography, drone media; Charlotte, NC). A dependency-free static site whose booking and contact flows run as Cloudflare Pages Functions backed by a D1 database, Google Calendar, Resend, and Zoho Mail.
 
-This file is the operational handbook for humans and coding agents. `README.txt` is the original narrative/history doc and stays as-is.
+This file is the operational handbook for humans and coding agents.
 
 ## Tech stack
 
@@ -20,6 +20,9 @@ This file is the operational handbook for humans and coding agents. `README.txt`
 ```
 index.html                 Home page
 about/ contact/ gallery/   Static pages, one dir + index.html per clean URL
+gallery/                   charlotte, nature, film, cyclegearbikenights,
+                           hyattshootingcompetitions, monroeairshow (flat,
+                           no intermediate hubs)
 services/                  photography, videography, drone, graduation, realestate
 booking/                   Universal booking flow (the active one)
   index.html               Step-based booking UI
@@ -40,6 +43,8 @@ migrations/                D1 migrations 0001-0004 (plain SQL)
 tests/                     node:test suites (unit + storage + submission)
 assets/ images/ videos/    Static media
 components/                Shared HTML fragments + include loader (see "Shared fragments" below)
+_redirects                 Cloudflare Pages redirects (301s from the old
+                           /gallery/events/* URLs; see "Gallery structure" below)
 staging/                   Working copies mid-migration (booking-universal)
 wrangler.jsonc             Local dev config (bindings; DB id for remote ops)
 .dev.vars.example          Template for local secrets (copy to .dev.vars)
@@ -84,9 +89,7 @@ Run it after changing any production secret (Turnstile, Resend, Google keys). It
 npm test
 ```
 
-Runs `node --test tests/*.test.mjs`. Suites cover booking input validation (server-derived prices, package rules, participant lists), submission pipeline, storage/conflict behavior, and orphan cleanup after calendar reconciliation. Suites are plain `node:test`; add a `test('name', ...)` in the relevant file rather than introducing a framework.
-
-**Known issue:** none. The `lost-response retry` test used to fail because the replay lookup ran after Turnstile verification, but Turnstile tokens are single-use, so a customer retrying after a lost response could never re-verify and hit an error even though their booking was saved. Fixed by short-circuiting the replay before verification; the suite is 30/30.
+Runs `node --test tests/*.test.mjs`. Suites cover booking input validation (server-derived prices, package rules, participant lists), submission pipeline, storage/conflict behavior, and orphan cleanup after calendar reconciliation. Suites are plain `node:test`; add a `test('name', ...)` in the relevant file rather than introducing a framework. Current count: 28 tests, all passing.
 
 The submission pipeline enforces replay-before-verify as a security-relevant ordering. Do not move the `verify` call above the prior-row lookup.
 
@@ -125,7 +128,43 @@ Conventions:
 
 - Bump `?v=` on the `data-include` attribute in every page that references a fragment whenever that fragment's markup changes (same rule as booking assets, above).
 - Links inside fragments use absolute paths (`/contact/`); all pages are served from the domain root, so fragments need no per-page path logic.
-- The pattern is not footer-specific: any future shared fragment (e.g. a shared header) follows the same form — one placeholder + one fragment file in `components/`, styled by whichever stylesheet family the adopting pages already load.
+- The pattern is not footer-specific: any future shared fragment follows the same form — one placeholder + one fragment file in `components/`, styled by whichever stylesheet family the adopting pages already load. Note: the shared page **header** is deliberately *not* a fragment — it is per-page markup styled centrally from `site-shell.css`; see "Shared header component" below.
+
+## Shared header component (site-shell.css)
+
+All modern standalone pages share one header "tile", styled centrally in the **Floating Box Layout** section of `assets/css/site-shell.css` (markup is duplicated per page; the styling is not):
+
+```html
+<div class="intro-tile">
+    <nav class="page-nav" aria-label="Page navigation">
+        <a href="<parent>" class="page-back" aria-label="Back to <parent>">←</a>
+        <a href="/" class="page-home icon solid fa-home" aria-label="Home"></a>
+    </nav>
+    <span class="image page-banner">
+        <img src="<root>/images/headers/<page>.webp" alt="<page>" />
+    </span>
+    <!-- optional text header (gallery sub-pages use h2.major) -->
+</div>
+```
+
+Rules of the component:
+
+- **Full-bleed banner:** the image spans the tile edge-to-edge; its top corners take the tile's 12px radius. On desktop it is cropped to a shared **190px** height (a 220px trial was rejected — keep 190). Below 737px it renders at natural proportions.
+- **Overlay controls:** when a tile contains a banner, `.page-nav` leaves the flow (via `:has(> .page-banner)`) and the back/home buttons sit on the image's top corners over a translucent dark disc (`rgba(27,31,37,0.55)`, darker on hover/active). Tiles **without** a banner keep a static nav row above the header text (the sub-service pages: photography, drone, plus privacy/terms' text tiles).
+- **Browser support:** the overlay relies on `:has()`; older browsers simply fall back to the static nav row above the banner.
+- **Header images** live in `images/headers/*.webp` (`about`, `booking`, `contact`, `gallery`, `services`). They carry the page title, which is why most tiles have no visible text heading.
+- **No captions:** the text captions that used to sit under the banners were removed site-wide to make room for a future nav bar under the header image. Don't reintroduce caption elements.
+- **Booking shares it:** the booking page keeps its own class names (`booking-intro-tile`, `booking-page-nav`, `booking-page-back`, `booking-page-home`) but they are co-listed in the same `site-shell.css` rules, so a change to the header component covers booking automatically. Only booking-specific quirks stay in `booking/booking.css`.
+- **Old-template pages:** `services/graduation`, `services/realestate`, and `services/videography` still use the pre-floating-boxes template (absolute-positioned lone back link, JS-injected Home button from `main.js`). Converting them to the component is a planned follow-up; they are the only reason the legacy absolute-position rules in the Page Navigation block of `site-shell.css` still exist.
+
+## Gallery structure
+
+The gallery is **flat**: `charlotte`, `nature`, `film`, `cyclegearbikenights`, `hyattshootingcompetitions`, and `monroeairshow` sit directly under `/gallery/`. The former `/gallery/events/` hub was removed and the three event galleries moved up one level:
+
+- Old URLs 301-redirect via `_redirects` at the repo root (Cloudflare Pages). If a gallery page moves again, add a redirect line there.
+- Canonical tags and `sitemap.xml` point at the new URLs; keep them in sync with any move.
+- Image folders mirror the page folders: `images/gallery/<name>/` (the bike-nights image folder was renamed to match its page dir).
+- `booking/booking-core.js` uses `images/gallery/events_cover.webp` as the generic event summary image — that file's path is load-bearing for the booking flow.
 
 ## Variables
 

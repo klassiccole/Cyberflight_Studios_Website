@@ -1,0 +1,137 @@
+<!DOCTYPE HTML>
+<!--
+	Dimension by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license
+-->
+<html lang="en">
+	<head>
+		<title>Monroe Airshow | Cyberflight Studios</title>
+
+		<meta charset="utf-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1, user-scalable=no"
+		/>
+
+		<!-- SEO -->
+		<meta
+			name="description"
+			content="Airshow photography from the Monroe Airshow by Cyberflight Studios in North Carolina."
+		/>
+		<link rel="canonical" href="https://cyberflight.studio/gallery/monroeairshow/" />
+
+		<link rel="icon" type="image/png" href="../../images/favicon.png" />
+
+		<!-- Styles -->
+		<link rel="stylesheet" href="../../assets/css/fontawesome-all.min.css" />
+		<link rel="stylesheet" href="../../assets/css/site-shell.css" />
+		<link rel="stylesheet" href="../../assets/css/site-pages.css" />
+		<noscript>
+			<link rel="stylesheet" href="../../assets/css/noscript.css" />
+		</noscript>
+	</head>
+
+	<body class="standalone-page floating-boxes">
+
+		<!-- Wrapper -->
+		<div id="wrapper">
+
+			<!-- Main -->
+			<div id="main">
+
+				<!-- Monroe Airshow -->
+				<article id="gallery-monroe-airshow">
+
+					<!-- Gallery Header -->
+					<div class="intro-tile">
+						<nav class="page-nav" aria-label="Page navigation">
+							<a
+								href="../"
+								class="page-back"
+								aria-label="Back to gallery"
+								title="Back to Gallery"
+							>
+								&#8592;
+							</a>
+							<a
+								href="/"
+								class="page-home icon solid fa-home"
+								aria-label="Home"
+								title="Home"
+							></a>
+						</nav>
+
+						<span class="image page-banner">
+							<img
+								src="../../images/headers/gallery.webp"
+								alt="Cyberflight Studios Gallery"
+							/>
+						</span>
+
+						<h2 class="major">Monroe Airshow</h2>
+					</div>
+
+					<div class="gallery-grid">
+
+						<img src="../../images/gallery/monroeairshow/monroeairshow1.jpg" alt="Monroe Airshow 1" loading="lazy" decoding="async" />
+						<img src="../../images/gallery/monroeairshow/monroeairshow2.jpg" alt="Monroe Airshow 2" loading="lazy" decoding="async" />
+						<img src="../../images/gallery/monroeairshow/monroeairshow3.jpg" alt="Monroe Airshow 3" loading="lazy" decoding="async" />
+						<img src="../../images/gallery/monroeairshow/monroeairshow4.jpg" alt="Monroe Airshow 4" loading="lazy" decoding="async" />
+						<img src="../../images/gallery/monroeairshow/monroeairshow5.jpg" alt="Monroe Airshow 5" loading="lazy" decoding="async" />
+						<img src="../../images/gallery/monroeairshow/monroeairshow6.jpg" alt="Monroe Airshow 6" loading="lazy" decoding="async" />
+						<img src="../../images/gallery/monroeairshow/monroeairshow7.jpg" alt="Monroe Airshow 7" loading="lazy" decoding="async" />
+						<img src="../../images/gallery/monroeairshow/monroeairshow8.jpg" alt="Monroe Airshow 8" loading="lazy" decoding="async" />
+						<img src="../../images/gallery/monroeairshow/monroeairshow9.jpg" alt="Monroe Airshow 9" loading="lazy" decoding="async" />
+						<img src="../../images/gallery/monroeairshow/monroeairshow10.jpg" alt="Monroe Airshow 10" loading="lazy" decoding="async" />
+
+					</div>
+
+				</article>
+
+			</div>
+			<div data-include="/components/footer.html?v=2"></div>
+
+		</div>
+
+		<!-- Background -->
+		<div id="bg">
+
+			<video
+				id="homepage-video"
+				muted
+				loop
+				playsinline
+				preload="none"
+				poster="../../images/bg.webp"
+				aria-hidden="true">
+			</video>
+
+			<script>
+				window.addEventListener("load", function () {
+
+					const video = document.getElementById("homepage-video");
+
+					const source = document.createElement("source");
+					source.src = "../../videos/gallery_background.mp4";
+					source.type = "video/mp4";
+
+					video.appendChild(source);
+					video.load();
+
+					video.addEventListener("canplay", function () {
+						video.play().catch(function () {
+							// Poster remains visible if autoplay is unavailable.
+						});
+					}, { once: true });
+
+				});
+			</script>
+
+		</div>
+<!-- Site JavaScript -->
+		<script src="../../assets/js/main.js"></script>
+
+	<script src="/components/html-include.js?v=1"></script>
+	</body>
+</html>

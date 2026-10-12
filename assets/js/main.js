@@ -60,6 +60,11 @@
 * Automatically adds a Home button to the upper-right corner of
 * standalone pages. This keeps navigation consistent without requiring
 * the button to be manually added to every HTML file.
+*
+* Only the old-template service pages (graduation, realestate,
+* videography) still need this; all other pages ship a .page-nav in
+* their intro tile. If those pages convert to the shared header
+* component, this injection can be removed.
 */
     document.addEventListener('DOMContentLoaded', function () {
 
