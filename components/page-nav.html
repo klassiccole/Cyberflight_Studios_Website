@@ -1,0 +1,22 @@
+<!--
+	Shared section menu: the primary 4-page navigation shown under the
+	header banner on every page except the homepage. Populate pages by
+	placing this placeholder inside the intro tile, directly after the
+	banner image:
+		<div data-include="/components/page-nav.html?v=1"></div>
+	<script src="/components/html-include.js?v=2"></script>
+
+	Current-page highlight: html-include.js marks the link matching the
+	URL's first path segment with aria-current="page" and .is-active
+	(filled white chip); see highlightPageNav() there and the .is-active
+	rules in site-shell.css. Pages outside these four sections get no
+	highlight.
+-->
+<nav class="page-menu" aria-label="Site sections">
+	<ul>
+		<li><a href="/about/">About</a></li>
+		<li><a href="/gallery/">Gallery</a></li>
+		<li><a href="/services/">Services</a></li>
+		<li><a href="/booking/">Booking</a></li>
+	</ul>
+</nav>

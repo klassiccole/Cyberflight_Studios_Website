@@ -13,6 +13,32 @@
 (function (window, document) {
 	"use strict";
 
+	/* The section menu (page-nav.html) is one shared fragment, so it
+	   cannot know which page it is on. After it lands, mark the link
+	   matching the URL's first path segment (about/gallery/services/
+	   booking) with aria-current + .is-active so the CSS can fill it.
+	   Pages outside those four sections (contact, terms, ...) simply
+	   get no highlight. */
+	function highlightPageNav() {
+		var menu = document.querySelector(".page-menu");
+		if (!menu) {
+			return;
+		}
+
+		var segments = window.location.pathname.split("/").filter(String);
+		if (segments.length === 0) {
+			return;
+		}
+
+		var current = "/" + segments[0] + "/";
+		var link = menu.querySelector('a[href="' + current + '"]');
+
+		if (link) {
+			link.setAttribute("aria-current", "page");
+			link.classList.add("is-active");
+		}
+	}
+
 	function includeAll() {
 		var placeholders = document.querySelectorAll("[data-include]");
 		var pending = placeholders.length;
@@ -33,6 +59,9 @@
 				})
 				.then(function (html) {
 					el.outerHTML = html;
+					if (url.indexOf("page-nav") !== -1) {
+						highlightPageNav();
+					}
 				})
 				.catch(function (error) {
 					// Leave the placeholder (empty div) in place; the page

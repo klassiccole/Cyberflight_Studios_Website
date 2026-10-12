@@ -1804,8 +1804,120 @@ body.cf-booking .booking-intro-tile .booking-page-home:focus-visible {
 /* Full-bleed banner: the image edges become the tile edges and the top
    corners take the tile's radius. The 190px desktop crop is set in the
    shared Page Banners block above. Page captions were removed to make
-   room for a future navigation bar under the banner, so nothing follows
-   the image inside the tile. */
+   room for the section menu that now follows the image inside the tile. */
+
+/* Section menu (components/page-nav.html): the 4-page primary nav shown
+   under each page's header banner. Styled to match the homepage nav
+   (#header nav ul in homepage.css). The current-section link is filled
+   white via .is-active, added by highlightPageNav() in html-include.js. */
+
+/* Base placement: centered below whatever header content precedes it,
+   with room before the next section. The scoped rule below tightens the
+   bottom margin when it sits inside an intro tile. */
+
+.page-menu {
+	width: fit-content;
+	max-width: 100%;
+	margin: 18px auto 24px;
+}
+
+.page-menu ul {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	margin-bottom: 0;
+	list-style: none;
+	padding-left: 0;
+	border: solid 1px #ffffff;
+	border-radius: 4px;
+}
+
+.page-menu ul li {
+	padding-left: 0;
+	border-left: solid 1px #ffffff;
+}
+
+.page-menu ul li:first-child {
+	border-left: 0;
+}
+
+/* Labels center on their own — needed because the min-width leaves
+   shorter labels ("ABOUT") hugging the left when the text is a plain
+   block, unlike the homepage nav where every label runs longer. */
+
+.page-menu ul li a {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 7.5rem;
+	height: 2.75rem;
+	padding: 0 1.25rem;
+	text-transform: uppercase;
+	letter-spacing: 0.2rem;
+	font-size: 0.8rem;
+	border-bottom: 0;
+	color: #ffffff;
+}
+
+.page-menu ul li a.is-active {
+	background-color: #ffffff;
+	color: #1b1f25;
+}
+
+/* Equal-specificity hover/active rules would out-rank the fill above
+   on source order alone, so the active link gets its own to keep the
+   highlight visible while hovered. */
+
+.page-menu ul li a.is-active:hover {
+	background-color: #e6e6e6;
+}
+
+.page-menu ul li a.is-active:active {
+	background-color: #d9d9d9;
+}
+
+.page-menu ul li a:hover {
+	background-color: rgba(255, 255, 255, 0.075);
+}
+
+.page-menu ul li a:active {
+	background-color: rgba(255, 255, 255, 0.175);
+}
+
+body.standalone-page.floating-boxes .intro-tile .page-menu,
+body.cf-booking .booking-intro-tile .page-menu {
+	width: fit-content;
+	max-width: 100%;
+	margin: 18px auto 0;
+}
+
+@media screen and (max-width: 480px) {
+
+	.page-menu ul li {
+		flex: 1 0 50%;
+		border-left: 0;
+	}
+
+	.page-menu ul li a {
+		min-width: 0;
+		width: 100%;
+		padding: 0;
+		text-align: center;
+	}
+
+	.page-menu ul li:nth-child(odd) a {
+		border-right: solid 1px #ffffff;
+	}
+
+	.page-menu ul li:nth-child(n+3) a {
+		border-top: solid 1px #ffffff;
+	}
+
+	.page-menu ul li a.is-active {
+		color: #1b1f25;
+	}
+
+}
 
 body.standalone-page.floating-boxes .intro-tile:has(> .page-banner) .page-banner,
 body.cf-booking .booking-intro-tile .page-banner {
@@ -1817,14 +1929,6 @@ body.cf-booking .booking-intro-tile .page-banner {
 body.standalone-page.floating-boxes .intro-tile:has(> .page-banner) .page-banner img,
 body.cf-booking .booking-intro-tile .page-banner img {
 	border-radius: 12px 12px 0 0;
-}
-
-/* Gallery sub-page titles keep their Dimension-style h2.major underline.
-   The top margin restores the gap the banner's old 2rem bottom margin
-   used to provide now that the banner sits flush at the tile's bottom. */
-
-body.standalone-page.floating-boxes .intro-tile h2.major {
-	margin-top: 1.5rem;
 }
 
 body.standalone-page.floating-boxes .content-box {
