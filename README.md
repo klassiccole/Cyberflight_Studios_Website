@@ -45,7 +45,6 @@ assets/ images/ videos/    Static media
 components/                Shared HTML fragments + include loader (see "Shared fragments" below)
 _redirects                 Cloudflare Pages redirects (301s from the old
                            /gallery/events/* URLs; see "Gallery structure" below)
-staging/                   Working copies mid-migration (booking-universal)
 wrangler.jsonc             Local dev config (bindings; DB id for remote ops)
 .dev.vars.example          Template for local secrets (copy to .dev.vars)
 ```

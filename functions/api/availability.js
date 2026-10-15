@@ -115,9 +115,10 @@ async function busyWindows(env, token, timeMin, timeMax, signal) {
   return merge(ranges);
 }
 function calculateDays(start, duration, openings, busy, now) {
-  // Slots must fall on the third calendar day ahead or later (Charlotte
-  // time): nothing on today, tomorrow, or the day after is bookable.
-  const minTime = midnight(addDays(dateKey(now), 3));
+  // Slots that have already started are not bookable; any future time the
+  // calendar can fit is bookable. (The 3-day lead is a written policy,
+  // not code.)
+  const minTime = now;
   return Array.from({ length: monthSpan(start) }, (_, i) => {
     const key = addDays(start, i), dayStart = midnight(key), dayEnd = midnight(addDays(key, 1));
     const slots = [], seen = new Set();
@@ -177,8 +178,8 @@ export async function onRequest({ request, env }) {
     }
     // One-year ceiling for every service. `start` may sit in the past (the
     // client requests whole months, and the current month begins before
-    // today); only the far edge is bounded. Slot math below zeroes out days
-    // inside the 3-day lead time.
+    // today); only the far edge is bounded. Slot math below zeroes out
+    // times that have already started.
     const today = dateKey(now);
     if (start > addDays(today, WINDOW_DAYS)) return reply({ error: 'Date outside booking window.' }, 400);
     const span = monthSpan(start);

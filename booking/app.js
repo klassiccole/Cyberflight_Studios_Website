@@ -5,11 +5,7 @@ const escapeHTML=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<
 const money=value=>'$'+value;
 const timeLabel=minutes=>`${Math.floor(minutes/60)%12||12}:${String(minutes%60).padStart(2,'0')} ${minutes<720?'AM':'PM'}`;
 const formatDate=(key,options={month:'short',day:'numeric',weekday:'short'})=>new Intl.DateTimeFormat('en-US',{...options,timeZone:'UTC'}).format(new Date(key+'T12:00:00Z'));
-const formatInstant=date=>new Intl.DateTimeFormat('en-US',{timeZone:C.zone,month:'short',day:'numeric',hour:'numeric',minute:'2-digit',timeZoneName:'short'}).format(date);
-const state={step:0,maxStep:0,service:null,package:'standard',count:2,tier:'t1',length:120,date:null,time:null,details:null,submittedAt:false,groupConfirmed:false,eventConfirmed:false,agreement:null,submissionKey:null,turnstileToken:null,turnstileId:null,turnstileWait:null,drawStrokes:[]};
-let drawing=false,hasDrawing=false;const drawStrokes=state.drawStrokes;
-const canvas=$('signature-canvas'),ctx=canvas.getContext('2d');
-ctx.lineWidth=4;ctx.lineCap='round';ctx.lineJoin='round';ctx.strokeStyle='#201931';
+const state={step:0,maxStep:0,service:null,package:'standard',count:2,tier:'t1',length:120,date:null,time:null,details:null,submittedAt:false,groupConfirmed:false,eventConfirmed:false,submissionKey:null,turnstileToken:null,turnstileId:null,turnstileWait:null};
 
 function serviceInfo(){return C.services[state.service];}
 function internalPackage(){const s=serviceInfo();return s.mode==='slots'&&s.internalPackage?s.internalPackage:state.package;}
@@ -22,13 +18,7 @@ function total(){
   return C.price(state.package,state.count);
 }
 function participantsCount(){return state.service==='graduation'&&state.package==='group'?state.count:1;}
-function resetSignature(){
-  $('signature-name').value='';$('typed-signature').textContent='';
-  $('agreement-consent').checked=false;$('electronic-consent').checked=false;
-  document.querySelectorAll('[name=promotion]').forEach(el=>el.checked=false);
-  ctx.clearRect(0,0,canvas.width,canvas.height);hasDrawing=false;drawStrokes.length=0;
-}
-function resetDownstream(){state.details=null;resetSignature();}
+function resetDownstream(){state.details=null;}
 function priceLabel(value){return value===null?'By Proposal':money(value);}
 function updateSummary(){
   const s=serviceInfo();
@@ -64,7 +54,6 @@ function showStep(step, moveFocus=true){
   document.querySelectorAll('[data-panel]').forEach(el=>el.hidden=Number(el.dataset.panel)!==step);
   if(step===1)renderSchedule();
   if(step===2)renderDetailsMode();
-  if(step===3){renderReview();if(state.service!=='event')loadServerAgreement();ensureTurnstile();}
   updateProgress();updateSummary();
   if(moveFocus){
     $(`heading-${step}`).focus({preventScroll:true});
@@ -118,7 +107,7 @@ async function renderSchedule(){
   if(state.service==='graduation'&&state.package==='group')$('group-size').value=state.groupConfirmed?String(state.count):'';
   $('lead-hint').textContent=s.mode==='wedding'
     ?'Please choose a date at least 1 month in advance; earlier requests may be subject to higher cost.'
-    :'Please choose a date at least 3 days in advance.';
+    :'Choose any upcoming date — sooner works when a time is free; I review and confirm each request.';
   $('session-schedule').hidden=s.mode!=='slots';
   $('event-schedule').hidden=s.mode!=='event';
   $('wedding-schedule').hidden=s.mode!=='wedding';
@@ -132,7 +121,7 @@ function renderDates(){
   /* Slots-mode date picking uses the same native date input as the event
      and wedding flows: the browser/OS supplies the pop-out calendar on
      desktop and the platform picker on mobile. Bounds mirror the server:
-     3-day lead, one-year ceiling. */
+     no past dates, one-year ceiling. */
   const {min,max}=slotsBounds();
   $('session-date').min=min;$('session-date').max=max;
   $('session-date').value=state.date||'';
@@ -171,12 +160,12 @@ function renderSlots(){
   $('slot-explanation').textContent=state.time!==null?`Your session: ${timeLabel(state.time)}–${timeLabel(state.time+duration())}. With buffers, the calendar keeps ${timeLabel(state.time-30)}–${timeLabel(state.time+duration()+30)} clear.`:'Choose a start time. Both 30-minute buffers are included when checking availability.';
   updateSummary();
 }
-/* Slots-mode date bounds: 3-day lead (managed by the server), one-year
-   ceiling — same window every service shares. The native date input gets
-   min/max attributes so the pop-out calendar dims unbookable days. */
+/* Slots-mode date bounds: any upcoming date, one-year ceiling. The native
+   date input gets min/max attributes so the pop-out calendar dims
+   unbookable days; today's already-started times are filtered server-side. */
 function slotsBounds(){
   const today=C.dateKey(new Date());
-  return {min:C.addDays(today,3),max:C.addDays(today,365)};
+  return {min:today,max:C.addDays(today,365)};
 }
 /* Desktop nicety: clicking anywhere in a date field pops the calendar,
    not just the small calendar icon at the field's right edge. Modern
@@ -196,7 +185,7 @@ $('session-date').addEventListener('change',()=>{
   const {min,max}=slotsBounds();
   if(value<min||value>max){
     $('session-date').value=state.date||'';
-    $('time-error').textContent='Sessions can be booked from 3 days out to one year ahead.';
+    $('time-error').textContent='Sessions can be booked up to one year ahead.';
     return;
   }
   state.date=value;state.time=null;resetDownstream();
@@ -243,7 +232,7 @@ function updateEventLengthLabel(){
   $('event-length-label').textContent=state.length>=840?'All day':`${state.length/60} hours`;
 }
 function renderEventSchedule(){
-  const minKey=C.addDays(C.dateKey(new Date()),3);
+  const minKey=C.dateKey(new Date());
   $('event-date').min=minKey;
   updateEventLengthLabel();
   $('event-duration-note').textContent='';
@@ -350,9 +339,10 @@ $('enter-details').addEventListener('click',()=>{
 
 function renderDetailsMode(){
   const grad=state.service==='graduation';
-  const event=state.service==='event';
-  $('details-submit').innerHTML=(event||state.service==='wedding')?'Book It <span aria-hidden="true">→</span>':'Review agreement <span aria-hidden="true">→</span>';
-  if(event||state.service==='wedding'){$('details-turnstile-box').hidden=false;ensureTurnstile('details-turnstile-box');state.submissionKey=state.submissionKey||crypto.randomUUID();}
+  $('details-submit').innerHTML='Book It <span aria-hidden="true">→</span>';
+  $('details-turnstile-box').hidden=false;ensureTurnstile('details-turnstile-box');state.submissionKey=state.submissionKey||crypto.randomUUID();
+  $('promotion-field').hidden=grad&&state.package==='group';
+  $('group-promotion-note').hidden=!(grad&&state.package==='group');
   $('participants-field').hidden=!(grad&&state.package==='group');
   $('individual-graduate-field').hidden=!grad||state.package==='group';
   $('graduate-name').disabled=grad&&state.package==='group';
@@ -369,8 +359,8 @@ function renderDetailsMode(){
   $('participant-rows').innerHTML=(grad&&state.package==='group')?Array.from({length:state.count},(_,i)=>`<div class="participant-row"><h3>GRADUATE ${i+1}</h3><div class="field-grid"><div class="field"><label for="participant-${i}-name">Full name <span>*</span></label><input class="participant-name" id="participant-${i}-name" required maxlength="100" value="${escapeHTML(old[i]?.name||'')}"></div><div class="field"><label for="participant-${i}-email">Email <span class="optional">optional</span></label><input class="participant-email" id="participant-${i}-email" type="email" maxlength="254" value="${escapeHTML(old[i]?.email||'')}"></div></div></div>`).join(''):'';
 }
 $('address').disabled=false;
-$('details-form').addEventListener('input',()=>{state.details=null;state.maxStep=2;resetSignature();updateProgress();});
-async function submitEventBooking(){
+$('details-form').addEventListener('input',()=>{state.details=null;state.maxStep=2;updateProgress();});
+async function submitBooking(){
   const button=$('details-submit');
   if(!state.turnstileToken&&window.turnstile){$('details-error').textContent='Complete the verification box before submitting.';return;}
   $('details-error').textContent='';
@@ -379,6 +369,7 @@ async function submitEventBooking(){
     const response=await fetch('/api/booking/submit',{method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({booking:submissionBooking(),
+        promotion:document.querySelector('[name=promotion]:checked')?.value??null,
         submissionKey:state.submissionKey||crypto.randomUUID(),turnstileToken:state.turnstileToken||undefined})});
     const receipt=await response.json().catch(()=>({}));
     if(response.status===201||(response.status===200&&receipt.replayed)){
@@ -401,53 +392,10 @@ $('details-form').addEventListener('submit',event=>{
   const grad=state.service==='graduation';
   const location=grad?($('location').value==='Another Charlotte-area location'?$('custom-location').value.trim():$('location').value):$('address').value.trim();
   const d={name:$('client-name').value.trim(),email:$('client-email').value.trim(),phone:$('client-phone').value.trim(),location,graduate:$('graduate-name').value.trim()||$('client-name').value.trim(),notes:$('notes').value.trim(),participants:[...document.querySelectorAll('.participant-row')].map(row=>({name:row.querySelector('.participant-name').value.trim(),email:row.querySelector('.participant-email').value.trim()}))};
-  if(JSON.stringify(d)!==JSON.stringify(state.details))resetSignature();state.details=d;
-  if(state.service==='event'||state.service==='wedding'){submitEventBooking();return;}
-  showStep(3);
+  state.details=d;
+  submitBooking();
 });
 
-function fact(label,value){return `<div><dt>${escapeHTML(label)}</dt><dd>${escapeHTML(value)}</dd></div>`;}
-function sessionText(){
-  const s=serviceInfo();
-  if(s.mode==='wedding')return `${formatDate(state.date,{month:'long',day:'numeric',year:'numeric'})} · full day`;
-  if(s.mode==='event'&&state.time===null)return `${formatDate(state.date,{month:'long',day:'numeric',year:'numeric'})} · ${state.length/60} hour${state.length>=120?'s':''} · start time to be confirmed`;
-  return `${formatDate(state.date,{month:'long',day:'numeric',year:'numeric'})} · ${timeLabel(state.time)}–${timeLabel((state.time+duration())%1440)}${s.mode==='event'&&state.time+duration()>=1440?' (next day)':''}`;
-}
-function bookingFacts(){
-  const s=serviceInfo(),grad=state.service==='graduation';
-  const rows=[fact('Service',`${s.label} · ${priceLabel(total())}`),fact('Requested session',sessionText()),fact('Client',state.details.name),fact('Location',state.details.location)];
-  if(grad)rows.push(fact('Payment due',formatInstant(C.deadline(state.date,state.time))));
-  if(grad&&state.package==='group')rows.push(fact('Graduates',state.details.participants.map(p=>p.name).join(', ')));
-  if(grad&&state.package!=='group')rows.push(fact('Graduate',state.details.graduate));
-  return rows.join('');
-}
-function renderReview(){
-  if(!state.details)return;
-  $('review-facts').innerHTML=bookingFacts();
-  $('promotion-field').hidden=state.service==='graduation'&&state.package==='group';
-  $('group-promotion-note').hidden=!(state.service==='graduation'&&state.package==='group');
-}
-async function loadServerAgreement(){
-  if(!['graduation','realestate'].includes(state.service)){
-    state.agreement=null;
-    $('agreement-title').textContent=`${serviceInfo().label} services agreement`;
-    $('agreement-content').innerHTML='<p class="draft-notice"><strong>Submissions for this service open with the next update.</strong> Contact us meanwhile and I will set everything up with you directly.</p>';
-    return;
-  }
-  try{
-    const response=await fetch('/api/booking/agreement',{method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({booking:submissionBooking()})});
-    if(!response.ok)throw new Error('unavailable');
-    const agreement=await response.json();
-    state.agreement={version:agreement.version,hash:agreement.hash};
-    $('agreement-title').textContent=agreement.title;
-    $('agreement-content').innerHTML=agreement.html;
-  }catch{
-    state.agreement=null;
-    $('agreement-content').innerHTML='<p class="form-error">The agreement could not be loaded. Refresh the page or contact us.</p>';
-  }
-}
 function submissionBooking(){
   const details={name:state.details.name,email:state.details.email,phone:state.details.phone,
       location:state.details.location,graduate:state.details.graduate,
@@ -471,62 +419,14 @@ function ensureTurnstile(container){
   else state.turnstileWait=window.setInterval(()=>{if(window.turnstile)render();},200);
   window.setTimeout(()=>window.clearInterval(state.turnstileWait),15000);
 }
-$('signature-name').addEventListener('input',()=>{$('typed-signature').textContent=$('signature-name').value;$('signature-name').setCustomValidity('');});
-function point(e){const r=canvas.getBoundingClientRect();return {x:(e.clientX-r.left)*canvas.width/r.width,y:(e.clientY-r.top)*canvas.height/r.height};}
-canvas.addEventListener('pointerdown',e=>{if(e.button!==0)return;drawing=true;canvas.setPointerCapture(e.pointerId);const p=point(e);ctx.beginPath();ctx.moveTo(p.x,p.y);drawStrokes.push([[+(p.x/canvas.width).toFixed(4),+(p.y/canvas.height).toFixed(4)]]);});
-canvas.addEventListener('pointermove',e=>{if(!drawing)return;const p=point(e);ctx.lineTo(p.x,p.y);drawStrokes[drawStrokes.length-1].push([+(p.x/canvas.width).toFixed(4),+(p.y/canvas.height).toFixed(4)]);});
-canvas.addEventListener('pointerup',()=>drawing=false);canvas.addEventListener('pointercancel',()=>drawing=false);
-$('clear-signature').addEventListener('click',()=>{ctx.clearRect(0,0,canvas.width,canvas.height);hasDrawing=false;});
 const SUBMIT_ERRORS={'time_unavailable':'That time is no longer available. Go back and choose another time.',
-  'agreement_changed_review_again':'The agreement changed. The current version has loaded below — review it and submit again.',
-  'consent_required':'Both consent boxes must be checked before submitting.',
-  'invalid_submission_key':'Something went wrong with the request. Refresh the page and try again.',
-  'request_too_large':'The drawn signature is too complex. Clear it and submit with your typed name.',
   'booking_not_open_yet':'Booking requests are not open yet. Contact us directly.',
-  'booking_overlap':'That time is no longer available. Go back and choose another time.',
   'calendar_unavailable':'We could not reach the booking calendar. Try again in a minute — if it keeps failing, contact us directly.',
   'send_failed':'The booking was received but the confirmation email failed. Try again or contact us.',
   'request_unavailable':'The request could not be completed. Try again or contact us.',
   'verification_failed':'The verification failed. Refresh the page and try again.',
   'verification_unavailable':'Verification is temporarily unavailable. Try again in a minute.',
-  'invalid_fields':'Some booking details were invalid. Refresh the page and try again.',
-  'signature_name_mismatch':'Your signature must match the name you entered on the booking form.'};
-$('signature-form').addEventListener('submit',async event=>{
-  event.preventDefault();
-  const button=$('signature-form').querySelector('.primary');
-  if(!$('signature-name').value.trim()){$('signature-name').setCustomValidity('Please type your full name.');$('signature-name').reportValidity();return;}
-  const sigName=$('signature-name').value.trim().replace(/\s+/g,' ').toLowerCase();
-  if(sigName!==String(state.details&&state.details.name||'').trim().replace(/\s+/g,' ').toLowerCase()){$('sign-error').textContent='Your signature must match the first and last name you entered on the booking form.';return;}
-  if(!$('signature-form').reportValidity())return;
-  const s=serviceInfo();
-
-  if(s.mode==='slots'&&(state.time===null||!slotsFor(state.date).includes(state.time))){$('sign-error').textContent='Please choose a new available time before continuing.';return;}
-  if(s.mode==='event'&&state.time===null){$('sign-error').textContent='Please choose a start time before continuing.';return;}
-  if(!['event','wedding'].includes(state.service)&&!state.agreement){$('sign-error').textContent='The agreement has not loaded yet. Give it a moment and try again.';return;}
-  if(!state.turnstileToken&&window.turnstile){$('sign-error').textContent='Complete the verification checkbox before submitting.';return;}
-  button.disabled=true;$('sign-error').textContent='';
-  try{
-    const response=await fetch('/api/booking/submit',{method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify(Object.assign({booking:submissionBooking(),
-        signature:{typedName:$('signature-name').value.trim(),agreementConsent:true,electronicConsent:true,
-          promotion:document.querySelector('[name=promotion]:checked')?.value??null,drawing:drawStrokes.slice(-100)},
-        submissionKey:state.submissionKey||crypto.randomUUID(),turnstileToken:state.turnstileToken||undefined},
-        state.service==='event'?{}:{agreementVersion:state.agreement.version,agreementHash:state.agreement.hash}))});
-    const receipt=await response.json().catch(()=>({}));
-    if(response.status===201||(response.status===200&&receipt.replayed)){
-      location.href=`/booking/confirmed/?id=${encodeURIComponent(receipt.requestId)}`;
-      return;
-    }
-    $('sign-error').textContent=SUBMIT_ERRORS[receipt.error]||receipt.detail||'The request could not be submitted. Try again or contact us.';
-    if(receipt.error==='agreement_changed_review_again')await loadServerAgreement();
-  }catch{
-    $('sign-error').textContent='The request could not be submitted. Check your connection and try again, or contact us.';
-  }finally{
-    button.disabled=false;
-    if(window.turnstile&&state.turnstileId!==null){window.turnstile.reset(state.turnstileId);state.turnstileToken=null;}
-  }
-});
+  'invalid_fields':'Some booking details were invalid. Refresh the page and try again.'};
 // Within the booking flow the arrow steps back through the form; from the
 // first step it returns to the page the visitor came from (same-site history),
 // falling back to the services hub when there is nowhere to go back to.
