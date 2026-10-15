@@ -1699,7 +1699,8 @@ transition: none !important;
 	boxes, matching the booking page.
 
 	Box anatomy (booking-parity):
-	- .intro-tile  — page-nav + header text + banner, top of page
+	- .intro-tile  — the slim header tile: nav bar only (plus the banner image on
+	  pages that have one); intro content follows below
 	- .content-box — generic floating panel for prose/sections
 	Card grids (.service-item, .gallery-item) already box themselves.
 */
@@ -1711,119 +1712,129 @@ body.standalone-page.floating-boxes #main article {
 }
 
 /* The booking page keeps its own class names but shares this header
-   component's styling through the co-listed selectors below. */
+   component's styling through the co-listed selectors below. Slim
+   padding is the norm for every tile: the banner fills it edge-to-edge
+   via negative margins on banner pages, and non-banner pages (drone,
+   terms, ...) hold just the bar in the same compact shell. */
 
-body.standalone-page.floating-boxes .intro-tile,
+.intro-tile,
 body.cf-booking .booking-intro-tile {
 	background: rgba(27, 31, 37, 0.85);
 	border: 1px solid #3b414c;
 	border-radius: 12px;
-	padding: 30px;
+	padding: 14px;
 	margin-bottom: 26px;
 	position: relative;
 }
 
-body.standalone-page.floating-boxes .intro-tile .page-nav,
-body.cf-booking .booking-intro-tile .booking-page-nav {
+/* Unified nav bar (all pages): back disc, section menu, home disc in
+   one pill that shares a single backdrop and white border. The pill
+   spans its container's full width, so the discs always sit at the
+   edges and the menu's auto margins center it — identical geometry on
+   banner pages (bar absolute over the image) and non-banner pages
+   (bar as a static row). Booking keeps its own class names but
+   co-lists every rule; the confirmation panels use the generic class. */
+
+.page-nav,
+body.cf-booking .booking-intro-tile .booking-page-nav,
+body.cf-booking .confirm-panel .page-nav {
 	display: flex;
 	align-items: center;
-	justify-content: space-between;
-	margin-bottom: 18px;
+	gap: 12px;
+	width: 100%;
+	margin: 0 auto;
+	padding: 8px 10px;
+	background: rgba(27, 31, 37, 0.55);
+	border: 1px solid #ffffff;
+	border-radius: 999px;
+
+	/* Pixel-locked: sizes in px and the site typeface set explicitly, so
+	   pages that restyle the root element (booking sets a 17px CFBooking
+	   root) can't inflate or re-typeface the shared bar. Page zoom still
+	   scales it; browser user font-size preferences do not. */
+	font-family: "Source Sans Pro", sans-serif;
+	font-weight: 300;
 }
 
-body.standalone-page.floating-boxes #main article .intro-tile .page-back,
-body.standalone-page.floating-boxes #main article .intro-tile .page-home,
+/* The menu placeholder inherits the menu's space-occupying job, so the
+   home disc sits flush right from the first paint — before the fragment
+   fetch finishes, the bar would otherwise flash as [back][home] next to
+   each other on the left and snap apart on injection. */
+
+.page-nav > div[data-include],
+.booking-page-nav > div[data-include] {
+	flex: 1 1 0%;
+}
+
+#main article .intro-tile .page-back,
+#main article .intro-tile .page-home,
 body.cf-booking .booking-intro-tile .booking-page-back,
 body.cf-booking .booking-intro-tile .booking-page-home {
 	position: static;
 }
 
-/* When a tile contains a full-bleed banner the tile becomes a hero
-   header: the banner is a fixed 300px window (cover crop, no zoom —
-   down from the natural-height hero and the earlier 190px), flush with
-   the tile's top and side edges and, on pages with no gallery title,
-   its bottom edge too. The section menu and the back/home buttons
-   overlay the image's top, flanking each other. Gallery sub-pages
-   carry their title as a second row below the image. Tiles with no
-   banner keep the static nav row above the header text. */
-
-body.standalone-page.floating-boxes .intro-tile:has(> .page-banner),
-body.cf-booking .booking-intro-tile {
-	display: grid;
-	grid-template-columns: 1fr;
-	grid-template-areas:
-		"banner";
-	padding-bottom: 0;
-}
-
-/* The nav is a zero-height placeholder parked in the banner's area; its
-   back/home links and the menu (below) are absolute to the tile (the
-   tile is position: relative) and overlay the image. The discs need
-   z-index because Dimension's .image class positions the banner span
-   too, and being later in the DOM it would otherwise paint over them. */
-
-body.standalone-page.floating-boxes .intro-tile:has(> .page-banner) .page-nav,
-body.cf-booking .booking-intro-tile .booking-page-nav {
-	grid-area: banner;
-	height: 0;
-	margin: 0;
-}
-
-/* The banner itself: a fixed 300px window. The span bleeds upward
-   (negative margins) so the image runs flush with the tile's top and
-   side edges, its top corners taking the tile's radius; cover crops
-   the source to the window without zooming, trimming the surplus from
-   the bottom so the image's top edge stays flush. The generic Page
-   Banners rules above remain as the :has()-less fallback.
+/* Hero header: on banner-bearing tiles the banner image becomes the
+   tile's face, flush with every edge. The 102px window is content-
+   exact: the 74px bar plus the 14px tile gutter on each side, so the
+   padding around the pill matches the tile's edge padding on all four
+   sides. The bar overlays the image with that same 14px inset; object-
+   position center keeps thin, pre-cropped source images centered.
+   Gallery sub-page titles render below the boxed hero; non-banner
+   tiles hold just the bar in the same slim shell.
 
    TODO(future improvement): hoist this whole tile into
    components/header.html (like footer.html), passing per-page bits
    (banner image, back target) via data- attributes, so every page's
    header is a single placeholder line. */
 
-body.standalone-page.floating-boxes .intro-tile:has(> .page-banner) .page-banner,
+.intro-tile:has(> .page-banner) .page-banner,
 body.cf-booking .booking-intro-tile .page-banner {
-	grid-area: banner;
 	max-width: none;
-	height: 300px;
-	margin: -30px -30px 0;
+	height: 102px;
+	margin: -14px;
 	border-radius: 12px;
 }
 
-body.standalone-page.floating-boxes .intro-tile:has(> .page-banner) .page-banner img,
+.intro-tile:has(> .page-banner) .page-banner img,
 body.cf-booking .booking-intro-tile .page-banner img {
 	height: 100%;
 	object-fit: cover;
-	object-position: center 25%;
+	object-position: center;
 	border-radius: 12px;
 }
 
-body.standalone-page.floating-boxes #main article .intro-tile:has(> .page-banner) .page-back,
-body.cf-booking .booking-intro-tile .booking-page-back {
+/* Inside banner tiles the bar overlaps the image, pinned to the same
+   14px gutter the base tile padding gives every page; left+right pins
+   the stretch so the discs sit at the image's edges. z-index is needed
+   because Dimension's .image class positions the banner span too, and
+   being later in the DOM it would otherwise paint over the bar. */
+
+.intro-tile:has(> .page-banner) .page-nav,
+body.cf-booking .booking-intro-tile .booking-page-nav {
 	position: absolute;
-	top: 32px;
-	left: 30px;
+	top: 14px;
+	left: 14px;
+	right: 14px;
+	width: auto; /* stretch between the insets; a fixed width would
+	                defeat right: 14px and push the pill past the edge */
 	z-index: 2;
 }
 
-body.standalone-page.floating-boxes #main article .intro-tile:has(> .page-banner) .page-home,
-body.cf-booking .booking-intro-tile .booking-page-home {
-	position: absolute;
-	top: 32px;
-	right: 30px;
-	z-index: 2;
-}
+/* Disc buttons keep their circular look inside the bar; positioned
+   static, so no corner math anywhere. The confirmation panels' home
+   button joins them. */
 
-body.standalone-page.floating-boxes #main article .intro-tile:has(> .page-banner) .page-back,
-body.standalone-page.floating-boxes #main article .intro-tile:has(> .page-banner) .page-home,
+#main article .intro-tile .page-back,
+#main article .intro-tile .page-home,
 body.cf-booking .booking-intro-tile .booking-page-back,
-body.cf-booking .booking-intro-tile .booking-page-home {
+body.cf-booking .booking-intro-tile .booking-page-home,
+body.cf-booking .confirm-panel .booking-page-home {
 	display: flex;
 	align-items: center;
 	justify-content: center;
 
-	width: var(--cf-nav-size);
-	height: var(--cf-nav-size);
+	width: 48px;
+	height: 48px;
 
 	border: 1px solid #ffffff;
 	border-radius: 50%;
@@ -1838,92 +1849,97 @@ body.cf-booking .booking-intro-tile .booking-page-home {
 	transition: background-color var(--cf-transition-speed) ease-in-out;
 }
 
-body.standalone-page.floating-boxes #main article .intro-tile:has(> .page-banner) .page-back,
+#main article .intro-tile .page-back,
 body.cf-booking .booking-intro-tile .booking-page-back {
-	font-size: var(--cf-back-icon-size);
+	font-size: 21.6px;
 }
 
-body.standalone-page.floating-boxes #main article .intro-tile:has(> .page-banner) .page-home,
-body.cf-booking .booking-intro-tile .booking-page-home {
-	font-size: var(--cf-home-icon-size);
+#main article .intro-tile .page-home,
+body.cf-booking .booking-intro-tile .booking-page-home,
+body.cf-booking .confirm-panel .booking-page-home {
+	font-size: 18.4px;
 }
 
-body.standalone-page.floating-boxes #main article .intro-tile:has(> .page-banner) .page-back:hover,
-body.standalone-page.floating-boxes #main article .intro-tile:has(> .page-banner) .page-home:hover,
+#main article .intro-tile .page-back:hover,
+#main article .intro-tile .page-home:hover,
 body.cf-booking .booking-intro-tile .booking-page-back:hover,
-body.cf-booking .booking-intro-tile .booking-page-home:hover {
+body.cf-booking .booking-intro-tile .booking-page-home:hover,
+body.cf-booking .confirm-panel .booking-page-home:hover {
 	background: rgba(27, 31, 37, 0.75);
 }
 
-body.standalone-page.floating-boxes #main article .intro-tile:has(> .page-banner) .page-back:active,
-body.standalone-page.floating-boxes #main article .intro-tile:has(> .page-banner) .page-home:active,
+#main article .intro-tile .page-back:active,
+#main article .intro-tile .page-home:active,
 body.cf-booking .booking-intro-tile .booking-page-back:active,
-body.cf-booking .booking-intro-tile .booking-page-home:active {
+body.cf-booking .booking-intro-tile .booking-page-home:active,
+body.cf-booking .confirm-panel .booking-page-home:active {
 	background: rgba(27, 31, 37, 0.9);
 }
 
-body.standalone-page.floating-boxes #main article .intro-tile:has(> .page-banner) .page-back:focus-visible,
-body.standalone-page.floating-boxes #main article .intro-tile:has(> .page-banner) .page-home:focus-visible,
+#main article .intro-tile .page-back:focus-visible,
+#main article .intro-tile .page-home:focus-visible,
 body.cf-booking .booking-intro-tile .booking-page-back:focus-visible,
-body.cf-booking .booking-intro-tile .booking-page-home:focus-visible {
+body.cf-booking .booking-intro-tile .booking-page-home:focus-visible,
+body.cf-booking .confirm-panel .booking-page-home:focus-visible {
 	outline: 2px solid currentColor;
 	outline-offset: 3px;
 }
 
-/* Section menu (components/page-nav.html): the 4-page primary nav shown
-   under each page's header banner. Styled to match the homepage nav
-   (#header nav ul in homepage.css). The current-section link is filled
-   white via .is-active, added by highlightPageNav() in html-include.js. */
+/* Section menu (components/page-nav.html): the 4-button menu that sits
+   centered inside the unified nav bar. Chrome (border, backdrop,
+   rounding) comes from the bar itself; the menu supplies only the
+   items. Styled to match the homepage nav. The current-section link is
+   filled white via .is-active, added by highlightPageNav() in
+   html-include.js. */
 
-/* Base placement: centered below whatever header content precedes it,
-   with room before the next section. The scoped rule below tightens the
-   bottom margin when it sits inside an intro tile. */
+/* The fragment root is the ul itself, so all menu selectors target it
+   directly (no inner wrapper). */
 
 .page-menu {
-	width: fit-content;
-	max-width: 100%;
-	margin: 18px auto 24px;
-}
-
-.page-menu ul {
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: center;
-	margin-bottom: 0;
+	width: fit-content;
+	max-width: 100%;
+	margin: 0 auto 0;
 	list-style: none;
 	padding-left: 0;
-	border: solid 1px #ffffff;
-	border-radius: 4px;
 }
 
-.page-menu ul li {
+/* Dividers frame the menu block: lines at both ends (between the discs
+   and the buttons) and between each pair. */
+
+.page-menu li {
 	padding-left: 0;
 	border-left: solid 1px #ffffff;
 }
 
-.page-menu ul li:first-child {
-	border-left: 0;
+.page-menu li:last-child {
+	border-right: solid 1px #ffffff;
 }
 
 /* Labels center on their own — needed because the min-width leaves
    shorter labels ("ABOUT") hugging the left when the text is a plain
-   block, unlike the homepage nav where every label runs longer. */
+   block, unlike the homepage nav where every label runs longer.
+   Sizing: one notch below the homepage H1 scale keeps the nav as the
+   page's strongest interactive element; discs scale to match. */
 
-.page-menu ul li a {
+.page-menu li a {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	min-width: 8rem;
-	height: 3rem;
-	padding: 0 1.5rem;
+	min-width: 152px;
+	height: 56px;
+	padding: 0 32px;
 	text-transform: uppercase;
 	letter-spacing: 0.2rem;
-	font-size: 0.8rem;
+	font-size: 15px;
 	border-bottom: 0;
 	color: #ffffff;
 }
 
-.page-menu ul li a.is-active {
+
+.page-menu li a.is-active {
 	background-color: #ffffff;
 	color: #1b1f25;
 }
@@ -1932,91 +1948,53 @@ body.cf-booking .booking-intro-tile .booking-page-home:focus-visible {
    on source order alone, so the active link gets its own to keep the
    highlight visible while hovered. */
 
-.page-menu ul li a.is-active:hover {
+.page-menu li a.is-active:hover {
 	background-color: #e6e6e6;
 }
 
-.page-menu ul li a.is-active:active {
+.page-menu li a.is-active:active {
 	background-color: #d9d9d9;
 }
 
-.page-menu ul li a:hover {
+.page-menu li a:hover {
 	background-color: rgba(255, 255, 255, 0.075);
 }
 
-.page-menu ul li a:active {
+.page-menu li a:active {
 	background-color: rgba(255, 255, 255, 0.175);
 }
 
-/* The menu overlays the banner's top edge, centered on the same line as
-   the corner back/home buttons; left/right: 0 with auto margins centers
-   it without a transform, and the 180px side budget keeps it clear of
-   the discs. top matches the discs' top: 32px inset so the whole nav
-   row shares one padding line (the pill is ~10px taller than the discs
-   and hangs below their bottom edge). The translucent backdrop keeps
-   the labels readable over whatever the header photo shows and matches
-   the discs' fill. */
-
-body.standalone-page.floating-boxes .intro-tile:has(> .page-banner) .page-menu,
-body.cf-booking .booking-intro-tile .page-menu {
-	position: absolute;
-	top: 32px;
-	left: 0;
-	right: 0;
-	width: fit-content;
-	max-width: calc(100% - 11.25rem);
-	margin: 0 auto;
-}
-
-/* TEMPORARY mobile fix: below 737px the menu returns to normal flow and
-   sits under the banner instead of on its top row. The 2x2 grid layout
-   is too wide to share the banner's top edge with the back/home discs
-   (it overlaps the home button), so the overlay is desktop-only until
-   TODO(Cole): add icons for the mobile menu, then it can stay overlaid
-   on the banner top at all sizes. */
-
-@media screen and (max-width: 736px) {
-
-	body.standalone-page.floating-boxes .intro-tile:has(> .page-banner) .page-menu,
-	body.cf-booking .booking-intro-tile .page-menu {
-		position: static;
-		margin: 18px auto 0;
-	}
-
-}
-
-body.standalone-page.floating-boxes .intro-tile:has(> .page-banner) .page-menu ul,
-body.cf-booking .booking-intro-tile .page-menu ul {
-	background: rgba(27, 31, 37, 0.55);
-}
-
 /* Gallery sub-page titles: their h2.major sits outside the header tile
-   (below the boxed hero) so the tile stays exactly the image, which
-   keeps the menu's bottom overlay flush with the image's bottom edge. */
+   (below the boxed hero), so the tile is always exactly the image face
+   plus the overlaid bar. */
 
 @media screen and (max-width: 480px) {
 
-	.page-menu ul li {
+	.page-menu li {
 		flex: 1 0 50%;
 		border-left: 0;
 	}
 
-	.page-menu ul li a {
+	.page-menu li:last-child {
+		border-right: 0;
+	}
+
+	.page-menu li a {
 		min-width: 0;
 		width: 100%;
 		padding: 0;
 		text-align: center;
 	}
 
-	.page-menu ul li:nth-child(odd) a {
+	.page-menu li:nth-child(odd) a {
 		border-right: solid 1px #ffffff;
 	}
 
-	.page-menu ul li:nth-child(n+3) a {
+	.page-menu li:nth-child(n+3) a {
 		border-top: solid 1px #ffffff;
 	}
 
-	.page-menu ul li a.is-active {
+	.page-menu li a.is-active {
 		color: #1b1f25;
 	}
 
@@ -2038,41 +2016,21 @@ body.standalone-page.floating-boxes .services-grid {
 
 @media screen and (max-width: 736px) {
 
-	body.standalone-page.floating-boxes .intro-tile,
+	.intro-tile,
 	body.cf-booking .booking-intro-tile {
-		padding: 20px;
+		padding: 12px;
 	}
 
-	body.standalone-page.floating-boxes .intro-tile:has(> .page-banner),
-	body.cf-booking .booking-intro-tile {
-		padding-bottom: 0;
-	}
-
-	body.standalone-page.floating-boxes .intro-tile:has(> .page-banner) .page-banner,
+	.intro-tile:has(> .page-banner) .page-banner,
 	body.cf-booking .booking-intro-tile .page-banner {
-		margin: -20px -20px 0;
+		margin: -12px;
 	}
 
-	body.standalone-page.floating-boxes .intro-tile:has(> .page-banner) .page-menu,
-	body.cf-booking .booking-intro-tile .page-menu {
-		bottom: 20px;
-	}
-
-	body.standalone-page.floating-boxes #main article .intro-tile:has(> .page-banner) .page-back,
-	body.cf-booking .booking-intro-tile .booking-page-back {
-		top: 22px;
-		left: 20px;
-	}
-
-	body.standalone-page.floating-boxes #main article .intro-tile:has(> .page-banner) .page-home,
-	body.cf-booking .booking-intro-tile .booking-page-home {
-		top: 22px;
-		right: 20px;
-	}
-
-	body.standalone-page.floating-boxes .intro-tile:has(> .page-banner) .page-menu,
-	body.cf-booking .booking-intro-tile .page-menu {
-		max-width: calc(100% - 9.5rem);
+	.intro-tile:has(> .page-banner) .page-nav,
+	body.cf-booking .booking-intro-tile .booking-page-nav {
+		top: 12px;
+		left: 12px;
+		right: 12px;
 	}
 
 	body.standalone-page.floating-boxes .content-box {
@@ -2081,24 +2039,29 @@ body.standalone-page.floating-boxes .services-grid {
 
 }
 
-/* Posted after the header rules above so the cascade wins: on small
-   phones there is not enough room for the 2x2 menu between the flanking
-   disc buttons, so the menu drops to full tile width in its own row
-   below them. 46px clears the discs' bottom edge. */
+/* Below 480px the bar wraps: the discs share the top row
+   (space-between) and the 2x2 menu takes the second row, all inside
+   the same pill. The window grows to hold the wrapped pill with the
+   same 12px top/bottom symmetry (pill 163px + 2 x 12px = 187px). */
 
 @media screen and (max-width: 480px) {
 
-	/* On small phones the 2x2 menu cannot fit beside the flanking disc
-	   buttons, so it spans the tile's full width, still overlaid on the
-	   image's bottom edge. */
+	.page-nav,
+	body.cf-booking .booking-intro-tile .booking-page-nav,
+	body.cf-booking .confirm-panel .page-nav {
+		flex-wrap: wrap;
+		justify-content: space-between;
+		row-gap: 6px;
+	}
 
-	body.standalone-page.floating-boxes .intro-tile:has(> .page-banner) .page-menu,
-	body.cf-booking .booking-intro-tile .page-menu {
-		bottom: 20px;
-		left: 20px;
-		right: 20px;
-		width: auto;
-		max-width: none;
+	.page-menu {
+		order: 3;
+		width: 100%;
+	}
+
+	.intro-tile:has(> .page-banner) .page-banner,
+	body.cf-booking .booking-intro-tile .page-banner {
+		height: 187px;
 	}
 
 }

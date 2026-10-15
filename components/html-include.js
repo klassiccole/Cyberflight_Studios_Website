@@ -39,6 +39,21 @@
 		}
 	}
 
+	/* Placeholder attributes configure the bar wrapper the fragment
+	   lands in: data-no-back drops the back link (confirmation pages),
+	   data-back="..." reroutes it. Back link destinations otherwise stay
+	   whatever each page's own markup sets (one level up). */
+	function applyNavConfig(placeholder) {
+		var backLink = document.querySelector(".page-back, .booking-page-back");
+		var backHref = placeholder.getAttribute("data-back");
+
+		if (placeholder.hasAttribute("data-no-back") && backLink) {
+			backLink.remove();
+		} else if (backHref && backLink) {
+			backLink.setAttribute("href", backHref);
+		}
+	}
+
 	function includeAll() {
 		var placeholders = document.querySelectorAll("[data-include]");
 		var pending = placeholders.length;
@@ -60,6 +75,7 @@
 				.then(function (html) {
 					el.outerHTML = html;
 					if (url.indexOf("page-nav") !== -1) {
+						applyNavConfig(el);
 						highlightPageNav();
 					}
 				})

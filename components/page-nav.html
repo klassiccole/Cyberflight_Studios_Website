@@ -1,10 +1,19 @@
 <!--
-	Shared section menu: the primary 4-page navigation shown under the
-	header banner on every page except the homepage. Populate pages by
-	placing this placeholder inside the intro tile, directly after the
-	banner image:
-		<div data-include="/components/page-nav.html?v=1"></div>
-	<script src="/components/html-include.js?v=2"></script>
+	Shared nav-bar menu: the 4-button section menu (About / Gallery /
+	Services / Booking) that forms the middle of every page's unified
+	nav bar. The placeholder sits inside each page's .page-nav, between
+	the back and home links:
+		<nav class="page-nav">
+			<a href="..." class="page-back">...</a>
+			<div data-include="/components/page-nav.html?v=2"></div>
+			<a href="/" class="page-home">...</a>
+		</nav>
+
+	Variants (read by html-include.js, which injects this fragment):
+	- data-no-back on the placeholder hides the bar's back link (the
+	  booking/contact confirmation pages).
+	- data-back="/path/" on the placeholder overrides the back link's
+	  destination (default: each page's own markup, one level up).
 
 	Current-page highlight: html-include.js marks the link matching the
 	URL's first path segment with aria-current="page" and .is-active
@@ -12,11 +21,9 @@
 	rules in site-shell.css. Pages outside these four sections get no
 	highlight.
 -->
-<nav class="page-menu" aria-label="Site sections">
-	<ul>
-		<li><a href="/about/">About</a></li>
-		<li><a href="/gallery/">Gallery</a></li>
-		<li><a href="/services/">Services</a></li>
-		<li><a href="/booking/">Booking</a></li>
-	</ul>
-</nav>
+<ul class="page-menu">
+	<li><a href="/about/">About</a></li>
+	<li><a href="/gallery/">Gallery</a></li>
+	<li><a href="/services/">Services</a></li>
+	<li><a href="/booking/">Booking</a></li>
+</ul>

@@ -32,7 +32,7 @@
 		</noscript>
 	</head>
 
-	<body class="standalone-page">
+	<body class="standalone-page floating-boxes">
 
 		<!-- Wrapper -->
 		<div id="wrapper">
@@ -43,8 +43,22 @@
 				<!-- Real Estate Photography -->
 				<article id="service-realestate" class="graduation-page">
 
+					<!-- Header tile: nav bar only; the intro content follows below.
+					     Every page keeps the same tile + bar skeleton. -->
+					<div class="intro-tile">
+					<nav class="page-nav" aria-label="Page navigation">
+						<a href="../" class="page-back" aria-label="Back to services" title="Back to Services">&#8592;</a>
+						<div data-include="/components/page-nav.html?v=2"></div>
+						<a href="/" class="page-home icon solid fa-home" aria-label="Home" title="Home"></a>
+					</nav>
+
+					<span class="image page-banner">
+						<img src="../../images/headers/services.jpg" alt="Cyberflight Studios Services" />
+					</span>
+					</div>
+
 					<!-- Introduction -->
-                <header class="graduation-intro">
+                <header class="graduation-intro content-box">
 
                     <div class="graduation-intro-content">
 
@@ -79,10 +93,9 @@
                     </div>
 
                 </header>
-                <div data-include="/components/page-nav.html?v=1"></div>
 
 					<!-- Packages -->
-					<section class="graduation-packages">
+					<section class="graduation-packages content-box">
 
 						<div class="graduation-section-heading">
 							<h2>Choose Your Property Size</h2>
@@ -172,7 +185,7 @@
 					</section>
 
 					<!-- Session Information -->
-                    <section class="graduation-info">
+                    <section class="graduation-info content-box">
 
                         <div class="graduation-info-content">
 
@@ -218,15 +231,6 @@
 						Book Your Real Estate Session
 					</a>
 				</section>
-
-					<!-- Back to Services -->
-					<a
-						href="../"
-						class="page-back"
-						aria-label="Back to services"
-						title="Back to Services">
-						&#8592;
-					</a>
 				</article>
 			</div>
 			<div data-include="/components/footer.html?v=2"></div>
@@ -272,6 +276,6 @@
 		<script src="../../assets/js/main.js"></script>
 
 
-	<script src="/components/html-include.js?v=2"></script>
+	<script src="/components/html-include.js?v=3"></script>
 	</body>
 </html>
