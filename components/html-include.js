@@ -44,7 +44,7 @@
 	   data-back="..." reroutes it. Back link destinations otherwise stay
 	   whatever each page's own markup sets (one level up). */
 	function applyNavConfig(placeholder) {
-		var backLink = document.querySelector(".page-back, .booking-page-back");
+			var backLink = document.querySelector(".page-back");
 		var backHref = placeholder.getAttribute("data-back");
 
 		if (placeholder.hasAttribute("data-no-back") && backLink) {
