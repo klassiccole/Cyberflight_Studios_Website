@@ -202,6 +202,13 @@ All read via `env.*` inside Functions; set in Cloudflare dashboard (prod) or `.d
 4. **DB and calendar as separate sources:** events/weddings are calendar-only (no D1 rows); graduation (and real estate when enabled) persist to D1. Availability is the merge of both.
 5. **Clean URLs via directory structure:** each page is `<dir>/index.html`. Keep that pattern for new pages.
 
+## Stylesheet ownership
+
+- `site-shell.css` — shared blueprint, loads on all 20 pages: reset, fonts, typography, background, header tile, footer, page states, the floating-box layout and the unified nav bar. Homepage and booking load it, so it must stay page-agnostic.
+- `site-pages.css` — content-page layer (about / gallery / services / contact / privacy / terms + the footer fragment styling). The homepage and booking pages must never be affected by it.
+- `homepage.css` / `booking.css` — the two single-purpose files. The homepage footer is intentionally its own copy; keep it in sync manually.
+- **Shared page family:** the `.packages-page` CSS family (intro, tagline, package-card tiles, information, CTA) is used by BOTH `services/graduation` and `services/realestate` — do not rename or trim members without checking both pages. The `graduation` booking service name (`/booking/?service=graduation`, D1 rows) is unrelated to these class names and is not part of any rename.
+
 ## Working conventions for agents (learned the hard way)
 
 - **Never push, commit, deploy, delete data, or change Cloudflare settings without explicit per-action approval.** When asked for "comment and code", reply with exactly the pastable commands and nothing else.
