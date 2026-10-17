@@ -1401,13 +1401,26 @@ body.standalone-page.floating-boxes #main article {
 
 }
 
-/* The menu placeholder inherits the menu's space-occupying job, so the
-   home disc sits flush right from the first paint — before the fragment
-   fetch finishes, the bar would otherwise flash as [back][home] next to
-   each other on the left and snap apart on injection. */
+/* Intro-tile slot reservation: pages render the whole header via one
+   placeholder (components/header.html). While the fetch is in flight,
+   the placeholder holds the tile's final height so nothing below it
+   jumps when the header arrives. The slot class is consumed when the
+   fragment replaces the placeholder, so the reservation never fights
+   the real tile.
+   Height math: brand mark 100px + brand margin 10px + pill
+   (8px padding + 56px menu + 1px borders = 74px) = 184px. Mobile swaps
+   to the 40px mark + 10px + 66px pill = 116px. */
 
-.page-nav > div[data-include] {
-	flex: 1 1 0%;
+.intro-tile-slot {
+	min-height: 184px;
+	margin-bottom: 26px; /* tile's own margin, so bottom spacing is stable too */
+}
+
+@media screen and (max-width: 480px) {
+
+	.intro-tile-slot {
+		min-height: 116px;
+	}
 }
 
 .intro-tile .page-back,
@@ -1482,47 +1495,7 @@ body.standalone-page.floating-boxes #main article {
 }
 
 
-/* The confirmation panels reuse the header component but have no
-   <article> shell, so the disc rules above (scoped by #main) don't
-   reach them; this scoped block gives the panel's home button the
-   identical disc. */
-
-body.cf-booking .confirm-panel .page-home {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-
-	width: 48px;
-	height: 48px;
-
-	border: 1px solid #ffffff;
-	border-radius: 50%;
-	background: rgba(27, 31, 37, 0.55);
-
-	color: #ffffff;
-	line-height: 1;
-	font-size: 18.4px;
-
-	text-decoration: none;
-	cursor: pointer;
-
-	transition: background-color var(--cf-transition-speed) ease-in-out;
-}
-
-body.cf-booking .confirm-panel .page-home:hover {
-	background: rgba(27, 31, 37, 0.75);
-}
-
-body.cf-booking .confirm-panel .page-home:active {
-	background: rgba(27, 31, 37, 0.9);
-}
-
-body.cf-booking .confirm-panel .page-home:focus-visible {
-	outline: 2px solid currentColor;
-	outline-offset: 3px;
-}
-
-/* Section menu (components/page-nav.html): the 4-button menu that sits
+/* Section menu (inside components/header.html): the 4-button menu that sits
    centered inside the unified nav bar. Chrome (border, backdrop,
    rounding) comes from the bar itself; the menu supplies only the
    items. Styled to match the homepage nav. The current-section link is

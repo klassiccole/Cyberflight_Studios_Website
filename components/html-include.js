@@ -13,12 +13,12 @@
 (function (window, document) {
 	"use strict";
 
-	/* The section menu (page-nav.html) is one shared fragment, so it
-	   cannot know which page it is on. After it lands, mark the link
-	   matching the URL's first path segment (about/gallery/services/
-	   booking) with aria-current + .is-active so the CSS can fill it.
-	   Pages outside those four sections (contact, terms, ...) simply
-	   get no highlight. */
+	/* The section menu lives inside the shared header fragment
+	   (header.html), so it cannot know which page it is on. After the
+	   header lands, mark the menu link matching the URL's first path
+	   segment (about/gallery/services/booking) with aria-current +
+	   .is-active so the CSS can fill it. Pages outside those four
+	   sections (contact, terms, ...) simply get no highlight. */
 	function highlightPageNav() {
 		var menu = document.querySelector(".page-menu");
 		if (!menu) {
@@ -74,7 +74,7 @@
 				})
 				.then(function (html) {
 					el.outerHTML = html;
-					if (url.indexOf("page-nav") !== -1) {
+					if (url.indexOf("header") !== -1) {
 						applyNavConfig(el);
 						highlightPageNav();
 					}

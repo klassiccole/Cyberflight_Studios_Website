@@ -1,0 +1,61 @@
+<!--
+	Shared page header ("intro tile"): brand row + unified nav bar.
+
+	One definition for the entire site. Every page renders it with a
+	single line:
+
+		<div class="intro-tile-slot" data-include="/components/header.html?v=NN"></div>
+
+	The .intro-tile-slot class on the placeholder reserves the tile's
+	height during the fragment fetch (see site-shell.css) so the page
+	below never jumps when the header arrives.
+
+	Placeholder attributes, applied by html-include.js after injection:
+	- data-no-back      - omit the back link (booking/contact confirmation pages)
+	- data-back="/.../" - override the back link's target. Default is
+	                      "../", which walks to the parent directory; per
+	                      the one-level-deep rule, header tiles only exist
+	                      at a single directory depth (see README).
+
+	Behavior notes:
+	- The back link falls back to real browser history when the visitor
+	  arrived from the same site (main.js). Inside the booking flow,
+	  app.js reinterprets the same link as the wizard's "previous step"
+	  button (hooked by #nav-back id) - do not remove that id.
+	- html-include.js adds the current-section highlight (.is-active +
+	  aria-current) to the menu link matching the URL's first path
+	  segment after injection.
+	- The homepage does NOT use this component (it has its own full-page
+	  header design).
+-->
+<div class="intro-tile">
+	<a class="page-brand" href="/">
+		<img src="/images/headers/logo_icon.png" alt="Cyberflight Studios" />
+		<span>Cyberflight Studios</span>
+	</a>
+
+	<nav class="page-nav" aria-label="Page navigation">
+		<a href="../" id="nav-back" class="page-back" aria-label="Back" title="Back">
+			&#8592;
+		</a>
+		<ul class="page-menu">
+			<li><a href="/about/" aria-label="About">
+				<i class="far fa-user" aria-hidden="true"></i>
+				<span class="menu-label">About</span>
+			</a></li>
+			<li><a href="/gallery/" aria-label="Gallery">
+				<i class="far fa-images" aria-hidden="true"></i>
+				<span class="menu-label">Gallery</span>
+			</a></li>
+			<li><a href="/services/" aria-label="Services">
+				<i class="fas fa-camera" aria-hidden="true"></i>
+				<span class="menu-label">Services</span>
+			</a></li>
+			<li><a href="/booking/" aria-label="Booking">
+				<i class="far fa-calendar-check" aria-hidden="true"></i>
+				<span class="menu-label">Booking</span>
+			</a></li>
+		</ul>
+		<a href="/" class="page-home icon solid fa-home" aria-label="Home" title="Home"></a>
+	</nav>
+</div>

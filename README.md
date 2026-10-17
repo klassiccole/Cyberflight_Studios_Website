@@ -118,6 +118,7 @@ Shared HTML lives in `components/` so it is written once and adopted per page. N
 
 Current fragments:
 
+- `header.html` — full header tile (brand row + nav bar with section menu). Used by every page except the homepage; see "Shared header component" below.
 - `footer.html` — standard site footer (`footer#footer` > `.site-footer`: brand + "Contact Me"). Used by about, gallery/*, services/*. Footer styling lives in `assets/css/site-pages.css` (`#footer .site-footer` rules); do not duplicate it into other stylesheets.
 - `footer-brand.html` — brand-only variant (no link), used by contact/index.html only.
 
@@ -127,38 +128,24 @@ Conventions:
 
 - Bump `?v=` on the `data-include` attribute in every page that references a fragment whenever that fragment's markup changes (same rule as booking assets, above).
 - Links inside fragments use absolute paths (`/contact/`); all pages are served from the domain root, so fragments need no per-page path logic.
-- The pattern is not footer-specific: any future shared fragment follows the same form — one placeholder + one fragment file in `components/`, styled by whichever stylesheet family the adopting pages already load. Note: the shared page **header** is deliberately *not* a fragment — it is per-page markup styled centrally from `site-shell.css`; see "Shared header component" below.
+- The pattern is not footer-specific: any future shared fragment follows the same form — one placeholder + one fragment file in `components/`, styled by whichever stylesheet family the adopting pages already load.
 
-## Shared header component (site-shell.css)
+## Shared header component (components/header.html)
 
-All modern standalone pages share one header "tile", styled centrally in the **Floating Box Layout** section of `assets/css/site-shell.css` (markup is duplicated per page; the styling is not):
+Every page except the homepage renders its header tile from **one fragment** — the full tile (brand row + unified nav bar with back disc, 4-button section menu, home disc) lives in `components/header.html`; the former per-page tile markup and the separate `page-nav.html` menu fragment were absorbed into it. Each page is a single line:
 
 ```html
-<div class="intro-tile">
-    <a class="page-brand" href="/">
-        <img src="/images/headers/logo_icon.png" alt="Cyberflight Studios" />
-        <span>Cyberflight Studios</span>
-    </a>
-    <nav class="page-nav" aria-label="Page navigation">
-        <a href="<parent>" class="page-back" aria-label="Back to <parent>">←</a>
-        <div data-include="/components/page-nav.html?v=NN"></div>
-        <a href="/" class="page-home icon solid fa-home" aria-label="Home"></a>
-    </nav>
-</div>
+<div class="intro-tile-slot" data-include="/components/header.html?v=NN"></div>
 ```
 
-(This replaced an earlier banner-image header design — full-bleed `images/headers/*.webp` faces with the nav bar overlaid via `:has(> .page-banner)` — which was fully removed once the brand-row tile took over; no page carries `.page-banner` and the banner CSS is deleted.)
-
-Rules of the component:
-
-- **Brand row:** `logo_icon.png` + the studio name sit above the nav pill, floating over the animated page background (drop-shadow/text-shadow keep them legible); the whole row links home. On small phones the row scales down (40px mark / 20px name).
-- **Unified nav bar:** one pill with a single backdrop and white border holds the back disc, the shared 4-button section menu (`components/page-nav.html`), and the home disc. Pixel-locked sizing (px + explicit typeface) so booking's 17px `CFBooking` root can't inflate or re-typeface it.
-- **Current-section highlight:** `html-include.js` marks the link matching the URL's first path segment with `aria-current="page"` + `.is-active` (filled white chip).
-- **Tile is nav-only:** every tile holds just the brand row and the bar — the banner-era edge-to-edge header images and `:has()` overlay geometry are gone. Gallery sub-pages keep their `h2.major` title in the content below the tile.
-- **Booking shares it:** booking and the confirmation panels use the standard `intro-tile`/`page-nav`/`page-back`/`page-home` classes directly — no per-page co-listed class names anymore. Only booking-specific quirks stay in `booking/booking.css`.
-- **Confirmation panels:** they have no `<article>` shell, so a scoped `body.cf-booking .confirm-panel .page-home` block gives their home disc the identical look.
-- **All standalone pages converted:** every page including `services/graduation`, `services/realestate`, and `services/videography` uses the shared header component. The old pre-floating-boxes template variants and the JS-injected Home button (`main.js` "Standalone Page Home Button" block) are gone; the injector was deleted once it was confirmed no page lacked `.page-home`.
-- **TODO(future):** hoist the whole tile into `components/header.html` (like `footer.html`), passing per-page bits (back target) via data- attributes, so every header is a single placeholder line.
+- **Slot reservation:** while the fetch is in flight, the placeholder's `.intro-tile-slot` class (CSS in `site-shell.css`) holds the tile's final height (184px desktop, 116px mobile) so content below never jumps. The class is consumed on injection.
+- **Back link:** defaults to `href="../"` — which only works because tiles exist at exactly one directory depth site-wide (keep that rule). Override with `data-back="/services/"` (booking does this); omit entirely with `data-no-back` (the two confirmation pages). The back link carries `id="nav-back"` because `booking/app.js` hooks it to step backwards through the booking wizard — don't remove the id. `main.js` still adds same-site history-aware behavior by class.
+- **Current-section highlight:** `html-include.js` marks the menu link matching the URL's first path segment with `aria-current="page"` + `.is-active` (filled white chip).
+- **Brand row:** `logo_icon.png` + the studio name link home; legibility over the animated background via drop-shadow/text-shadow; scales down on small phones (40px mark / 20px name).
+- **Pixel-locked nav:** sizes in px with an explicit typeface so booking's 17px `CFBooking` root can't inflate or re-typeface the bar.
+- **Booking flow:** `booking/index.html` uses the fragment with `data-back="/services/"`; the two confirmation pages place the header above their centered success panel (their inline brand/nav and the scoped `body.cf-booking .confirm-panel .page-home` rules are gone).
+- **Excluded:** the homepage keeps its own full-page header design (not this component). The old banner-image header design (full-bleed `images/headers/*.webp` + `:has()` overlay) was removed with the brand-row tile; no page carries `.page-banner` and the banner CSS is deleted.
+- **No-JS:** pages without JavaScript show no header tile (fragment requires the loader). Accepted trade-off; the homepage and booking forms remain fully usable without it.
 
 ## Gallery structure
 

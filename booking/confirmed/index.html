@@ -8,7 +8,7 @@
   <title>Request received · Cyberflight Studios</title>
   <link rel="icon" href="../../images/headers/logo_icon.png">
   <link rel="stylesheet" href="../../assets/css/fontawesome-all.min.css">
-  <link rel="stylesheet" href="../../assets/css/site-shell.css?v=5">
+  <link rel="stylesheet" href="../../assets/css/site-shell.css?v=6">
   <link rel="stylesheet" href="../booking.css?v=40">
   <style>
     /* Centered confirmation card with the home button inside, top-right. */
@@ -19,11 +19,6 @@
       position: relative;
       text-align: center;
       padding-top: 48px;
-    }
-    body.cf-booking .confirm-panel .page-home.icon {
-      position: absolute;
-      top: 16px;
-      right: 16px;
     }
     body.cf-booking .confirm-panel .confirm-head {
       display: flex;
@@ -48,21 +43,12 @@
 </head>
 <body class="cf-booking">
   <main id="main">
+        <div class="intro-tile-slot" data-include="/components/header.html?v=1" data-no-back></div>
     <div class="booking-layout">
       <div class="workspace">
         <section class="panel success confirm-panel">
 
 
-          <!-- Brand: links home; sits above the nav bar -->
-          <a class="page-brand" href="/">
-          	<img src="/images/headers/logo_icon.png" alt="Cyberflight Studios" />
-          	<span>Cyberflight Studios</span>
-          </a>
-
-          <nav class="page-nav">
-          <div data-include="/components/page-nav.html?v=3" data-no-back></div>
-          <a href="/" class="page-home icon solid fa-home" aria-label="Home" title="Home"></a>
-          </nav>
           <div class="confirm-head">
             <div class="success-symbol" aria-hidden="true">✓</div>
             <p class="eyebrow">REQUEST RECEIVED</p>
@@ -75,7 +61,7 @@
     <footer><span>CYBERFLIGHT STUDIOS</span><p><a href="/booking/">Back to booking <span aria-hidden="true">↗</span></a> · <a href="/contact/">Ask a general question <span aria-hidden="true">↗</span></a></p></footer>
   </main>
   <noscript><p class="noscript">JavaScript is only needed on the booking form itself; this page works without it.</p></noscript>
-<script src="/components/html-include.js?v=4"></script>
+<script src="/components/html-include.js?v=5"></script>
 </body>
 <div class="booking-background" aria-hidden="true">
   <video autoplay muted loop playsinline poster="../../images/bg.webp">

@@ -8,26 +8,14 @@
   <title>Book a Session · Cyberflight Studios</title>
   <link rel="icon" href="../images/headers/logo_icon.png">
   <link rel="stylesheet" href="../assets/css/fontawesome-all.min.css">
-  <link rel="stylesheet" href="../assets/css/site-shell.css?v=5">
+  <link rel="stylesheet" href="../assets/css/site-shell.css?v=6">
   <link rel="stylesheet" href="booking.css?v=40">
   <script defer src="booking-core.js?v=28"></script>
   <script defer src="app.js?v=43"></script>
 </head>
 <body class="cf-booking">
   <main id="main">
-    <div class="intro-tile">
-     <!-- Brand: links home; sits above the nav bar -->
-     <a class="page-brand" href="/">
-     	<img src="/images/headers/logo_icon.png" alt="Cyberflight Studios" />
-     	<span>Cyberflight Studios</span>
-     </a>
-
-     <nav class="page-nav" aria-label="Page navigation">
-    <a href="/services/" class="page-back" id="nav-back" aria-label="Back" title="Back">&#8592;</a>
-    <div data-include="/components/page-nav.html?v=3"></div>
-    <a href="/" class="page-home icon solid fa-home" aria-label="Home" title="Home"></a>
-</nav>
-</div>
+    <div class="intro-tile-slot" data-include="/components/header.html?v=1" data-back="/services/"></div>
     <div class="booking-layout">
       <div class="workspace">
         <section class="panel" data-panel="0" aria-labelledby="heading-0">
@@ -129,7 +117,7 @@
   <noscript>
   <p class="noscript">This page needs JavaScript enabled.</p></noscript>
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-<script src="/components/html-include.js?v=4"></script>
+<script src="/components/html-include.js?v=5"></script>
 </body>
 <div class="booking-background" aria-hidden="true">
   <video autoplay muted loop playsinline
