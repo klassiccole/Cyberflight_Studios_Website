@@ -1,421 +1,487 @@
 /*
-Dimension by HTML5 UP
-html5up.net | @ajlkn
-Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+   Cyberflight Studios - Homepage styles
+
+   Styles specific to index.html (the homepage). All pages also load
+   site-shell.css for the shared reset, background, page states, and
+   footer rules.
+
+   Layout / selectors / breakpoints derive from the Dimension template
+   by HTML5 UP (html5up.net | @ajlkn), heavily customized.
+
+   Conventions: flush-left selectors, 4-space indented properties,
+   section banners; viewport breakpoints are 1680 / 980 / 736 / 480 px.
 */
 
-/*
-Homepage Wrapper
-Defines the primary structural container used by the Cyberflight Studios
-homepage.
+/* ============================================================
+   Homepage Wrapper
+============================================================ */
 
-Standalone content pages use the shared wrapper defined in site-shell.css.
+/*
+    Defines the primary structural container used by the Cyberflight
+    Studios homepage.
+
+    Standalone content pages use the shared wrapper defined in
+    site-shell.css (body.standalone-page), which is why every rule in
+    this section is keyed on body:not(.standalone-page) — see also the
+    "Homepage Header" comment below.
 */
 
 body:not(.standalone-page) #wrapper {
-display: flex;
-
-flex-direction: column;
-
-align-items: center;
-
-justify-content: space-between;
-
-position: relative;
-
-min-height: 100vh;
-width: 100%;
-
-padding: 4rem 2rem;
-
-z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    min-height: 100vh;
+    width: 100%;
+    padding: 4rem 2rem;
+    z-index: 3;
 }
 
+/* Empty ::before keeps Dimension's centering math for the header. */
 body:not(.standalone-page) #wrapper:before {
-content: '';
-display: block;
+    content: '';
+    display: block;
 }
 
 /* Homepage Wrapper - Small Desktop */
 
 @media screen and (max-width: 1680px) {
 
-body:not(.standalone-page) #wrapper {
-	padding: 3rem 2rem;
-}
+    body:not(.standalone-page) #wrapper {
+        padding: 3rem 2rem;
+    }
 }
 
 /* Homepage Wrapper - Tablet */
 
 @media screen and (max-width: 736px) {
 
-body:not(.standalone-page) #wrapper {
-	padding: 2rem 1rem;
-}
+    body:not(.standalone-page) #wrapper {
+        padding: 2rem 1rem;
+    }
 }
 
 /* Homepage Wrapper - Mobile */
 
 @media screen and (max-width: 480px) {
 
-body:not(.standalone-page) #wrapper {
-	padding: 1rem;
-}
+    body:not(.standalone-page) #wrapper {
+        padding: 1rem;
+    }
 }
 
-/* 
-Homepage Header
-The homepage interface is primarily contained within #header.
-This includes the logo, company information, navigation, and social links.
+/* ============================================================
+   Homepage Header
+============================================================ */
+
+/*
+    The homepage interface is contained within #header: logo, company
+    information, navigation, and social links.
+
+    Column hierarchy: each direct child of #header gets a white 1px
+    connector line rising from the previous element (the #header > *:before
+    rules), so logo, content box, nav, and socials hang from one
+    continuous line. The .content box expands open on page load via the
+    is-preload choreography at the bottom of this section.
 */
 
 #header {
-display: flex;
-flex-direction: column;
-align-items: center;
-transition: transform 0.325s ease-in-out, filter 0.325s ease-in-out, opacity 0.325s ease-in-out;
-background-image: radial-gradient(rgba(0, 0, 0, 0.25) 25%, rgba(0, 0, 0, 0) 55%);
-max-width: 100%;
-text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 0.325s ease-in-out, filter 0.325s ease-in-out, opacity 0.325s ease-in-out;
+    background-image: radial-gradient(rgba(0, 0, 0, 0.25) 25%, rgba(0, 0, 0, 0) 55%);
+    max-width: 100%;
+    text-align: center;
 }
 
 #header > * {
-	transition: opacity 0.325s ease-in-out;
-	position: relative;
-	margin-top: 3.5rem;
+    transition: opacity 0.325s ease-in-out;
+    position: relative;
+    margin-top: 3.5rem;
 }
 
-	#header > *:before {
-		content: '';
-		display: block;
-		position: absolute;
-		top: calc(-3.5rem - 1px);
-		left: calc(50% - 1px);
-		width: 1px;
-		height: calc(3.5rem + 1px);
-		background: #ffffff;
-	}
+#header > *:before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: calc(-3.5rem - 1px);
+    left: calc(50% - 1px);
+    width: 1px;
+    height: calc(3.5rem + 1px);
+    background: #ffffff;
+}
 
 #header > :first-child {
-	margin-top: 0;
+    margin-top: 0;
 }
 
 #header > :first-child:before {
-	display: none;
+    display: none;
 }
 
+/* Logo: strips the template-era logo chrome; the img carries the disc
+   shape itself. */
+
 #header .logo {
-	background: none;
-	box-shadow: none;
-	border-radius: 0;
+    background: none;
+    box-shadow: none;
+    border-radius: 0;
 }
 
 #header .logo img {
-	width: 12rem;
-	height: 12rem;
-	object-fit: contain;
-	border-radius: 50%;
-	display: block;
-	margin: 0 auto;
+    width: 12rem;
+    height: 12rem;
+    object-fit: contain;
+    border-radius: 50%;
+    display: block;
+    margin: 0 auto;
+}
+
+/* Company info box: bordered band with the name and tagline. */
+
+#header .content {
+    border-style: solid;
+    border-color: #ffffff;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    max-width: 100%;
+}
+
+#header .content .inner {
+    transition: max-height 0.75s ease, padding 0.75s ease, opacity 0.325s ease-in-out;
+    transition-delay: 0.25s;
+    padding: 2rem 2rem;
+    max-height: 40rem;
+    overflow: hidden;
+}
+
+#header .content .inner > :last-child {
+    margin-bottom: 0;
 }
 
 #header .content .location {
-	font-size: 0.85rem;
-	font-weight: 600;
-	letter-spacing: 0.2rem;
-	margin-top: -1.25rem;
-	margin-bottom: 1rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.2rem;
+    margin-top: -1.25rem;
+    margin-bottom: 1rem;
 }
 
-#header .content {
-	border-style: solid;
-	border-color: #ffffff;
-	border-top-width: 1px;
-	border-bottom-width: 1px;
-	max-width: 100%;
+#header .content p {
+    text-transform: uppercase;
+    letter-spacing: 0.2rem;
+    font-size: 0.8rem;
+    line-height: 2;
 }
 
-	#header .content .inner {
-		transition: max-height 0.75s ease, padding 0.75s ease, opacity 0.325s ease-in-out;
-		transition-delay: 0.25s;
-		padding: 2rem 2rem;
-		max-height: 40rem;
-		overflow: hidden;
-	}
-
-		#header .content .inner > :last-child {
-			margin-bottom: 0;
-		}
-
-	#header .content p {
-		text-transform: uppercase;
-		letter-spacing: 0.2rem;
-		font-size: 0.8rem;
-		line-height: 2;
-	}
-
-/* Homepage Social Media Links */
+/* ============================================================
+   Homepage Social Media Links
+============================================================ */
 
 #header .home-socials {
-display: flex;
-justify-content: center;
-align-items: center;
-gap: 1.75rem;
-list-style: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.75rem;
+    list-style: none;
 
-/* Social box */
-width: fit-content;
-padding: 0.4rem 1.1rem;
-margin: 1.75rem auto 0 auto;
+    /* Social box border */
+    width: fit-content;
+    padding: 0.4rem 1.1rem;
+    margin: 1.75rem auto 0 auto;
 
-border: solid 1px #ffffff;
-border-radius: 4px;
+    border: solid 1px #ffffff;
+    border-radius: 4px;
 }
 
 #header .home-socials li {
-padding: 0;
+    padding: 0;
 }
 
 #header .home-socials a {
-border-bottom: none;
-font-size: 1.55rem;
-transition: transform 0.2s ease, opacity 0.2s ease;
+    border-bottom: none;
+    font-size: 1.55rem;
+    transition: transform 0.2s ease, opacity 0.2s ease;
 }
 
 #header .home-socials a:hover {
-transform: scale(1.15);
-opacity: 0.75;
+    transform: scale(1.15);
+    opacity: 0.75;
 }
 
+/* ============================================================
+   Homepage Navigation
+============================================================ */
+
+/* Four-link bordered band; the JS-added .use-middle (even link count)
+   draws a 1px center divider — intentional design, see main.js. */
+
 #header nav ul {
-display: flex;
-margin-bottom: 0;
-list-style: none;
-padding-left: 0;
-border: solid 1px #ffffff;
-border-radius: 4px;
+    display: flex;
+    margin-bottom: 0;
+    list-style: none;
+    padding-left: 0;
+    border: solid 1px #ffffff;
+    border-radius: 4px;
 }
 
 #header nav ul li {
-padding-left: 0;
-border-left: solid 1px #ffffff;
+    padding-left: 0;
+    border-left: solid 1px #ffffff;
 }
 
 #header nav ul li:first-child {
-	border-left: 0;
+    border-left: 0;
 }
 
 #header nav ul li a {
-	display: block;
-	min-width: 7.5rem;
-	height: 2.75rem;
-	line-height: 2.75rem;
-	padding: 0 1.25rem 0 1.45rem;
-	text-transform: uppercase;
-	letter-spacing: 0.2rem;
-	font-size: 0.8rem;
-	border-bottom: 0;
+    display: block;
+    min-width: 7.5rem;
+    height: 2.75rem;
+    line-height: 2.75rem;
+    padding: 0 1.25rem 0 1.45rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2rem;
+    font-size: 0.8rem;
+    border-bottom: 0;
 }
 
-	#header nav ul li a:hover {
-		background-color: rgba(255, 255, 255, 0.075);
-	}
+#header nav ul li a:hover {
+    background-color: rgba(255, 255, 255, 0.075);
+}
 
-	#header nav ul li a:active {
-		background-color: rgba(255, 255, 255, 0.175);
-	}
+#header nav ul li a:active {
+    background-color: rgba(255, 255, 255, 0.175);
+}
 
 #header nav.use-middle:after {
-content: '';
-display: block;
-position: absolute;
-top: 0;
-left: calc(50% - 1px);
-width: 1px;
-height: 100%;
-background: #ffffff;
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    left: calc(50% - 1px);
+    width: 1px;
+    height: 100%;
+    background: #ffffff;
 }
 
 #header nav.use-middle ul li.is-middle {
-border-left: 0;
+    border-left: 0;
 }
 
+/* ============================================================
+   Page States (is-preload)
+============================================================ */
+
+/*
+    Only the homepage ships <body class="is-preload">; main.js removes
+    that class at load, which triggers the transitions above. The rules
+    below define the page's starting (pre-reveal) state:
+
+    - nav items and the socials box hidden (fade in)
+    - the content box collapsed and transparent (expands open)
+    - the background filter cleared
+
+    Other pages are intentionally static and must NOT get a preload
+    class — do not key visual states on it outside the homepage stack.
+*/
+
 body.is-preload #header {
-filter: none;
+    filter: none;
 }
 
 body.is-preload #header > *:not(.logo) {
-opacity: 0;
+    opacity: 0;
 }
 
 body.is-preload #header .content .inner {
-max-height: 0;
-padding-top: 0;
-padding-bottom: 0;
-opacity: 0;
+    max-height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    opacity: 0;
 }
+
+/* ============================================================
+   Homepage Header - Viewports
+============================================================ */
 
 /* Header - Small Desktop */
 
 @media screen and (max-width: 980px) {
 
-	#header .content p br {
-		display: none;
-		}
-	}
+    #header .content p br {
+        display: none;
+    }
+}
 
 /* Header - Tablet */
 
 @media screen and (max-width: 736px) {
 
-	#header > * {
-		margin-top: 2rem;
-	}
+    #header > * {
+        margin-top: 2rem;
+    }
 
-		#header > *:before {
-			top: calc(-2rem - 1px);
-			height: calc(2rem + 1px);
-		}
+    #header > *:before {
+        top: calc(-2rem - 1px);
+        height: calc(2rem + 1px);
+    }
 
-		/* The socials box keeps a tighter 1.75rem margin, so its connector
-		   must be sized to its actual gap or it bleeds into the nav. */
-		#header .home-socials:before {
-			top: calc(-1.75rem - 1px);
-			height: calc(1.75rem + 1px);
-		}
+    /* The socials box keeps a tighter 1.75rem margin, so its connector
+       must be sized to its actual gap or it bleeds into the nav. */
+    #header .home-socials:before {
+        top: calc(-1.75rem - 1px);
+        height: calc(1.75rem + 1px);
+    }
 
-	#header .logo {
-		width: 4.75rem;
-		height: 4.75rem;
-		line-height: 4.75rem;
-	}
+    #header .logo {
+        width: 4.75rem;
+        height: 4.75rem;
+        line-height: 4.75rem;
+    }
 
-	#header .content .inner {
-		padding: 2rem 1rem;
-	}
+    #header .content .inner {
+        padding: 2rem 1rem;
+    }
 
-	#header .content p {
-		line-height: 1.875;
-		}
-	}
+    #header .content p {
+        line-height: 1.875;
+    }
+}
 
 /* Header - Mobile */
 
 @media screen and (max-width: 480px) {
 
-#header {
-	padding: 1.5rem 0 0;
+    #header {
+        padding: 1.5rem 0 0;
+    }
+
+    #header nav {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    #header nav ul {
+        flex-direction: column;
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+    }
+
+    #header nav ul li {
+        border-left: 0;
+        border-top: solid 1px #ffffff;
+    }
+
+    #header nav ul li:first-child {
+        border-top: 0;
+    }
+
+    #header nav ul li a {
+        height: 3rem;
+        line-height: 3rem;
+        width: 100%;
+        min-width: 0;
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    /* The centered divider makes no sense on a stacked list. */
+    #header nav.use-middle:after {
+        display: none;
+    }
+
+    #header .logo {
+        width: 7rem;
+        height: 7rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #header .logo img {
+        width: 7rem;
+        height: 7rem;
+        border-radius: 50%;
+    }
+
+    #header > .content::before {
+        display: none;
+    }
+
+    #header .content {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    #header .content .inner {
+        width: 100%;
+        max-width: 100%;
+        padding: 2rem 1rem;
+    }
+
+    #header h1 {
+        letter-spacing: 0.25rem;
+        word-break: break-word;
+    }
 }
 
-	#header nav ul {
-		flex-direction: column;
-		width: 100%;
-		min-width: 0;
-		max-width: 100%;
-	}
+/* ============================================================
+   Homepage Footer
+============================================================ */
 
-		#header nav ul li {
-			border-left: 0;
-			border-top: solid 1px #ffffff;
-		}
+/* The homepage footer is the only page whose footer styling is NOT the
+   shared fragment version in site-pages.css - homepage and booking-adjacent
+   pages keep their own inline footers (README "Shared fragments").
+   #footer .site-footer here must stay visually in sync with
+   site-pages.css; it lives here because homepage.css is the homepage's
+   only page stylesheet besides site-shell.css. */
 
-			#header nav ul li:first-child {
-				border-top: 0;
-			}
-
-			#header nav ul li a {
-				height: 3rem;
-				line-height: 3rem;
-				width: 100%;
-				min-width: 0;
-				padding-left: 1rem;
-				padding-right: 1rem;
-			}
-
-	#header nav.use-middle:after {
-		display: none;
-	}
-
-#header .logo {
-	width: 7rem;
-	height: 7rem;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-}
-
-#header .logo img {
-	width: 7rem;
-	height: 7rem;
-	border-radius: 50%;
-}
-
-#header > .content::before {
-	display: none;
-}
-
-#header .content {
-	width: 100%;
-	max-width: 100%;
-}
-
-#header .content .inner {
-	width: 100%;
-	max-width: 100%;
-	padding: 2rem 1rem;
-}
-
-#header nav {
-	width: 100%;
-	max-width: 100%;
-}
-
-#header h1 {
-	letter-spacing: 0.25rem;
-	word-break: break-word;
-}
-}
-/* Site footer on the home page: matches the shared footer styling */
 #footer .site-footer {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	gap: 12px 20px;
-	flex-wrap: wrap;
-	padding: 20px 0 0;
-	border-top: 1px solid #ffffff;
-	color: rgba(255, 255, 255, 0.6);
-	font-size: 0.85rem;
-	text-align: left;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px 20px;
+    flex-wrap: wrap;
+    padding: 20px 0 0;
+    border-top: 1px solid #ffffff;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.85rem;
+    text-align: left;
 }
 
-/* Vertical line rising from the footer rule to the socials box.
-   The connector is a flex item in #wrapper, so it grows to span the
+#footer .site-footer-brand {
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+}
+
+#footer .site-footer a {
+    color: inherit;
+    text-underline-offset: 5px;
+}
+
+#footer .site-footer a:hover {
+    color: #ffffff;
+}
+
+/* Footer Connector: vertical line rising from the footer rule to the
+   socials box. It is a flex item in #wrapper, so it grows to span the
    full variable gap between the socials box and the footer at any
    viewport height, keeping both ends connected. */
+
 #footer-connector {
-	flex: 1 0 2.5rem;
-	align-self: center;
-	width: 1px;
-	background: #ffffff;
+    flex: 1 0 2.5rem;
+    align-self: center;
+    width: 1px;
+    background: #ffffff;
 }
 
 /* The connector owns the spacing between the socials box and the
    footer; the footer margin would otherwise break the connection. */
+
 #footer {
-	margin-top: 0;
-}
-
-#footer .site-footer-brand {
-	font-size: 0.7rem;
-	letter-spacing: 0.18em;
-}
-
-#footer .site-footer a {
-	color: inherit;
-	text-underline-offset: 5px;
-}
-
-#footer .site-footer a:hover {
-	color: #ffffff;
+    margin-top: 0;
 }
