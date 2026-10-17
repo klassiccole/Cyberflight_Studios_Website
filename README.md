@@ -135,26 +135,30 @@ All modern standalone pages share one header "tile", styled centrally in the **F
 
 ```html
 <div class="intro-tile">
+    <a class="page-brand" href="/">
+        <img src="/images/headers/logo_icon.png" alt="Cyberflight Studios" />
+        <span>Cyberflight Studios</span>
+    </a>
     <nav class="page-nav" aria-label="Page navigation">
         <a href="<parent>" class="page-back" aria-label="Back to <parent>">←</a>
+        <div data-include="/components/page-nav.html?v=NN"></div>
         <a href="/" class="page-home icon solid fa-home" aria-label="Home"></a>
     </nav>
-    <span class="image page-banner">
-        <img src="<root>/images/headers/<page>.webp" alt="<page>" />
-    </span>
-    <!-- optional text header (gallery sub-pages use h2.major) -->
 </div>
 ```
 
+(This replaced an earlier banner-image header design — full-bleed `images/headers/*.webp` faces with the nav bar overlaid via `:has(> .page-banner)` — which was fully removed once the brand-row tile took over; no page carries `.page-banner` and the banner CSS is deleted.)
+
 Rules of the component:
 
-- **Full-bleed banner:** the image spans the tile edge-to-edge; its top corners take the tile's 12px radius. On desktop it is cropped to a shared **190px** height (a 220px trial was rejected — keep 190). Below 737px it renders at natural proportions.
-- **Overlay controls:** when a tile contains a banner, `.page-nav` leaves the flow (via `:has(> .page-banner)`) and the back/home buttons sit on the image's top corners over a translucent dark disc (`rgba(27,31,37,0.55)`, darker on hover/active). Tiles **without** a banner keep a static nav row above the header text (the sub-service pages: photography, drone, plus privacy/terms' text tiles).
-- **Browser support:** the overlay relies on `:has()`; older browsers simply fall back to the static nav row above the banner.
-- **Header images** live in `images/headers/*.webp` (`about`, `booking`, `contact`, `gallery`, `services`). They carry the page title, which is why most tiles have no visible text heading.
-- **No captions:** the text captions that used to sit under the banners were removed site-wide to make room for a future nav bar under the header image. Don't reintroduce caption elements.
-- **Booking shares it:** the booking page keeps its own class names (`booking-intro-tile`, `booking-page-nav`, `booking-page-back`, `booking-page-home`) but they are co-listed in the same `site-shell.css` rules, so a change to the header component covers booking automatically. Only booking-specific quirks stay in `booking/booking.css`.
+- **Brand row:** `logo_icon.png` + the studio name sit above the nav pill, floating over the animated page background (drop-shadow/text-shadow keep them legible); the whole row links home. On small phones the row scales down (40px mark / 20px name).
+- **Unified nav bar:** one pill with a single backdrop and white border holds the back disc, the shared 4-button section menu (`components/page-nav.html`), and the home disc. Pixel-locked sizing (px + explicit typeface) so booking's 17px `CFBooking` root can't inflate or re-typeface it.
+- **Current-section highlight:** `html-include.js` marks the link matching the URL's first path segment with `aria-current="page"` + `.is-active` (filled white chip).
+- **Tile is nav-only:** every tile holds just the brand row and the bar — the banner-era edge-to-edge header images and `:has()` overlay geometry are gone. Gallery sub-pages keep their `h2.major` title in the content below the tile.
+- **Booking shares it:** booking and the confirmation panels use the standard `intro-tile`/`page-nav`/`page-back`/`page-home` classes directly — no per-page co-listed class names anymore. Only booking-specific quirks stay in `booking/booking.css`.
+- **Confirmation panels:** they have no `<article>` shell, so a scoped `body.cf-booking .confirm-panel .page-home` block gives their home disc the identical look.
 - **All standalone pages converted:** every page including `services/graduation`, `services/realestate`, and `services/videography` uses the shared header component. The old pre-floating-boxes template variants and the JS-injected Home button (`main.js` "Standalone Page Home Button" block) are gone; the injector was deleted once it was confirmed no page lacked `.page-home`.
+- **TODO(future):** hoist the whole tile into `components/header.html` (like `footer.html`), passing per-page bits (back target) via data- attributes, so every header is a single placeholder line.
 
 ## Gallery structure
 
