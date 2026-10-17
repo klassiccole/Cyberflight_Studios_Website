@@ -326,16 +326,17 @@ body.is-preload #header .content .inner {
     }
 
     #header .logo {
-        width: 4.75rem;
-        height: 4.75rem;
+        width: 9rem;
+        height: 9rem;
     }
 
-    /* The img must shrink with the wrapper; a 12rem img inside a 4.75rem
-       container overflows right and breaks the centered connector-line
-       hierarchy. */
+    /* The img must shrink with the wrapper; a 12rem img inside a
+       smaller container overflows right and breaks the centered
+       connector-line hierarchy. 9rem is the floor between the 12rem
+       desktop disc and the 7rem mobile disc. */
     #header .logo img {
-        width: 4.75rem;
-        height: 4.75rem;
+        width: 9rem;
+        height: 9rem;
     }
 
     #header .content .inner {
