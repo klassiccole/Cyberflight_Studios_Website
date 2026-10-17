@@ -430,8 +430,13 @@ const SUBMIT_ERRORS={'time_unavailable':'That time is no longer available. Go ba
 // Within the booking flow the arrow steps back through the form; from the
 // first step it returns to the page the visitor came from (same-site history),
 // falling back to the services hub when there is nowhere to go back to.
+// Delegated on document (same pattern as main.js's back-link handling): the
+// header - and its #nav-back disc - is injected by html-include.js after
+// this script runs, so the element may not exist yet at attach time.
 (function(){
-  $('nav-back').addEventListener('click',event=>{
+  document.addEventListener('click',event=>{
+    const back=event.target.closest('#nav-back');
+    if(!back)return;
     if(state.step>0){
       event.preventDefault();
       showStep(state.step-1);
