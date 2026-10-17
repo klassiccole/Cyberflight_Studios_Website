@@ -13,24 +13,12 @@ Standalone content pages use the shared wrapper defined in site-shell.css.
 */
 
 body:not(.standalone-page) #wrapper {
-display: -moz-flex;
-display: -webkit-flex;
-display: -ms-flex;
 display: flex;
 
--moz-flex-direction: column;
--webkit-flex-direction: column;
--ms-flex-direction: column;
 flex-direction: column;
 
--moz-align-items: center;
--webkit-align-items: center;
--ms-align-items: center;
 align-items: center;
 
--moz-justify-content: space-between;
--webkit-justify-content: space-between;
--ms-justify-content: space-between;
 justify-content: space-between;
 
 position: relative;
@@ -82,34 +70,16 @@ This includes the logo, company information, navigation, and social links.
 */
 
 #header {
-display: -moz-flex;
-display: -webkit-flex;
-display: -ms-flex;
 display: flex;
--moz-flex-direction: column;
--webkit-flex-direction: column;
--ms-flex-direction: column;
 flex-direction: column;
--moz-align-items: center;
--webkit-align-items: center;
--ms-align-items: center;
 align-items: center;
--moz-transition: -moz-transform 0.325s ease-in-out, -moz-filter 0.325s ease-in-out, opacity 0.325s ease-in-out;
--webkit-transition: -webkit-transform 0.325s ease-in-out, -webkit-filter 0.325s ease-in-out, opacity 0.325s ease-in-out;
--ms-transition: -ms-transform 0.325s ease-in-out, -ms-filter 0.325s ease-in-out, opacity 0.325s ease-in-out;
 transition: transform 0.325s ease-in-out, filter 0.325s ease-in-out, opacity 0.325s ease-in-out;
-background-image: -moz-radial-gradient(rgba(0, 0, 0, 0.25) 25%, rgba(0, 0, 0, 0) 55%);
-background-image: -webkit-radial-gradient(rgba(0, 0, 0, 0.25) 25%, rgba(0, 0, 0, 0) 55%);
-background-image: -ms-radial-gradient(rgba(0, 0, 0, 0.25) 25%, rgba(0, 0, 0, 0) 55%);
 background-image: radial-gradient(rgba(0, 0, 0, 0.25) 25%, rgba(0, 0, 0, 0) 55%);
 max-width: 100%;
 text-align: center;
 }
 
 #header > * {
-	-moz-transition: opacity 0.325s ease-in-out;
-	-webkit-transition: opacity 0.325s ease-in-out;
-	-ms-transition: opacity 0.325s ease-in-out;
 	transition: opacity 0.325s ease-in-out;
 	position: relative;
 	margin-top: 3.5rem;
@@ -166,13 +136,7 @@ text-align: center;
 }
 
 	#header .content .inner {
-		-moz-transition: max-height 0.75s ease, padding 0.75s ease, opacity 0.325s ease-in-out;
-		-webkit-transition: max-height 0.75s ease, padding 0.75s ease, opacity 0.325s ease-in-out;
-		-ms-transition: max-height 0.75s ease, padding 0.75s ease, opacity 0.325s ease-in-out;
 		transition: max-height 0.75s ease, padding 0.75s ease, opacity 0.325s ease-in-out;
-		-moz-transition-delay: 0.25s;
-		-webkit-transition-delay: 0.25s;
-		-ms-transition-delay: 0.25s;
 		transition-delay: 0.25s;
 		padding: 2rem 2rem;
 		max-height: 40rem;
@@ -224,9 +188,6 @@ opacity: 0.75;
 }
 
 #header nav ul {
-display: -moz-flex;
-display: -webkit-flex;
-display: -ms-flex;
 display: flex;
 margin-bottom: 0;
 list-style: none;
@@ -280,9 +241,6 @@ border-left: 0;
 }
 
 body.is-preload #header {
--moz-filter: none;
--webkit-filter: none;
--ms-filter: none;
 filter: none;
 }
 
@@ -350,9 +308,6 @@ opacity: 0;
 }
 
 	#header nav ul {
-		-moz-flex-direction: column;
-		-webkit-flex-direction: column;
-		-ms-flex-direction: column;
 		flex-direction: column;
 		width: 100%;
 		min-width: 0;
