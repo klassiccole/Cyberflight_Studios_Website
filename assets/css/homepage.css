@@ -121,14 +121,7 @@ body:not(.standalone-page) #wrapper:before {
     display: none;
 }
 
-/* Logo: strips the template-era logo chrome; the img carries the disc
-   shape itself. */
-
-#header .logo {
-    background: none;
-    box-shadow: none;
-    border-radius: 0;
-}
+/* Logo: the img carries the disc shape itself. */
 
 #header .logo img {
     width: 12rem;
@@ -287,10 +280,6 @@ body:not(.standalone-page) #wrapper:before {
     Other pages are intentionally static and must NOT get a preload
     class — do not key visual states on it outside the homepage stack.
 */
-
-body.is-preload #header {
-    filter: none;
-}
 
 body.is-preload #header > *:not(.logo) {
     opacity: 0;
