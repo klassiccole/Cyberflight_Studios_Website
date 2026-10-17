@@ -804,6 +804,10 @@
 			}
 
 			.drone-intro-content ul {
+				/* Match the photography/videography service pages: the service
+				   list fills two newspaper columns so the text box runs
+				   shorter. column-gap without `columns` is inert. */
+				columns: 2;
 				column-gap: 3rem;
 			}
 
