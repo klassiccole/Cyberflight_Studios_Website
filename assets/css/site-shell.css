@@ -121,18 +121,8 @@ input, select, textarea {
 ============================================================ */
 
 :root {
-	/* Navigation */
-	--cf-nav-size: 2.5rem;
-	--cf-back-icon-size: 1.35rem;
-	--cf-home-icon-size: 1.15rem;
-
 	/* Shared content width */
 	--cf-content-max-width: 960px;
-
-	/* Shared colors */
-	--cf-shell-text: #ffffff;
-	--cf-nav-hover: rgba(255, 255, 255, 0.075);
-	--cf-nav-active: rgba(255, 255, 255, 0.175);
 
 	/* Shared motion */
 	--cf-transition-speed: 0.2s;
@@ -1385,19 +1375,6 @@ body.standalone-page #main article {
 		padding: 4.75rem 2rem 0.5rem 2rem;
 	}
 
-	#main article .page-back,
-	#main article .page-home {
-		top: 20px;
-	}
-
-	#main article .page-back {
-		left: 20px;
-	}
-
-	#main article .page-home {
-		right: 20px;
-	}
-
 }
 
 
@@ -1409,87 +1386,6 @@ body.standalone-page #main article {
 		padding: 4.5rem 1.5rem 0.5rem 1.5rem;
 	}
 
-	#main article .page-back,
-	#main article .page-home {
-		top: 20px;
-	}
-
-	#main article .page-back {
-		left: 20px;
-	}
-
-	#main article .page-home {
-		right: 20px;
-	}
-
-}
-
-/* ============================================================
-   Page Navigation
-============================================================ */
-
-/*
-	Canonical Back and Home controls used throughout
-	Cyberflight Studios standalone pages.
-
-	NOTE: services/graduation, services/realestate and
-	services/videography still use the old standalone template
-	(no floating-boxes intro tile) and rely on these absolute
-	positions plus the JS-injected Home button in main.js.
-	If those pages are converted to the shared header component,
-	this absolute-position block becomes dead code and can go.
-*/
-
-#main article .page-back,
-#main article .page-home {
-	position: absolute;
-	top: 30px;
-
-	display: flex;
-	align-items: center;
-	justify-content: center;
-
-	width: var(--cf-nav-size);
-	height: var(--cf-nav-size);
-
-	border: 0;
-	border-radius: 50%;
-	background: transparent;
-
-	color: var(--cf-shell-text);
-	line-height: 1;
-
-	text-decoration: none;
-	cursor: pointer;
-
-	transition: background-color var(--cf-transition-speed) ease-in-out;
-}
-
-#main article .page-back {
-	left: 30px;
-	font-size: var(--cf-back-icon-size);
-}
-
-#main article .page-home {
-	right: 30px;
-	font-size: var(--cf-home-icon-size);
-}
-
-#main article .page-back:hover,
-#main article .page-home:hover {
-	color: var(--cf-shell-text);
-	background-color: var(--cf-nav-hover);
-}
-
-#main article .page-back:active,
-#main article .page-home:active {
-	background-color: var(--cf-nav-active);
-}
-
-#main article .page-back:focus-visible,
-#main article .page-home:focus-visible {
-	outline: 2px solid currentColor;
-	outline-offset: 3px;
 }
 
 /* ============================================================
@@ -1711,18 +1607,25 @@ body.standalone-page.floating-boxes #main article {
 	padding: 0;
 }
 
-/* The booking page keeps its own class names but shares this header
-   component's styling through the co-listed selectors below. Slim
-   padding is the norm for every tile: the banner fills it edge-to-edge
-   via negative margins on banner pages, and non-banner pages (drone,
-   terms, ...) hold just the bar in the same compact shell. */
+/* Slim padding is the norm for every tile: the banner fills it
+   edge-to-edge via negative margins on banner pages, and non-banner
+   pages (drone, terms, ...) hold just the bar in the same compact
+   shell. Booking and the confirmation panels use these standard
+   classes too — no per-page co-listing anymore. */
 
-.intro-tile,
-body.cf-booking .booking-intro-tile {
-	background: rgba(27, 31, 37, 0.85);
-	border: 1px solid #3b414c;
-	border-radius: 12px;
-	padding: 14px;
+/* Floating header: the tile is an invisible anchor — no box, no
+   border, no padding; the brand row and the nav pill float directly
+   over the animated page background (both carry their own backdrops
+   or color for legibility). If the experiment is reverted, restore
+   background rgba(27,31,37,0.85), border 1px solid #3b414c,
+   border-radius 12px and padding 14px. */
+
+.intro-tile
+{
+	background: none;
+	border: 0;
+	border-radius: 0;
+	padding: 0;
 	margin-bottom: 26px;
 	position: relative;
 }
@@ -1732,12 +1635,10 @@ body.cf-booking .booking-intro-tile {
    spans its container's full width, so the discs always sit at the
    edges and the menu's auto margins center it — identical geometry on
    banner pages (bar absolute over the image) and non-banner pages
-   (bar as a static row). Booking keeps its own class names but
-   co-lists every rule; the confirmation panels use the generic class. */
+   (bar as a static row). */
 
-.page-nav,
-body.cf-booking .booking-intro-tile .booking-page-nav,
-body.cf-booking .confirm-panel .page-nav {
+.page-nav
+{
 	display: flex;
 	align-items: center;
 	gap: 12px;
@@ -1756,20 +1657,74 @@ body.cf-booking .confirm-panel .page-nav {
 	font-weight: 300;
 }
 
+/* Brand row: the logo mark and the studio name, centered as a unit
+   above the nav bar, floating over the page background. Pixel-locked
+   like the bar so booking's 17px CFBooking root can't rescale or
+   re-typeface it; the soft shadows keep it legible over the moving
+   background. */
+
+.page-brand {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 16px;
+	width: fit-content;
+	margin: 0 auto 10px;
+	border-bottom: 0; /* kills the site-wide dotted link underline */
+	font-family: "Source Sans Pro", sans-serif;
+	font-weight: 300;
+	text-decoration: none;
+}
+
+.page-brand img {
+	height: 100px;
+	width: auto;
+	filter: drop-shadow(0 2px 14px rgba(0, 0, 0, 0.55));
+}
+
+.page-brand span {
+	text-transform: uppercase;
+	letter-spacing: 0.3rem;
+	font-size: 60px;
+	color: #ffffff;
+	text-shadow: 0 2px 18px rgba(0, 0, 0, 0.65);
+}
+
+/* Small phones: the 60px desktop name can't fit beside the mark, so
+   the brand stays a horizontal row but scales down - mark left, name
+   right, one line, sized to fit the tile's width with room to spare. */
+
+@media screen and (max-width: 480px) {
+
+	.page-brand {
+		gap: 10px;
+		margin-bottom: 10px;
+	}
+
+	.page-brand img {
+		height: 40px;
+	}
+
+	.page-brand span {
+		font-size: 20px;
+		letter-spacing: 0.12rem;
+		text-shadow: 0 2px 10px rgba(0, 0, 0, 0.65);
+	}
+
+}
+
 /* The menu placeholder inherits the menu's space-occupying job, so the
    home disc sits flush right from the first paint — before the fragment
    fetch finishes, the bar would otherwise flash as [back][home] next to
    each other on the left and snap apart on injection. */
 
-.page-nav > div[data-include],
-.booking-page-nav > div[data-include] {
+.page-nav > div[data-include] {
 	flex: 1 1 0%;
 }
 
-#main article .intro-tile .page-back,
-#main article .intro-tile .page-home,
-body.cf-booking .booking-intro-tile .booking-page-back,
-body.cf-booking .booking-intro-tile .booking-page-home {
+.intro-tile .page-back,
+.intro-tile .page-home
+{
 	position: static;
 }
 
@@ -1787,16 +1742,16 @@ body.cf-booking .booking-intro-tile .booking-page-home {
    (banner image, back target) via data- attributes, so every page's
    header is a single placeholder line. */
 
-.intro-tile:has(> .page-banner) .page-banner,
-body.cf-booking .booking-intro-tile .page-banner {
+.intro-tile:has(> .page-banner) .page-banner
+{
 	max-width: none;
 	height: 102px;
 	margin: -14px;
 	border-radius: 12px;
 }
 
-.intro-tile:has(> .page-banner) .page-banner img,
-body.cf-booking .booking-intro-tile .page-banner img {
+.intro-tile:has(> .page-banner) .page-banner img
+{
 	height: 100%;
 	object-fit: cover;
 	object-position: center;
@@ -1809,8 +1764,8 @@ body.cf-booking .booking-intro-tile .page-banner img {
    because Dimension's .image class positions the banner span too, and
    being later in the DOM it would otherwise paint over the bar. */
 
-.intro-tile:has(> .page-banner) .page-nav,
-body.cf-booking .booking-intro-tile .booking-page-nav {
+.intro-tile:has(> .page-banner) .page-nav
+{
 	position: absolute;
 	top: 14px;
 	left: 14px;
@@ -1824,11 +1779,9 @@ body.cf-booking .booking-intro-tile .booking-page-nav {
    static, so no corner math anywhere. The confirmation panels' home
    button joins them. */
 
-#main article .intro-tile .page-back,
-#main article .intro-tile .page-home,
-body.cf-booking .booking-intro-tile .booking-page-back,
-body.cf-booking .booking-intro-tile .booking-page-home,
-body.cf-booking .confirm-panel .booking-page-home {
+.intro-tile .page-back,
+.intro-tile .page-home
+{
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -1849,38 +1802,72 @@ body.cf-booking .confirm-panel .booking-page-home {
 	transition: background-color var(--cf-transition-speed) ease-in-out;
 }
 
-#main article .intro-tile .page-back,
-body.cf-booking .booking-intro-tile .booking-page-back {
+.intro-tile .page-back
+{
 	font-size: 21.6px;
 }
 
-#main article .intro-tile .page-home,
-body.cf-booking .booking-intro-tile .booking-page-home,
-body.cf-booking .confirm-panel .booking-page-home {
+.intro-tile .page-home
+{
 	font-size: 18.4px;
 }
 
-#main article .intro-tile .page-back:hover,
-#main article .intro-tile .page-home:hover,
-body.cf-booking .booking-intro-tile .booking-page-back:hover,
-body.cf-booking .booking-intro-tile .booking-page-home:hover,
-body.cf-booking .confirm-panel .booking-page-home:hover {
+.intro-tile .page-back:hover,
+.intro-tile .page-home:hover
+{
 	background: rgba(27, 31, 37, 0.75);
 }
 
-#main article .intro-tile .page-back:active,
-#main article .intro-tile .page-home:active,
-body.cf-booking .booking-intro-tile .booking-page-back:active,
-body.cf-booking .booking-intro-tile .booking-page-home:active,
-body.cf-booking .confirm-panel .booking-page-home:active {
+.intro-tile .page-back:active,
+.intro-tile .page-home:active
+{
 	background: rgba(27, 31, 37, 0.9);
 }
 
-#main article .intro-tile .page-back:focus-visible,
-#main article .intro-tile .page-home:focus-visible,
-body.cf-booking .booking-intro-tile .booking-page-back:focus-visible,
-body.cf-booking .booking-intro-tile .booking-page-home:focus-visible,
-body.cf-booking .confirm-panel .booking-page-home:focus-visible {
+.intro-tile .page-back:focus-visible,
+.intro-tile .page-home:focus-visible
+{
+	outline: 2px solid currentColor;
+	outline-offset: 3px;
+}
+
+
+/* The confirmation panels reuse the header component but have no
+   <article> shell, so the disc rules above (scoped by #main) don't
+   reach them; this scoped block gives the panel's home button the
+   identical disc. */
+
+body.cf-booking .confirm-panel .page-home {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	width: 48px;
+	height: 48px;
+
+	border: 1px solid #ffffff;
+	border-radius: 50%;
+	background: rgba(27, 31, 37, 0.55);
+
+	color: #ffffff;
+	line-height: 1;
+	font-size: 18.4px;
+
+	text-decoration: none;
+	cursor: pointer;
+
+	transition: background-color var(--cf-transition-speed) ease-in-out;
+}
+
+body.cf-booking .confirm-panel .page-home:hover {
+	background: rgba(27, 31, 37, 0.75);
+}
+
+body.cf-booking .confirm-panel .page-home:active {
+	background: rgba(27, 31, 37, 0.9);
+}
+
+body.cf-booking .confirm-panel .page-home:focus-visible {
 	outline: 2px solid currentColor;
 	outline-offset: 3px;
 }
@@ -1924,6 +1911,10 @@ body.cf-booking .confirm-panel .booking-page-home:focus-visible {
    Sizing: one notch below the homepage H1 scale keeps the nav as the
    page's strongest interactive element; discs scale to match. */
 
+/* Desktop: the label text is the button face; the icon is hidden.
+   Mobile (below) swaps to the icon and visually-hides the label
+   (not display: none, so screen readers still announce it). */
+
 .page-menu li a {
 	display: flex;
 	align-items: center;
@@ -1936,6 +1927,25 @@ body.cf-booking .confirm-panel .booking-page-home:focus-visible {
 	font-size: 15px;
 	border-bottom: 0;
 	color: #ffffff;
+}
+
+.page-menu li a i {
+	display: none;
+}
+
+/* Screen-reader-only utility: visually hidden, still announced. */
+
+.sr-only {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	margin: -1px;
+	padding: 0;
+	overflow: hidden;
+	clip: rect(0 0 0 0);
+	clip-path: inset(50%);
+	border: 0;
+	white-space: nowrap;
 }
 
 
@@ -1968,38 +1978,6 @@ body.cf-booking .confirm-panel .booking-page-home:focus-visible {
    (below the boxed hero), so the tile is always exactly the image face
    plus the overlaid bar. */
 
-@media screen and (max-width: 480px) {
-
-	.page-menu li {
-		flex: 1 0 50%;
-		border-left: 0;
-	}
-
-	.page-menu li:last-child {
-		border-right: 0;
-	}
-
-	.page-menu li a {
-		min-width: 0;
-		width: 100%;
-		padding: 0;
-		text-align: center;
-	}
-
-	.page-menu li:nth-child(odd) a {
-		border-right: solid 1px #ffffff;
-	}
-
-	.page-menu li:nth-child(n+3) a {
-		border-top: solid 1px #ffffff;
-	}
-
-	.page-menu li a.is-active {
-		color: #1b1f25;
-	}
-
-}
-
 body.standalone-page.floating-boxes .content-box {
 	background: rgba(27, 31, 37, 0.85);
 	border: 1px solid #3b414c;
@@ -2016,52 +1994,80 @@ body.standalone-page.floating-boxes .services-grid {
 
 @media screen and (max-width: 736px) {
 
-	.intro-tile,
-	body.cf-booking .booking-intro-tile {
-		padding: 12px;
-	}
-
-	.intro-tile:has(> .page-banner) .page-banner,
-	body.cf-booking .booking-intro-tile .page-banner {
-		margin: -12px;
-	}
-
-	.intro-tile:has(> .page-banner) .page-nav,
-	body.cf-booking .booking-intro-tile .booking-page-nav {
-		top: 12px;
-		left: 12px;
-		right: 12px;
-	}
-
 	body.standalone-page.floating-boxes .content-box {
 		padding: 1.5rem;
 	}
 
 }
 
-/* Below 480px the bar wraps: the discs share the top row
-   (space-between) and the 2x2 menu takes the second row, all inside
-   the same pill. The window grows to hold the wrapped pill with the
-   same 12px top/bottom symmetry (pill 163px + 2 x 12px = 187px). */
+/* Mobile: the menu swaps to icons and the pill becomes a single row
+   again — [back] | 4 icon buttons | [home]. Spacing: the pill's gap
+   drops to 0 and the icon row stretches across the whole middle with
+   `space-evenly`, so every gap (icon-to-icon AND icon-to-disc) is
+   identical. End dividers are removed to reclaim their width; interior
+   dividers stay. No wrapping anywhere below 480px. */
 
 @media screen and (max-width: 480px) {
 
-	.page-nav,
-	body.cf-booking .booking-intro-tile .booking-page-nav,
-	body.cf-booking .confirm-panel .page-nav {
-		flex-wrap: wrap;
-		justify-content: space-between;
-		row-gap: 6px;
+	.page-nav {
+		gap: 0;
 	}
 
 	.page-menu {
-		order: 3;
-		width: 100%;
+		flex: 1 1 0%;
+		width: auto; /* let the flex growth stretch it; fit-content would defeat flex */
+		flex-wrap: nowrap;
+		justify-content: space-evenly;
 	}
 
-	.intro-tile:has(> .page-banner) .page-banner,
-	body.cf-booking .booking-intro-tile .page-banner {
-		height: 187px;
+	.page-menu li:first-child {
+		border-left: 0;
+	}
+
+	.page-menu li:last-child {
+		border-right: 0;
+	}
+
+	.page-menu li a {
+		min-width: 0;
+		width: 48px;
+		height: 48px;
+		padding: 0;
+		font-size: 20px;
+	}
+
+	.page-menu li a i {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.page-menu li a .menu-label {
+		display: none;
+	}
+
+	.sr-only {
+		position: static;
+		width: 1px;
+		height: 1px;
+	}
+
+	/* 320px-class phones: shrink the discs and icons together so the
+	   row still fits inside the pill. */
+
+	@media screen and (max-width: 370px) {
+
+		.page-back,
+		.page-home {
+			width: 42px;
+			height: 42px;
+		}
+
+		.page-menu li a {
+			width: 38px;
+			height: 38px;
+		}
+
 	}
 
 }

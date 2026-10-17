@@ -5,9 +5,13 @@
 	the back and home links:
 		<nav class="page-nav">
 			<a href="..." class="page-back">...</a>
-			<div data-include="/components/page-nav.html?v=2"></div>
+			<div data-include="/components/page-nav.html?v=3"></div>
 			<a href="/" class="page-home">...</a>
 		</nav>
+
+	Each link carries an icon AND a text label; site-shell.css shows the
+	text on desktop and swaps to the icon on phones (the label goes
+	visually-hidden there, so screen readers still announce it).
 
 	Variants (read by html-include.js, which injects this fragment):
 	- data-no-back on the placeholder hides the bar's back link (the
@@ -22,8 +26,20 @@
 	highlight.
 -->
 <ul class="page-menu">
-	<li><a href="/about/">About</a></li>
-	<li><a href="/gallery/">Gallery</a></li>
-	<li><a href="/services/">Services</a></li>
-	<li><a href="/booking/">Booking</a></li>
+	<li><a href="/about/" aria-label="About">
+		<i class="far fa-user" aria-hidden="true"></i>
+		<span class="menu-label">About</span>
+	</a></li>
+	<li><a href="/gallery/" aria-label="Gallery">
+		<i class="far fa-images" aria-hidden="true"></i>
+		<span class="menu-label">Gallery</span>
+	</a></li>
+	<li><a href="/services/" aria-label="Services">
+		<i class="fas fa-camera" aria-hidden="true"></i>
+		<span class="menu-label">Services</span>
+	</a></li>
+	<li><a href="/booking/" aria-label="Booking">
+		<i class="far fa-calendar-check" aria-hidden="true"></i>
+		<span class="menu-label">Booking</span>
+	</a></li>
 </ul>
