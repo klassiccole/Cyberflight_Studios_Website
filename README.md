@@ -105,7 +105,7 @@ Remote D1 migrations are run manually, in order, when a new migration file lands
 npm run db:migrate:remote
 ```
 
-**Cache-busting convention:** booking scripts/styles are loaded with a query version (`booking/app.js?v=NN`), and every `data-include` fragment URL carries one too (`components/footer.html?v=NN`). Any change to a cached asset requires bumping that `v=` in the pages that load it. Forgetting this makes correct fixes appear broken (stale browser JS), and has wasted entire sessions before. Check it every time.
+**Cache-busting convention:** every cached asset is loaded with a query version and bumped on change — site-wide assets (`main.js?v=NN`, `site-shell.css?v=NN`, `site-pages.css?v=NN`, `noscript.css?v=NN`), homepage (`homepage.css?v=NN`), booking (`booking.css?v=NN`, `booking-core.js?v=NN`, `app.js?v=NN`), and every `data-include` fragment URL (`components/footer.html?v=NN`). Any change to a cached asset requires bumping that `v=` in the pages that load it — site-wide assets are referenced by ~22 pages, so a bump touches all of them. Forgetting this makes correct fixes appear broken (stale browser JS), and has wasted entire sessions before. Check it every time.
 
 ## Shared fragments (components/)
 
