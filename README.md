@@ -154,7 +154,7 @@ Rules of the component:
 - **Header images** live in `images/headers/*.webp` (`about`, `booking`, `contact`, `gallery`, `services`). They carry the page title, which is why most tiles have no visible text heading.
 - **No captions:** the text captions that used to sit under the banners were removed site-wide to make room for a future nav bar under the header image. Don't reintroduce caption elements.
 - **Booking shares it:** the booking page keeps its own class names (`booking-intro-tile`, `booking-page-nav`, `booking-page-back`, `booking-page-home`) but they are co-listed in the same `site-shell.css` rules, so a change to the header component covers booking automatically. Only booking-specific quirks stay in `booking/booking.css`.
-- **Old-template pages:** `services/graduation`, `services/realestate`, and `services/videography` still use the pre-floating-boxes template (absolute-positioned lone back link, JS-injected Home button from `main.js`). Converting them to the component is a planned follow-up; they are the only reason the legacy absolute-position rules in the Page Navigation block of `site-shell.css` still exist.
+- **All standalone pages converted:** every page including `services/graduation`, `services/realestate`, and `services/videography` uses the shared header component. The old pre-floating-boxes template variants and the JS-injected Home button (`main.js` "Standalone Page Home Button" block) are gone; the injector was deleted once it was confirmed no page lacked `.page-home`.
 
 ## Gallery structure
 

@@ -18,8 +18,15 @@
 /*
  * Initial Page Animation
  *
- * Removes the preload class after the document loads,
- * allowing the page to fade into view.
+ * Removes the preload class after the document loads. This drives the
+ * homepage's load choreography: the is-preload CSS (site-shell.css and
+ * homepage.css) holds the nav items and background faded out and the
+ * content box collapsed, and removing the class lets all of it
+ * transition into view.
+ *
+ * Only index.html ships <body class="is-preload">. Every other page is
+ * intentionally static — it must NOT get a preload class — so this
+ * block is a no-op there but still required by the homepage.
  */
     document.addEventListener('DOMContentLoaded', function () {
 
@@ -30,10 +37,13 @@
     });
 
 /*
-* Navigation Alignment
+* Navigation Alignment (homepage)
 *
-* Preserves Dimension's centered navigation styling when the
-* navigation contains an even number of menu items.
+* When the homepage nav has an even number of links, a white 1px center
+* divider (`nav.use-middle:after`) is drawn between the two column-halves
+* and one link is marked .is-middle so its left border is suppressed.
+* This is an intentional part of the homepage visual, not leftover
+* template behavior — keep the CSS in homepage.css in sync if touched.
 */
 	document.addEventListener('DOMContentLoaded', function () {
 
