@@ -2,6 +2,9 @@
 live-check.js
 node_modules/
 
+# Local visual-check screenshots; never committed.
+staging/
+
 # Never commit secrets. .dev.vars is the LOCAL env (wrangler pages dev reads it);
 # .secrets.production is the PROD env, pushed to Cloudflare via `npm run secrets:sync`.
 # Both are gitignored; .dev.vars.example is the shared template for both.
