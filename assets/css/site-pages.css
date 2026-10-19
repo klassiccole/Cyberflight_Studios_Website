@@ -878,6 +878,14 @@ Drone
     letter-spacing: 0.18em;
 }
 
+/* Links row: flex gap spaces the dot separators evenly between links. */
+
+#footer .site-footer-links {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
 #footer .site-footer a {
     color: inherit;
     text-underline-offset: 5px;
@@ -894,3 +902,47 @@ Drone
     }
 }
 
+
+/* Privacy policy: the "What the site collects" items are presented as
+   a row of small cards. They reuse the content-box palette at reduced
+   scale and collapse to two columns, then one, as space runs out. */
+
+.privacy-cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin: 1.5rem 0;
+}
+
+.privacy-card {
+    background: rgba(27, 31, 37, 0.6);
+    border: 1px solid #3b414c;
+    border-radius: 12px;
+    padding: 1.25rem 1.25rem;
+    margin: 0;
+}
+
+.privacy-card h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 0.95rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.privacy-card p {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+@media (max-width: 1100px) {
+    .privacy-cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 560px) {
+    .privacy-cards {
+        grid-template-columns: 1fr;
+    }
+}
