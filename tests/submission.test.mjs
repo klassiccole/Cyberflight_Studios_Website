@@ -3,10 +3,13 @@ import assert from 'node:assert/strict';
 import {DatabaseSync} from 'node:sqlite';
 import {readFileSync} from 'node:fs';
 import {createBookingHandlers,verifyTurnstile} from '../lib/booking-submit.mjs';
-import {sha256} from '../lib/booking-input.mjs';
+
+/* The submission pipeline is calendar-as-truth: a request is the Bookings
+   Calendar event plus the owner email; booking_requests rows are no longer
+   written (only reconciled/deleted). These suites therefore cover the
+   request path's gates, not persistence. */
 
 const schema=readFileSync(new URL('../migrations/0004_remove_hold.sql',import.meta.url),'utf8');
-const now=Math.floor(Date.now()/1000);
 const calendarFixture=await (async()=>{
   const keyBytes=crypto.getRandomValues(new Uint8Array(32));
   const key=await crypto.subtle.importKey('raw',keyBytes,'AES-GCM',false,['encrypt']);
@@ -15,15 +18,14 @@ const calendarFixture=await (async()=>{
   const b64=bytes=>Buffer.from(bytes).toString('base64');
   return {keyBytes,encrypted:`v1.${b64(iv)}.${b64(cipher)}`};
 })();
+const now=Math.floor(Date.now()/1000);
 const date=new Date((now+10*86400)*1000).toISOString().slice(0,10);
 const booking=()=>({package:'standard',count:2,date,time:900,details:{name:'Test Customer',email:'trial@example.com',phone:'704-555-0100',location:'UNC Charlotte campus',graduate:'Test Customer',notes:'<script>example</script>',participants:[]}});
-const signature=()=>({typedName:'Test Customer',agreementConsent:true,electronicConsent:true,promotion:'no',drawing:[[[0,0],[0.5,0.8]]]});
 function setup(options={}) {
   const sqlite=new DatabaseSync(':memory:');sqlite.exec('PRAGMA foreign_keys=ON');sqlite.exec(schema);
   sqlite.exec(`CREATE TABLE IF NOT EXISTS google_connections (
     account_email TEXT PRIMARY KEY, encrypted_refresh_token TEXT NOT NULL,
     granted_scopes TEXT, connected_at INTEGER, updated_at INTEGER)`);
-  console.log('FIXTUREKEY-B64:',Buffer.from(calendarFixture.keyBytes).toString('base64').slice(0,20),'| ENCRYPTED-LEN:',calendarFixture.encrypted.length);
   const tokenRow={encrypted_refresh_token:calendarFixture.encrypted};
   const db={prepare(sql){const statement=sqlite.prepare(sql);return {bind(...args){return {
     async first(){if(sql.includes('google_connections'))return tokenRow;return statement.get(...args)??null;},async run(){const r=statement.run(...args);return {success:true,meta:{changes:r.changes}};}
@@ -36,65 +38,17 @@ function setup(options={}) {
     GOOGLE_ALLOWED_EMAIL:'trial@example.com',GOOGLE_TOKEN_ENCRYPTION_KEY:Buffer.from(calendarFixture.keyBytes).toString('base64'),
     GOOGLE_CLIENT_ID:'fixture',GOOGLE_CLIENT_SECRET:'fixture',GOOGLE_BOOKINGS_CALENDAR_ID:'bookings'};
   globalThis.__eventCreates=0;
-  globalThis.__fetchToken=0;
   globalThis.fetch=async(url,opts)=>{
     const target=String(url);
-    if(target.includes('/token')){globalThis.__fetchToken++;return Response.json({access_token:'local-token'});}
+    if(target.includes('/token'))return Response.json({access_token:'local-token'});
     if(target.includes('/bookings/events')&&opts?.method==='POST'){globalThis.__eventCreates++;return Response.json({id:'event-'+globalThis.__eventCreates});}
     throw new Error('Unexpected fetch: '+target);
   };
   const request=(body,path='submit',changes={})=>new Request(`https://cyberflight.studio/api/booking/${path}`,{method:'POST',headers:{'Content-Type':'application/json',Origin:'https://cyberflight.studio',...changes},body:JSON.stringify(body)});
   const context=(body,path='submit')=>({request:request(body,path),env});
-  async function submission() {
-    const agreement=await (await handlers.agreement(context({booking:booking()},'agreement'))).json();
-    return {booking:booking(),signature:signature(),agreementVersion:agreement.version,agreementHash:agreement.hash,submissionKey:crypto.randomUUID(),turnstileToken:'test-token'};
-  }
+  const submission=()=>({booking:booking(),promotion:'no',submissionKey:crypto.randomUUID(),turnstileToken:'test-token'});
   return {sqlite,handlers,env,context,request,submission,checks:()=>checks,verifications:()=>verifications};
 }
-test('agreement is server generated, safely escaped and contains agreed payment deadline',async()=>{
-  const s=setup();const p=booking();p.details.name='<img src=x onerror=alert(1)>';
-  const r=await s.handlers.agreement(s.context({booking:p},'agreement'));assert.equal(r.status,200);
-  const a=await r.json();assert.ok(a.html.includes('&lt;img'));assert.ok(!a.html.includes('<img'));
-  assert.ok(a.text.includes('48 hours before the requested session'));assert.ok(a.text.includes('72 hours before the session'));assert.ok(!('draft' in a));
-  assert.equal(a.hash,await sha256(a.text));s.sqlite.close();
-});
-test('submission stores actual inputs, typed/drawn signature and immutable agreement',async()=>{
-  const s=setup();const input=await s.submission();const r=await s.handlers.submit(s.context(input));assert.equal(r.status,201);
-  const receipt=await r.json(),row=s.sqlite.prepare('SELECT * FROM booking_requests').get();
-  assert.equal(row.id,receipt.requestId);assert.equal(row.status,'approved');assert.equal(row.price_cents,20000);
-  assert.equal(JSON.parse(row.customer_json).email,'trial@example.com');assert.equal(JSON.parse(row.signature_json).typedName,'Test Customer');
-  assert.deepEqual(JSON.parse(row.signature_json).drawing,input.signature.drawing);assert.equal(row.agreement_sha256,await sha256(row.agreement_text));
-  assert.equal(receipt.expiresAt,undefined);assert.equal(s.checks(),1);s.sqlite.close();
-});
-test('lost-response retry returns same ID without another verification or calendar call',async()=>{
-  const s=setup(),input=await s.submission();const a=await(await s.handlers.submit(s.context(input))).json();
-  const r=await s.handlers.submit(s.context({...input,turnstileToken:'used-token'}));assert.equal(r.status,200);
-  const b=await r.json();assert.equal(a.requestId,b.requestId);assert.equal(b.replayed,true);assert.equal(s.checks(),1);assert.equal(s.verifications(),1);
-  s.sqlite.close();
-});
-test('idempotency key cannot be reused for changed signature or details',async()=>{
-  const s=setup(),p=await s.submission();await s.handlers.submit(s.context(p));
-  p.signature.typedName='Different Name';
-  assert.equal((await s.handlers.submit(s.context(p))).status,400); // rejected before replay: wrong signature name
-  p.signature.typedName='Test Customer';p.booking.details.notes='changed';
-  assert.equal((await s.handlers.submit(s.context(p))).status,409); // same key, different payload, valid signature
-  s.sqlite.close();
-});
-test('simultaneous requests for overlapping slots save exactly one booking',async()=>{
-  const s=setup(),a=await s.submission(),b=await s.submission();
-  const results=await Promise.all([s.handlers.submit(s.context(a)),s.handlers.submit(s.context(b))]);
-  assert.deepEqual(results.map(r=>r.status).sort(),[201,409]);assert.equal(s.sqlite.prepare('SELECT count(*) n FROM booking_requests').get().n,1);
-  s.sqlite.close();
-});
-test('same-key concurrent requests converge on one receipt',async()=>{
-  const s=setup(),a=await s.submission();const responses=await Promise.all([s.handlers.submit(s.context(a)),s.handlers.submit(s.context(a))]);
-  assert.deepEqual(responses.map(r=>r.status).sort(),[200,201]);const data=await Promise.all(responses.map(r=>r.json()));
-  assert.equal(data[0].requestId,data[1].requestId);s.sqlite.close();
-});
-test('changed agreement cannot be signed without review',async()=>{
-  const s=setup(),a=await s.submission();a.agreementHash='0'.repeat(64);
-  assert.equal((await s.handlers.submit(s.context(a))).status,409);assert.equal(s.checks(),0);s.sqlite.close();
-});
 test('Google rejection or outage leaves no saved request',async()=>{
   for(const availability of [()=>new Response('error',{status:503}),()=>Response.json({source:'google',timeZone:'America/New_York',start:date,package:'standard',days:[{key:date,slots:[]}]})]) {
     const s=setup({availability}),a=await s.submission();assert.ok([409,503].includes((await s.handlers.submit(s.context(a))).status));
