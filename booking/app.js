@@ -5,7 +5,7 @@ const escapeHTML=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<
 const money=value=>'$'+value;
 const timeLabel=minutes=>`${Math.floor(minutes/60)%12||12}:${String(minutes%60).padStart(2,'0')} ${minutes<720?'AM':'PM'}`;
 const formatDate=(key,options={month:'short',day:'numeric',weekday:'short'})=>new Intl.DateTimeFormat('en-US',{...options,timeZone:'UTC'}).format(new Date(key+'T12:00:00Z'));
-const state={step:0,service:null,package:'standard',count:2,tier:'t1',length:120,date:null,time:null,details:null,groupConfirmed:false,eventConfirmed:false,submissionKey:null,turnstileToken:null,turnstileId:null,turnstileWait:null};
+const state={step:0,service:null,package:'standard',count:2,tier:'t1',length:120,date:null,time:null,details:null,groupConfirmed:false,eventConfirmed:false,eventAllDay:false,submissionKey:null,turnstileToken:null,turnstileId:null,turnstileWait:null};
 
 function serviceInfo(){return C.services[state.service];}
 function internalPackage(){const s=serviceInfo();return s.mode==='slots'&&s.internalPackage?s.internalPackage:state.package;}
@@ -34,7 +34,7 @@ function updateSummary(){
     if(state.service==='graduation')$('summary-spec').textContent=state.package==='group'&&!state.groupConfirmed?'90 minutes · 2 – 4 graduates':`${C.packages[state.package].advertised} · ${participantsCount()} graduate${participantsCount()>1?'s':''}`;
     else $('summary-spec').textContent='90 minutes · property walkthrough';
   }else if(s.mode==='event'){
-    $('summary-spec').textContent=state.eventConfirmed?`${state.length/60} hour${state.length>=120?'s':''}`:'2 hours – All Day';
+    $('summary-spec').textContent=state.eventAllDay?'All Day':state.eventConfirmed?`${state.length/60} hour${state.length>=120?'s':''}`:'1 hour – All Day';
   }else{
     $('summary-spec').textContent='All Day · By Proposal';
   }
@@ -228,8 +228,15 @@ function loadDateSlots(){
   })();
 }
 
+/* Slider stops: 0-8 map to 1-9 hours of coverage; stop 9 is an all-day
+   booking (the entire date is the unit - no start time, by proposal). */
+function eventStopLength(){
+  const stop=Number($('event-length').value);
+  return stop===9?null:(stop+1)*60;
+}
 function updateEventLengthLabel(){
-  $('event-length-label').textContent=state.length>=840?'All day':`${state.length/60} hours`;
+  const length=eventStopLength();
+  $('event-length-label').textContent=length===null?'All day':length===60?'1 hour':`${length/60} hours`;
 }
 function renderEventSchedule(){
   const minKey=C.dateKey(new Date());
@@ -237,6 +244,14 @@ function renderEventSchedule(){
   updateEventLengthLabel();
   $('event-duration-note').textContent='';
   const chosen=state.date?state.date:null;
+  const allDay=state.eventAllDay;
+  /* All-day override: no start-time picker; the date alone enables the
+     continue button. Availability is never enforced here - the server
+     flags conflicts to the owner instead. */
+  $('event-time-ui').hidden=allDay;
+  $('event-slots').hidden=allDay;
+  $('event-all-day-note').hidden=!allDay;
+  if(allDay){$('event-note').textContent='';$('enter-details').disabled=!state.date;updateSummary();return;}
   $('event-time-heading').textContent=chosen?formatDate(chosen,{weekday:'long',month:'short',day:'numeric'}):'Start times';
   const ready=chosen&&calendarStatus==='ready'&&calendarData?.start===chosen;
   if(!ready){
@@ -265,6 +280,7 @@ $('event-date').addEventListener('change',()=>{
   const value=$('event-date').value;
   if(!value||!/^\d{4}-\d{2}-\d{2}$/.test(value))return;
   state.date=value;state.time=null;resetDownstream();
+  if(state.eventAllDay){renderEventSchedule();return;}
   loadEventDay();
 });
 function loadEventDay(){
@@ -297,10 +313,13 @@ function loadEventDay(){
   })();
 }
 $('event-length').addEventListener('input',()=>{
-  state.length=Number($('event-length').value);
+  const wasAllDay=state.eventAllDay;
+  state.length=eventStopLength();
+  state.eventAllDay=state.length===null;
   state.eventConfirmed=true;
   updateEventLengthLabel();
-  if(state.date&&calendarStatus==='ready'){state.time=null;renderEventSlots();}
+  if(wasAllDay!==state.eventAllDay){state.time=null;resetDownstream();renderEventSchedule();}
+  else if(state.date&&calendarStatus==='ready'&&!state.eventAllDay){state.time=null;renderEventSlots();}
   updateSummary();
 });
 
@@ -331,7 +350,7 @@ $('enter-details').addEventListener('click',()=>{
   if(s.mode==='wedding'){if(!state.date){$('time-error').textContent='Please choose a wedding date.';return;}showStep(2);return;}
   if(s.mode==='event'){
     if(!state.date){$('time-error').textContent='Please choose an event date.';return;}
-    if(calendarStatus==='ready'&&state.time===null){$('time-error').textContent='Please choose a start time.';return;}
+    if(!state.eventAllDay&&calendarStatus==='ready'&&state.time===null){$('time-error').textContent='Please choose a start time.';return;}
     showStep(2);return;
   }
   if(state.time===null){$('time-error').textContent='Please choose a session start time.';return;}
@@ -402,7 +421,9 @@ function submissionBooking(){
   const details={name:state.details.name,email:state.details.email,phone:state.details.phone,
       location:state.details.location,graduate:state.details.graduate,
       notes:state.details.notes,participants:state.details.participants};
-  if(state.service==='event')return {package:'event',service:'event',count:1,length:state.length,
+  if(state.service==='event')return state.eventAllDay
+    ?{package:'event',service:'event',count:1,date:state.date,details,allDay:true}
+    :{package:'event',service:'event',count:1,length:state.length,
     date:state.date,time:state.time,details};
   if(state.service==='wedding')return {package:'wedding',service:'wedding',count:1,
     date:state.date,details};

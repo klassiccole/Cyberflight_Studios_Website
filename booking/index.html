@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="../assets/css/site-shell.css?v=6">
   <link rel="stylesheet" href="booking.css?v=41">
   <script defer src="booking-core.js?v=29"></script>
-  <script defer src="app.js?v=46"></script>
+  <script defer src="app.js?v=47"></script>
 </head>
 <body class="cf-booking">
   <main id="main">
@@ -59,8 +59,9 @@
           </div>
           <div id="event-schedule" hidden>
             <div class="field"><label for="event-date">Event date</label><input type="date" id="event-date"></div>
-            <div class="field range-field"><label for="event-length">Coverage length: <strong id="event-length-label">2 hours</strong></label><input type="range" id="event-length" min="120" max="840" step="30" value="120"></div>
-            <div class="time-heading"><h3 id="event-time-heading">Start times</h3><span class="small muted" id="event-duration-note"></span></div>
+            <div class="field range-field"><label for="event-length">Coverage length: <strong id="event-length-label">1 hour</strong></label><input type="range" id="event-length" min="0" max="9" step="1" value="0"></div>
+          <div id="event-all-day-note" class="inset" hidden><p>Choosing <strong>All Day</strong> books the entire date — no start time is needed. I'll review and confirm; if something is already on my calendar that day, I'll be flagged to review before locking it in.</p></div>
+            <div class="time-heading" id="event-time-ui"><h3 id="event-time-heading">Start times</h3><span class="small muted" id="event-duration-note"></span></div>
             <div id="event-slots" class="slots" role="group" aria-label="Available event start times"></div>
             <p class="small muted" id="event-note"></p>
           </div>
