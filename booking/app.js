@@ -5,7 +5,7 @@ const escapeHTML=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<
 const money=value=>'$'+value;
 const timeLabel=minutes=>`${Math.floor(minutes/60)%12||12}:${String(minutes%60).padStart(2,'0')} ${minutes<720?'AM':'PM'}`;
 const formatDate=(key,options={month:'short',day:'numeric',weekday:'short'})=>new Intl.DateTimeFormat('en-US',{...options,timeZone:'UTC'}).format(new Date(key+'T12:00:00Z'));
-const state={step:0,maxStep:0,service:null,package:'standard',count:2,tier:'t1',length:120,date:null,time:null,details:null,submittedAt:false,groupConfirmed:false,eventConfirmed:false,submissionKey:null,turnstileToken:null,turnstileId:null,turnstileWait:null};
+const state={step:0,service:null,package:'standard',count:2,tier:'t1',length:120,date:null,time:null,details:null,groupConfirmed:false,eventConfirmed:false,submissionKey:null,turnstileToken:null,turnstileId:null,turnstileWait:null};
 
 function serviceInfo(){return C.services[state.service];}
 function internalPackage(){const s=serviceInfo();return s.mode==='slots'&&s.internalPackage?s.internalPackage:state.package;}
@@ -46,15 +46,13 @@ function updateSummary(){
   $('summary-due').textContent=s.payLabel;
   $('summary-image').src=s.summaryImage.src;$('summary-image').alt=s.summaryImage.alt;
 }
-function hasTime(){const s=serviceInfo();return s.mode==='wedding'?false:state.time!==null&&Number.isInteger(state.time);}
-function updateProgress(){}
 function showStep(step, moveFocus=true){
   const signedFlow=state.service==='graduation'||state.service==='realestate';
-  state.step=step;state.maxStep=Math.max(state.maxStep,step);
+  state.step=step;
   document.querySelectorAll('[data-panel]').forEach(el=>el.hidden=Number(el.dataset.panel)!==step);
   if(step===1)renderSchedule();
   if(step===2)renderDetailsMode();
-  updateProgress();updateSummary();
+  updateSummary();
   if(moveFocus){
     $(`heading-${step}`).focus({preventScroll:true});
   }
@@ -62,20 +60,20 @@ function showStep(step, moveFocus=true){
 function selectService(service,opts={}){
   if(!C.services[service])throw new Error('Choose a service');
   const firstTime=state.service!==service;
-  if(state.service!==service){state.service=service;state.date=null;state.time=null;state.maxStep=0;resetDownstream();if(service==='event')state.eventConfirmed=false;}
+  if(state.service!==service){state.service=service;state.date=null;state.time=null;resetDownstream();if(service==='event')state.eventConfirmed=false;}
   document.querySelectorAll('[name=service]').forEach(el=>el.checked=el.value===service);
   document.querySelectorAll('.package.service').forEach(el=>el.classList.toggle('selected',el.dataset.service===service));
   document.querySelectorAll('.service-select').forEach(el=>el.disabled=el.closest('.package').dataset.service!==service);
   if(state.service==='graduation'){
     const grad=(opts.package&&C.packages[opts.package])?opts.package:'standard';
-    if(state.package!==grad){state.package=grad;state.time=null;state.maxStep=0;resetDownstream();if(grad==='group')state.groupConfirmed=false;}
+    if(state.package!==grad){state.package=grad;state.time=null;resetDownstream();if(grad==='group')state.groupConfirmed=false;}
     $('grad-package').value=state.package;
     $('grad-price').textContent=state.package==='group'?'from $280':money(C.price(state.package,state.count));
   }
   if(state.service==='realestate'){
     if(opts.tier&&serviceInfo().tiers.some(t=>t.id===opts.tier)){state.tier=opts.tier;}
     const tier=serviceInfo().tiers.find(t=>t.id===state.tier);$('re-tier').value=state.tier;$('re-price').textContent=(tier.id==='t3'?'from ':'')+money(tier.price);}
-  updateSummary();updateProgress();
+  updateSummary();
 }
 document.querySelectorAll('[name=service]').forEach(el=>el.addEventListener('change',()=>selectService(el.value)));
 $('grad-package').addEventListener('change',()=>{selectService('graduation',{package:$('grad-package').value});});
@@ -83,16 +81,18 @@ $('group-size').addEventListener('change',()=>{
   const value=Number($('group-size').value);
   if(!C.groupPrices[value])return;
   state.count=value;state.groupConfirmed=true;state.time=null;resetDownstream();
-  renderSlots();updateSummary();updateProgress();
+  renderSlots();updateSummary();
 });
 $('re-tier').addEventListener('change',()=>{state.tier=$('re-tier').value;selectService('realestate');});
-document.querySelectorAll('[data-step]').forEach(el=>el.addEventListener('click',()=>showStep(Number(el.dataset.step))));
-document.querySelectorAll('[data-back]').forEach(el=>el.addEventListener('click',()=>showStep(Number(el.dataset.back))));
+// Panel Back buttons only: the header placeholder also carries data-back
+// (its destination override for the fragment loader) and must not be
+// treated as a wizard step control.
+document.querySelectorAll('.panel [data-back]').forEach(el=>el.addEventListener('click',()=>showStep(Number(el.dataset.back))));
 /* One continue button per service tile (visible only on the selected
    tile via CSS :has). Each button carries its service's own schedule
    label from booking-core, so no text swapping is needed. */
 document.querySelector('.package-options').addEventListener('click',event=>{
-  if(event.target.closest('button[data-service]')){state.maxStep=1;showStep(1);}
+  if(event.target.closest('button[data-service]')){showStep(1);}
 });
 
 let calendarRequest=0,calendarData=null,calendarStatus='idle',calendarController=null;
@@ -155,7 +155,7 @@ function renderSlots(){
   $('slots').innerHTML=slots.length?slots.map(t=>`<button type="button" class="slot" data-time="${t}" aria-pressed="${state.time===t}">${timeLabel(t)}</button>`).join(''):'<p class="empty">No times fit this service on this date. Choose another available day.</p>';
   $('slots').querySelectorAll('button').forEach(el=>el.addEventListener('click',()=>{
     if(state.time!==Number(el.dataset.time)){state.time=Number(el.dataset.time);resetDownstream();}
-    $('time-error').textContent='';renderSlots();updateSummary();updateProgress();
+    $('time-error').textContent='';renderSlots();updateSummary();
   }));
   $('slot-explanation').textContent=state.time!==null?`Your session: ${timeLabel(state.time)}–${timeLabel(state.time+duration())}. With buffers, the calendar keeps ${timeLabel(state.time-30)}–${timeLabel(state.time+duration()+30)} clear.`:'Choose a start time. Both 30-minute buffers are included when checking availability.';
   updateSummary();
@@ -190,7 +190,7 @@ $('session-date').addEventListener('change',()=>{
   }
   state.date=value;state.time=null;resetDownstream();
   $('time-error').textContent='';
-  updateSummary();updateProgress();
+  updateSummary();
   loadDateSlots();
 });
 /* Fetch availability for the chosen date. The response covers the chosen
@@ -203,7 +203,7 @@ function loadDateSlots(){
   calendarController?.abort();
   const controller=new AbortController();calendarController=controller;
   calendarStatus='loading';calendarData=null;$('time-error').textContent='';
-  renderSlots();updateProgress();
+  renderSlots();
   const timer=window.setTimeout(()=>controller.abort(),25000);
   (async()=>{
     try{
@@ -223,7 +223,7 @@ function loadDateSlots(){
       $('time-error').textContent='Availability could not be loaded. Please try again or contact us.';
     }finally{
       window.clearTimeout(timer);
-      if(attempt===calendarRequest){renderSlots();updateProgress();}
+      if(attempt===calendarRequest){renderSlots();}
     }
   })();
 }
@@ -255,7 +255,7 @@ function renderEventSlots(){
   $('event-slots').innerHTML=all.length?all.map(t=>`<button type="button" class="slot" data-time="${t}" aria-pressed="${state.time===t}">${timeLabel(t)}</button>`).join(''):'<p class="empty">No clear window fits that length on this date. Try another date or a shorter length.</p>';
   $('event-slots').querySelectorAll('button').forEach(el=>el.addEventListener('click',()=>{
     if(state.time!==Number(el.dataset.time)){state.time=Number(el.dataset.time);resetDownstream();}
-    renderEventSlots();updateSummary();updateProgress();
+    renderEventSlots();updateSummary();
   }));
   $('event-note').textContent=state.time!==null?`Your coverage: ${timeLabel(state.time)}–${timeLabel((state.time+state.length)%1440)}${state.time+state.length>=1440?' (next day)':''}.`:'Choose a start time for your coverage block.';
   $('enter-details').disabled=state.time===null;
@@ -274,7 +274,7 @@ function loadEventDay(){
   calendarController?.abort();
   const controller=new AbortController();calendarController=controller;
   calendarStatus='loading';calendarData=null;$('time-error').textContent='';
-  resetDownstream();renderEventSchedule();updateProgress();
+  resetDownstream();renderEventSchedule();
   const timer=window.setTimeout(()=>controller.abort(),25000);
   (async()=>{
     try{
@@ -292,7 +292,7 @@ function loadEventDay(){
       $('time-error').textContent='Availability could not be loaded. Please try again or contact us.';
     }finally{
       window.clearTimeout(timer);
-      if(attempt===calendarRequest){renderEventSchedule();updateProgress();}
+      if(attempt===calendarRequest){renderEventSchedule();}
     }
   })();
 }
@@ -321,7 +321,7 @@ $('wedding-date').addEventListener('change',()=>{
   const {min,max}=weddingBounds();
   if(value<min||value>max){$('wedding-date').value=state.date||'';$('time-error').textContent='Weddings need at least 1 week of lead time; earlier requests may be subject to higher cost.';return;}
   state.date=value;state.time=null;resetDownstream();
-  $('time-error').textContent='';updateSummary();updateProgress();
+  $('time-error').textContent='';updateSummary();
   $('enter-details').disabled=!state.date;
 });
 $('enter-details').addEventListener('click',()=>{
@@ -359,7 +359,7 @@ function renderDetailsMode(){
   $('participant-rows').innerHTML=(grad&&state.package==='group')?Array.from({length:state.count},(_,i)=>`<div class="participant-row"><h3>GRADUATE ${i+1}</h3><div class="field-grid"><div class="field"><label for="participant-${i}-name">Full name <span>*</span></label><input class="participant-name" id="participant-${i}-name" required maxlength="100" value="${escapeHTML(old[i]?.name||'')}"></div><div class="field"><label for="participant-${i}-email">Email <span class="optional">optional</span></label><input class="participant-email" id="participant-${i}-email" type="email" maxlength="254" value="${escapeHTML(old[i]?.email||'')}"></div></div></div>`).join(''):'';
 }
 $('address').disabled=false;
-$('details-form').addEventListener('input',()=>{state.details=null;state.maxStep=2;updateProgress();});
+$('details-form').addEventListener('input',()=>{state.details=null;});
 async function submitBooking(){
   const button=$('details-submit');
   if(!state.turnstileToken&&window.turnstile){$('details-error').textContent='Complete the verification box before submitting.';return;}
@@ -461,4 +461,4 @@ if(requestedService&&C.services[requestedService]){
   selectService(requestedService,{package:requestedPackage,tier:requestedTier});
   if((requestedService==='graduation'&&C.packages[requestedPackage])||(requestedService==='realestate'&&serviceInfo().tiers.some(t=>t.id===requestedTier)))showStep(1,false);
 }
-updateSummary();updateProgress();
+updateSummary();
