@@ -527,23 +527,28 @@ body.cf-booking .success-symbol {
     place-items:center;
     margin-bottom:22px
 }
-body.cf-booking footer {
+body.cf-booking #footer {
+    margin-top:40px
+}
+body.cf-booking #footer .site-footer {
     display:flex;
     align-items:center;
     justify-content:space-between;
-    gap:20px;
-    margin:40px 0 0;
+    gap:12px 20px;
+    flex-wrap:wrap;
     padding:25px 0;
     border-top:1px solid var(--line);
     color:var(--muted);
     font-size:.85rem
 }
-body.cf-booking footer>span {
+body.cf-booking #footer .site-footer-brand {
     font-size:.7rem;
     letter-spacing:.18em
 }
-body.cf-booking footer p {
-    margin:0
+body.cf-booking #footer .site-footer-links {
+    display:flex;
+    align-items:center;
+    gap:12px
 }
 body.cf-booking .noscript {
     padding:30px;
@@ -634,7 +639,7 @@ DOM, so updateSummary() writes keep landing; only the layout changes). */
     body.cf-booking .time-heading .small {
         margin-bottom:12px
     }
-    body.cf-booking footer {
+    body.cf-booking #footer .site-footer {
         flex-direction:column;
         gap:12px;
         text-align:center

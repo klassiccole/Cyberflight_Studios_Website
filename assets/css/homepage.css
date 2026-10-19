@@ -455,6 +455,15 @@ body.is-preload #header .content .inner {
     letter-spacing: 0.18em;
 }
 
+/* Links row: flex gap spaces the dot separators evenly between links.
+   Kept in sync with site-pages.css. */
+
+#footer .site-footer-links {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
 #footer .site-footer a {
     color: inherit;
     text-underline-offset: 5px;

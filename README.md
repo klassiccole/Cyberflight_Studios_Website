@@ -117,10 +117,9 @@ Shared HTML lives in `components/` so it is written once and adopted per page. N
 Current fragments:
 
 - `header.html` — full header tile (brand row + nav bar with section menu). Used by every page except the homepage; see "Shared header component" below.
-- `footer.html` — standard site footer (`footer#footer` > `.site-footer`: brand + "Contact Me"). Used by about, gallery/*, services/*. Footer styling lives in `assets/css/site-pages.css` (`#footer .site-footer` rules); do not duplicate it into other stylesheets.
-- `footer-brand.html` — brand-only variant (no link), used by contact/index.html only.
+- `footer.html` — standard site footer (`footer#footer` > `.site-footer`: brand + links row: "Contact Me", Privacy, Terms). Used by every page except the homepage; booking/ and booking/confirmed/ inject it too (booking.css restyles it for the booking theme). Footer styling lives in `assets/css/site-pages.css` (`#footer .site-footer` rules); do not duplicate it into other stylesheets.
 
-Not adopted (deliberately): the homepage (`index.html`) and the booking flow pages (`booking/`, `booking/confirmed/`, `contact/confirmed/`) keep their own inline footers and styles (`homepage.css`, `booking/booking.css`). `site-shell.css` is loaded by all pages including those, so do not move fragment-specific CSS there — it would leak onto the excluded pages.
+Not adopted (deliberately): the homepage (`index.html`) and the booking confirmation page (`booking/confirmed/`, whose footer carries context-specific links) keep their own inline footers and styles (`homepage.css`, `booking/booking.css`). `site-shell.css` is loaded by all pages including those, so do not move fragment-specific CSS there — it would leak onto the excluded pages.
 
 Conventions:
 

@@ -1363,7 +1363,7 @@ background. */
 .page-brand span {
     text-transform: uppercase;
     letter-spacing: 0.3rem;
-    font-size: 60px;
+    font-size: 75px;
     color: #ffffff;
     text-shadow: 0 2px 18px rgba(0, 0, 0, 0.65);
 }
@@ -1384,7 +1384,7 @@ right, one line, sized to fit the tile's width with room to spare. */
     }
 
     .page-brand span {
-        font-size: 20px;
+        font-size: 25px;
         letter-spacing: 0.12rem;
         text-shadow: 0 2px 10px rgba(0, 0, 0, 0.65);
     }
@@ -1536,7 +1536,7 @@ Mobile (below) swaps to the icon and visually-hides the label
     padding: 0 32px;
     text-transform: uppercase;
     letter-spacing: 0.2rem;
-    font-size: 15px;
+    font-size: 19px;
     border-bottom: 0;
     color: #ffffff;
 }
