@@ -1,6 +1,6 @@
 # Cyberflight Studios Website
 
-Source for [cyberflight.studio](https://cyberflight.studio), the site of Cyberflight Studios LLC (photography, videography, drone media; Charlotte, NC). A dependency-free static site whose booking and contact flows run as Cloudflare Pages Functions backed by a D1 database, Google Calendar, Resend, and Zoho Mail.
+Source for [cyberflight.studio](https://cyberflight.studio), the site of Cyberflight Studios LLC (photography, videography, drone media; Charlotte, NC). A dependency-free static site whose booking and contact flows run as Cloudflare Pages Functions backed by Google Calendar (the booking source of truth), D1 (connection storage + request reconciliation), Resend, and Zoho Mail.
 
 This file is the operational handbook for humans and coding agents.
 
@@ -8,7 +8,7 @@ This file is the operational handbook for humans and coding agents.
 
 - **Frontend:** hand-written HTML5 / CSS3 / vanilla JS. **No frameworks, no bundler, no build step — by deliberate policy.** Do not add one. Started from the HTML5 UP "Dimension" template, heavily customized.
 - **Backend:** Cloudflare Pages Functions (`functions/api/**`) — serverless edge handlers, no Node server.
-- **Database:** Cloudflare D1 (SQLite). Schema integrity is enforced in SQL: CHECK constraints, triggers, and single-statement overlap guards, not app code.
+- **Database:** Cloudflare D1 (SQLite) — stores the encrypted Google connection and booking_requests rows used for calendar reconciliation. Schema integrity is enforced in SQL: CHECK constraints, triggers, and single-statement overlap guards, not app code.
 - **Email:** Resend (contact form + booking notifications) → owner mailbox on Zoho Mail. Zoho handles inbound MX/DKIM/SPF for the domain.
 - **Spam protection:** Cloudflare Turnstile on contact and booking forms.
 - **Calendar:** Google Calendar API (service account/OAuth, refresh token encrypted at rest in D1).
@@ -88,9 +88,9 @@ Run it after changing any production secret (Turnstile, Resend, Google keys). It
 npm test
 ```
 
-Runs `node --test tests/*.test.mjs`. Suites cover booking input validation (server-derived prices, package rules, participant lists), submission pipeline, storage/conflict behavior, and orphan cleanup after calendar reconciliation. Suites are plain `node:test`; add a `test('name', ...)` in the relevant file rather than introducing a framework. Current count: 28 tests, all passing.
+Runs `node --test tests/*.test.mjs`. Suites cover booking input validation (server-derived prices, package rules, participant lists), the submission pipeline's gates (origin, enabled flag, Turnstile hostname/action, availability outcomes), storage triggers, and orphan cleanup after calendar reconciliation. Suites are plain `node:test`; add a `test('name', ...)` in the relevant file rather than introducing a framework. Current count: 21 tests, all passing.
 
-The submission pipeline enforces replay-before-verify as a security-relevant ordering. Do not move the `verify` call above the prior-row lookup.
+The pipeline is calendar-as-truth: a booking request is the Bookings Calendar event plus the owner email — booking_requests rows are no longer written (only reconciled/deleted), and there is no client signature/agreement step (removed).
 
 ## Deployment
 
@@ -186,7 +186,7 @@ All read via `env.*` inside Functions; set in Cloudflare dashboard (prod) or `.d
 1. **No frontend frameworks or new dependencies.** Vanilla only. If a change seems to need a library, it doesn't.
 2. **Never trust the client.** Prices, durations, package names, and timezone math are computed in `lib/` from server state. Browser-submitted values of those fields are rejected (`unexpected_fields`, `invalid_package`). Agreements are served by the server and hashed with the signature at submission.
 3. **Push integrity into the schema.** Use CHECK constraints/triggers over app-level guards when the database can express the rule.
-4. **DB and calendar as separate sources:** events/weddings are calendar-only (no D1 rows); graduation (and real estate when enabled) persist to D1. Availability is the merge of both.
+4. **Calendar is the source of truth:** every booking request becomes a Bookings Calendar event plus an owner email; no booking rows are written to D1. Availability is the merge of the openings calendar and free/busy data. Lead times are advisory (30+ days ideal for events/weddings), never enforced in code. All-day event requests are an owner override: never rejected for busy time, but the owner email is conflict-flagged for calendar review.
 5. **Clean URLs via directory structure:** each page is `<dir>/index.html`. Keep that pattern for new pages.
 
 ## Stylesheet ownership
@@ -211,3 +211,5 @@ All read via `env.*` inside Functions; set in Cloudflare dashboard (prod) or `.d
 - The D1 check constraint on `package_id` is migration-versioned; adding a package means a new migration, not an edit to an old one.
 - One Turnstile widget/sitekey pair covers any page on the domain; don't create per-form widgets.
 - `booking/app.js` is the single frontend brain for the whole flow; large string-surgery edits on it have corrupted files before. Prefer small, verified edits.
+- **Pricing lives in three synchronized places:** the booking page's select options, `booking/booking-core.js` (client twin), and `lib/booking-input.mjs` (server authority). A price/duration change must touch all three; drift fails safe because the server recomputes and rejects client-submitted prices, but the UI shows stale numbers until all three are updated.
+- Event coverage length ceilings differ by layer by design: UI slider allows 1-9 hours (+ All Day), the server accepts up to 1200 minutes for timed events, and all-day requests bypass availability entirely (conflict-flagged email instead).
