@@ -106,7 +106,7 @@ async function renderSchedule(){
   $('group-options').hidden=!(state.service==='graduation'&&state.package==='group');
   if(state.service==='graduation'&&state.package==='group')$('group-size').value=state.groupConfirmed?String(state.count):'';
   $('lead-hint').textContent=s.mode==='wedding'
-    ?'Please choose a date at least 1 month in advance; earlier requests may be subject to higher cost.'
+    ?'Any date works — at least 1 month of planning is ideal; earlier requests may be subject to higher cost.'
     :'Choose any upcoming date — sooner works when a time is free; I review and confirm each request.';
   $('session-schedule').hidden=s.mode!=='slots';
   $('event-schedule').hidden=s.mode!=='event';
@@ -305,21 +305,23 @@ $('event-length').addEventListener('input',()=>{
 });
 
 function weddingBounds(){
-  const min=C.addDays(C.dateKey(new Date()),C.services.wedding.minDaysAhead);
-  const max=C.addDays(C.dateKey(new Date()),C.services.wedding.maxDaysAhead);
-  return {min,max};
+  /* Lead time is advisory (30+ days ideal), never enforced: any date from
+     today on may be requested - the calendar shows the real availability. */
+  const min=C.dateKey(new Date());
+  return {min,max:null};
 }
 function renderWeddingSchedule(){
   const {min,max}=weddingBounds();
-  $('wedding-date').min=min;$('wedding-date').max=max;
+  $('wedding-date').min=min;
+  if(max)$('wedding-date').max=max;
   $('wedding-date').value=state.date||'';
   $('enter-details').disabled=!state.date;
 }
 $('wedding-date').addEventListener('change',()=>{
   const value=$('wedding-date').value;
   if(!value)return;
-  const {min,max}=weddingBounds();
-  if(value<min||value>max){$('wedding-date').value=state.date||'';$('time-error').textContent='Weddings need at least 1 week of lead time; earlier requests may be subject to higher cost.';return;}
+  const {min}=weddingBounds();
+  if(value<min){$('wedding-date').value=state.date||'';$('time-error').textContent='Please choose an upcoming date.';return;}
   state.date=value;state.time=null;resetDownstream();
   $('time-error').textContent='';updateSummary();
   $('enter-details').disabled=!state.date;

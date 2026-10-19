@@ -116,8 +116,8 @@ async function busyWindows(env, token, timeMin, timeMax, signal) {
 }
 function calculateDays(start, duration, openings, busy, now) {
   // Slots that have already started are not bookable; any future time the
-  // calendar can fit is bookable. (The 3-day lead is a written policy,
-  // not code.)
+  // calendar can fit is bookable. Lead times are advisory only (30+ days
+  // recommended, esp. events/weddings) - never enforced in code.
   const minTime = now;
   return Array.from({ length: monthSpan(start) }, (_, i) => {
     const key = addDays(start, i), dayStart = midnight(key), dayEnd = midnight(addDays(key, 1));
