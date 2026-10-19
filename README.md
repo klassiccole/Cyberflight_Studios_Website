@@ -30,14 +30,12 @@ booking/                   Universal booking flow (the active one)
   confirmed/index.html     Post-submission receipt screen
 functions/api/             Pages Functions (the entire backend)
   contact.js               Contact form: Turnstile verify + Resend send
-  availability.js          Availability lookup (calendar + DB merge)
+  availability.js          Availability lookup (openings calendar + free/busy)
   booking/submit.js        Booking submission (thin wrapper -> lib/booking-submit.mjs)
-  booking/agreement.js     Server-owned agreement text
   google/[[path]].js       Google OAuth connect/callback proxy
 lib/                       Shared logic imported by the functions
   booking-input.mjs        Validation, prices, durations, Eastern-UTC math
-  booking-submit.mjs       Submission pipeline
-  booking-agreement.mjs    Agreement builder (per service)
+  booking-submit.mjs       Submission pipeline (calendar event + owner email)
   google-auth.mjs          Token decryption + bounded Google JSON fetch
 migrations/                D1 migrations 0001-0004 (plain SQL)
 tests/                     node:test suites (unit + storage + submission)
