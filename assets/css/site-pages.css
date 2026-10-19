@@ -1,57 +1,56 @@
 /* ============================================================
-   About
+About
 ============================================================ */
 
 /*
-   Controls the custom layout and presentation of the About content page.
-   Defines the side-by-side desktop layout, circular profile image,
-   text column, and enlarged introductory text.
+Controls the custom layout and presentation of the About content page.
+Defines the side-by-side desktop layout, circular profile image,
+text column, and enlarged introductory text.
 
-   Tablet rules are grouped at the bottom of this section and convert
-   the layout to a stacked format, center and resize the profile image,
-   and reduce the introductory text size for smaller screens.
+Tablet rules are grouped at the bottom of this section and convert
+the layout to a stacked format, center and resize the profile image,
+and reduce the introductory text size for smaller screens.
 */
 
-    #about .about-layout {
-        display: flex;
-        align-items: flex-start;
-        gap: 2.5rem;
-    }
+#about .about-layout {
+    display: flex;
+    align-items: flex-start;
+    gap: 2.5rem;
+}
 
-    #about .about-image {
-        display: block;
-        flex: 0 0 38%;
-        margin: 0;
-        aspect-ratio: 1 / 1;
-        border-radius: 50%;
-        overflow: hidden;
-    }
+#about .about-image {
+    display: block;
+    flex: 0 0 38%;
+    margin: 0;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    overflow: hidden;
+}
 
-    #about .about-image img {
-        display: block;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        border-radius: 50%;
-    }
+#about .about-image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
 
-    #about .about-image:before {
-        border-radius: 50%;
-    }
+#about .about-image:before {
+    border-radius: 50%;
+}
 
-    #about .about-text {
-        flex: 1;
-        min-width: 0;
-    }
+#about .about-text {
+    flex: 1;
+    min-width: 0;
+}
 
-    #about .about-intro {
-        display: block;
-        font-size: 2.5rem;
-        font-weight: 700;
-        line-height: 1.15;
-        margin-bottom: 0.75rem;
-    }
-
+#about .about-intro {
+    display: block;
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1.15;
+    margin-bottom: 0.75rem;
+}
 
 /* About - Tablet */
 
@@ -74,170 +73,169 @@
 }
 
 /* ============================================================
-   Gallery
+Gallery
 ============================================================ */
 
 /*
-   Controls the image grid used on the Gallery content page.
-   Includes thumbnail layout, image sizing, hover behavior,
-   and responsive gallery adjustments for smaller screens.
+Controls the image grid used on the Gallery content page.
+Includes thumbnail layout, image sizing, hover behavior,
+and responsive gallery adjustments for smaller screens.
 */
 
-			.gallery-grid {
-			display: grid;
-			grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-			gap: 1.5rem;
-			margin-top: 2rem;
-			}
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
 
-			.gallery-item {
-			display: block;
-			background: rgba(27, 31, 37, 0.85);
-			border: 1px solid rgba(255, 255, 255, 0.2);
-			border-radius: 12px;
-			text-align: center;
-			overflow: hidden;
-			text-decoration: none;
-			transition: transform 0.3s ease, border-color 0.3s ease;
-			}
+.gallery-item {
+    display: block;
+    background: rgba(27, 31, 37, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    text-align: center;
+    overflow: hidden;
+    text-decoration: none;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+}
 
-			.gallery-item img {
-			width: 100%;
-			height: 180px;
-			object-fit: cover;
-			}
+.gallery-item img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
 
-			.gallery-item h3 {
-			margin: 0.8rem 0;
-			color: #fff;
-			font-size: 1.1rem;
-			letter-spacing: 0.05em;
-			}
+.gallery-item h3 {
+    margin: 0.8rem 0;
+    color: #fff;
+    font-size: 1.1rem;
+    letter-spacing: 0.05em;
+}
 
-			.gallery-item:hover {
-			transform: scale(1.03);
-			border-color: rgba(255, 255, 255, 0.4);
-			}
+.gallery-item:hover {
+    transform: scale(1.03);
+    border-color: rgba(255, 255, 255, 0.4);
+}
 
 /* Sub-gallery media items */
 
-			.gallery-grid > img,
-			.gallery-grid > video {
-			width: 100%;
-			height: auto;
-			display: block;
-			border-radius: 12px;
-			}
+.gallery-grid > img,
+.gallery-grid > video {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 12px;
+}
 
 /* Gallery Grid - Tablet */
 
-
 /* ============================================================
-   Services Overview
+Services Overview
 ============================================================ */
 
-			.services-grid {
-			display: grid;
-			grid-template-columns: repeat(2, 1fr);
-			gap: 1.5rem;
-			margin-top: 2rem;
-			}
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
 
-			.service-item {
-			display: block;
-			background: rgba(27, 31, 37, 0.85);
-			border-radius: 12px;
-			overflow: hidden;
-			padding: 1.5rem;
-			}
+.service-item {
+    display: block;
+    background: rgba(27, 31, 37, 0.85);
+    border-radius: 12px;
+    overflow: hidden;
+    padding: 1.5rem;
+}
 
-			.service-item img,
-			.service-item video {
-			width: 100%;
-			height: 220px;
-			object-fit: cover;
-			object-position: center;
-			display: block;
-			border-radius: 8px;
-			margin-bottom: 1rem;
-			}
+.service-item img,
+.service-item video {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
 
-	/* Services - Tablet */
+/* Services - Tablet */
 
-		@media screen and (max-width: 736px) {
+@media screen and (max-width: 736px) {
 
-			.services-grid {
-				grid-template-columns: 1fr;
-			}
-
-		}
-
-/* Photography service page — the CTA lives in its own content-box
-   under the floating-boxes layout. */
-
-    .photography-page .photography-intro {
-        display: grid;
-        grid-template-columns: 1.3fr 0.7fr;
-        gap: 2.5rem;
-        align-items: center;
-
-        max-width: none;
-        margin: 0 auto 3rem auto;
-        text-align: left;
+    .services-grid {
+        grid-template-columns: 1fr;
     }
 
-    .photography-intro-image img {
-        display: block;
-        width: 100%;
-        height: 420px;
-        object-fit: cover;
-        object-position: center right;
+}
 
-        border-radius: 12px;
-        border: 1px solid rgba(255, 255, 255, 0.18);
-        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.22);
-    }
+/* Photography service page â€” the CTA lives in its own content-box
+under the floating-boxes layout. */
 
-    .photography-page .photography-label {
-        margin-bottom: 0.5rem;
-        font-size: 0.75rem;
-        font-weight: 600;
-        letter-spacing: 0.2rem;
-        text-transform: uppercase;
-        opacity: 0.7;
-    }
+.photography-page .photography-intro {
+    display: grid;
+    grid-template-columns: 1.3fr 0.7fr;
+    gap: 2.5rem;
+    align-items: center;
 
-    .photography-page .photography-intro h1 {
-        margin-bottom: 1rem;
-    }
+    max-width: none;
+    margin: 0 auto 3rem auto;
+    text-align: left;
+}
 
-    .photography-page .photography-tagline {
-        font-size: 1.25rem;
-        margin-bottom: 1.5rem;
-        padding-bottom: 1.25rem;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.25);
-    }
+.photography-intro-image img {
+    display: block;
+    width: 100%;
+    height: 420px;
+    object-fit: cover;
+    object-position: center right;
 
-    .photography-services {
-        padding-top: 3rem;
-        border-top: 1px solid rgba(255, 255, 255, 0.25);
-    }
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.22);
+}
 
-    .photography-intro-content > p {
-        margin-bottom: 1.25rem;
-    }
+.photography-page .photography-label {
+    margin-bottom: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.2rem;
+    text-transform: uppercase;
+    opacity: 0.7;
+}
 
-    .photography-intro-content ul {
-        columns: 2;
-        column-gap: 3rem;
-        margin-top: 0.5rem;
-    }
+.photography-page .photography-intro h1 {
+    margin-bottom: 1rem;
+}
 
-    .photography-cta {
-        margin-top: 0;
-        padding-top: 0;
-        border-top: none;
-    }
+.photography-page .photography-tagline {
+    font-size: 1.25rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.photography-services {
+    padding-top: 3rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.photography-intro-content > p {
+    margin-bottom: 1.25rem;
+}
+
+.photography-intro-content ul {
+    columns: 2;
+    column-gap: 3rem;
+    margin-top: 0.5rem;
+}
+
+.photography-cta {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: none;
+}
 
 @media screen and (max-width: 480px) {
 
@@ -279,234 +277,234 @@
 }
 
 /* ============================================================
-   Service Packages (graduation + real estate)
+Service Packages (graduation + real estate)
 ============================================================ */
 
 /*
-   SHARED PAGE FAMILY: the .packages-page class family is used by BOTH
-   services/graduation and services/realestate (which reuse the full
-   template: intro, tagline, package card tiles, information, CTA).
-   Some members (.packages-showcase, .packages-info-image) currently
-   render only on graduation. Do not rename or trim members without
-   checking both pages.
+SHARED PAGE FAMILY: the .packages-page class family is used by BOTH
+services/graduation and services/realestate (which reuse the full
+template: intro, tagline, package card tiles, information, CTA).
+Some members (.packages-showcase, .packages-info-image) currently
+render only on graduation. Do not rename or trim members without
+checking both pages.
 */
 
-    .packages-page .packages-intro {
-        display: grid;
-        grid-template-columns: 1.3fr 0.7fr;
-        gap: 2.5rem;
-        align-items: center;
-        max-width: none;
-        margin: 0 auto 1.5rem auto;
-        text-align: left;
-    }
+.packages-page .packages-intro {
+    display: grid;
+    grid-template-columns: 1.3fr 0.7fr;
+    gap: 2.5rem;
+    align-items: center;
+    max-width: none;
+    margin: 0 auto 1.5rem auto;
+    text-align: left;
+}
 
-    .packages-intro-image img {
-        display: block;
-        width: 100%;
-        height: 420px;
-        object-fit: cover;
-        object-position: center;
-        border-radius: 12px;
-        border: 1px solid rgba(255, 255, 255, 0.18);
-        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.22);
-    }
+.packages-intro-image img {
+    display: block;
+    width: 100%;
+    height: 420px;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.22);
+}
 
-    .packages-page .packages-label {
-        margin-bottom: 0.5rem;
-        font-size: 0.75rem;
-        font-weight: 600;
-        letter-spacing: 0.2rem;
-        text-transform: uppercase;
-        opacity: 0.7;
-    }
+.packages-page .packages-label {
+    margin-bottom: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.2rem;
+    text-transform: uppercase;
+    opacity: 0.7;
+}
 
-    .packages-page .packages-intro h1 {
-        margin-bottom: 1rem;
-    }
+.packages-page .packages-intro h1 {
+    margin-bottom: 1rem;
+}
 
-    .packages-page .packages-tagline {
-        font-size: 1.25rem;
-        margin-bottom: 1.5rem;
-        padding-bottom: 1.25rem;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.25);
-    }
+.packages-page .packages-tagline {
+    font-size: 1.25rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+}
 
-    .packages-local-note {
-        text-align: center;
-        font-weight: 600;
-        font-size: 0.9em;
-        letter-spacing: 0.03em;
-    }
+.packages-local-note {
+    text-align: center;
+    font-weight: 600;
+    font-size: 0.9em;
+    letter-spacing: 0.03em;
+}
 
 /* Package Section */
 
-    .packages-packages {
+.packages-packages {
     margin: 0 0 3rem 0;
     padding-top: 3rem;
     border-top: solid 1px rgba(255, 255, 255, 0.25);
-    }
+}
 
-    .packages-section-heading {
-        text-align: center;
-        margin-bottom: 2rem;
-    }
+.packages-section-heading {
+    text-align: center;
+    margin-bottom: 2rem;
+}
 
-    .packages-section-heading p {
-        margin-bottom: 0;
-    }
+.packages-section-heading p {
+    margin-bottom: 0;
+}
 
 /* Package Cards */
 
-    .packages-package-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 1.5rem;
-    }
+.packages-package-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+}
 
-    .packages-package {
-        position: relative;
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-        min-height: 30rem;
-        padding: 1.75rem;
+.packages-package {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-height: 30rem;
+    padding: 1.75rem;
 
-        background: rgba(255, 255, 255, 0.05);
-        border: solid 1px rgba(255, 255, 255, 0.2);
-        border-radius: 12px;
-    }
+    background: rgba(255, 255, 255, 0.05);
+    border: solid 1px rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+}
 
-    .packages-package-header {
-        text-align: center;
-        margin-bottom: 1rem;
-    }
+.packages-package-header {
+    text-align: center;
+    margin-bottom: 1rem;
+}
 
-    .packages-package-header h3 {
-        margin-bottom: 0.5rem;
-    }
+.packages-package-header h3 {
+    margin-bottom: 0.5rem;
+}
 
-    .packages-price {
-        font-size: 2rem;
-        font-weight: 600;
-        line-height: 1.2;
-        margin: 0;
-    }
+.packages-price {
+    font-size: 2rem;
+    font-weight: 600;
+    line-height: 1.2;
+    margin: 0;
+}
 
-    .packages-package-description {
-        text-align: center;
-        min-height: 5rem;
-        margin-bottom: 1.25rem;
-    }
+.packages-package-description {
+    text-align: center;
+    min-height: 5rem;
+    margin-bottom: 1.25rem;
+}
 
-    .packages-package ul {
-        flex-grow: 1;
-        margin-bottom: 1.5rem;
-    }
+.packages-package ul {
+    flex-grow: 1;
+    margin-bottom: 1.5rem;
+}
 
-    .packages-package li {
-        margin-bottom: 0.45rem;
-    }
+.packages-package li {
+    margin-bottom: 0.45rem;
+}
 
-    .packages-book {
-        display: block;
-        width: 100%;
-        margin-top: auto;
-    }
+.packages-book {
+    display: block;
+    width: 100%;
+    margin-top: auto;
+}
 
 /* Featured Package */
-    .packages-package-featured {
-        background: rgba(255, 255, 255, 0.09);
-        border-color: rgba(255, 255, 255, 0.55);
-    }
+.packages-package-featured {
+    background: rgba(255, 255, 255, 0.09);
+    border-color: rgba(255, 255, 255, 0.55);
+}
 
-    .packages-package-badge {
-        position: absolute;
-        top: -0.8rem;
-        left: 50%;
-        transform: translateX(-50%);
+.packages-package-badge {
+    position: absolute;
+    top: -0.8rem;
+    left: 50%;
+    transform: translateX(-50%);
 
-        padding: 0.25rem 0.8rem;
-        margin: 0;
+    padding: 0.25rem 0.8rem;
+    margin: 0;
 
-        background: #ffffff;
-        border-radius: 4px;
+    background: #ffffff;
+    border-radius: 4px;
 
-        color: #1b1f22;
-        font-size: 0.65rem;
-        font-weight: 600;
-        letter-spacing: 0.12rem;
-        text-transform: uppercase;
-        white-space: nowrap;
-    }
+    color: #1b1f22;
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.12rem;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
 
 /* Information */
-    .packages-info {
-        display: grid;
-        grid-template-columns: 0.8fr 1.2fr;
-        gap: 3rem;
-        align-items: start;
+.packages-info {
+    display: grid;
+    grid-template-columns: 0.8fr 1.2fr;
+    gap: 3rem;
+    align-items: start;
 
-        padding-top: 3rem;
-        border-top: solid 1px rgba(255, 255, 255, 0.25);
-    }
+    padding-top: 3rem;
+    border-top: solid 1px rgba(255, 255, 255, 0.25);
+}
 
-    .packages-info-image img {
-        display: block;
-        width: 100%;
-        aspect-ratio: 4 / 5;
-        object-fit: cover;
+.packages-info-image img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
 
-        border-radius: 12px;
-        border: 1px solid rgba(255, 255, 255, 0.18);
-        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.22);
-    }
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.22);
+}
 
-    .packages-info-content h2 {
-        margin-top: 0;
-        margin-bottom: 2rem;
-    }
+.packages-info-content h2 {
+    margin-top: 0;
+    margin-bottom: 2rem;
+}
 
-    .packages-info-content h3 {
-        margin-bottom: 0.75rem;
-    }
+.packages-info-content h3 {
+    margin-bottom: 0.75rem;
+}
 
-    .packages-info-content p {
-        margin-bottom: 1.5rem;
-    }
+.packages-info-content p {
+    margin-bottom: 1.5rem;
+}
 
 /* Showcase */
-    .packages-showcase {
-        margin-top: 3rem;
-        width: 100%;
-    }
+.packages-showcase {
+    margin-top: 3rem;
+    width: 100%;
+}
 
-    .packages-showcase img {
-        display: block;
-        width: 100%;
-        height: 420px;
-        object-fit: cover;
-        object-position: center 8%;
+.packages-showcase img {
+    display: block;
+    width: 100%;
+    height: 420px;
+    object-fit: cover;
+    object-position: center 8%;
 
-        border-radius: 12px;
-        border: 1px solid rgba(255, 255, 255, 0.18);
-        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.22);
-    }
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.22);
+}
 
 /* Call to Action */
-    .packages-cta {
-        margin-top: 3rem;
-        padding: 2rem;
-        text-align: center;
+.packages-cta {
+    margin-top: 3rem;
+    padding: 2rem;
+    text-align: center;
 
-        background: rgba(255, 255, 255, 0.05);
-        border: solid 1px rgba(255, 255, 255, 0.2);
-        border-radius: 12px;
-    }
+    background: rgba(255, 255, 255, 0.05);
+    border: solid 1px rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+}
 
-    .packages-cta p {
-        margin-bottom: 1.5rem;
-    }
+.packages-cta p {
+    margin-bottom: 1.5rem;
+}
 
 /* Service Packages - Tablet */
 
@@ -647,66 +645,66 @@
 }
 
 /* ============================================================
-   Videography
+Videography
 ============================================================ */
 
-    .videography-page .videography-intro {
-        display: grid;
-        grid-template-columns: 1.3fr 0.7fr;
-        gap: 2.5rem;
-        align-items: center;
+.videography-page .videography-intro {
+    display: grid;
+    grid-template-columns: 1.3fr 0.7fr;
+    gap: 2.5rem;
+    align-items: center;
 
-        max-width: none;
-        margin: 0 auto 3rem auto;
-        text-align: left;
-    }
+    max-width: none;
+    margin: 0 auto 3rem auto;
+    text-align: left;
+}
 
-    .videography-intro-image img {
-        display: block;
-        width: 100%;
-        height: 420px;
-        object-fit: cover;
-        object-position: center;
+.videography-intro-image img {
+    display: block;
+    width: 100%;
+    height: 420px;
+    object-fit: cover;
+    object-position: center;
 
-        border-radius: 12px;
-        border: 1px solid rgba(255, 255, 255, 0.18);
-        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.22);
-    }
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.22);
+}
 
-    .videography-page .videography-label {
-        margin-bottom: 0.5rem;
-        font-size: 0.75rem;
-        font-weight: 600;
-        letter-spacing: 0.2rem;
-        text-transform: uppercase;
-        opacity: 0.7;
-    }
+.videography-page .videography-label {
+    margin-bottom: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.2rem;
+    text-transform: uppercase;
+    opacity: 0.7;
+}
 
-    .videography-page .videography-intro h1 {
-        margin-bottom: 1rem;
-    }
+.videography-page .videography-intro h1 {
+    margin-bottom: 1rem;
+}
 
-    .videography-page .videography-tagline {
-        font-size: 1.25rem;
-        margin-bottom: 1.5rem;
-        padding-bottom: 1.25rem;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.25);
-    }
+.videography-page .videography-tagline {
+    font-size: 1.25rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+}
 
-    .videography-intro-content > p {
-        margin-bottom: 1.25rem;
-    }
+.videography-intro-content > p {
+    margin-bottom: 1.25rem;
+}
 
-    .videography-intro-content ul {
-        columns: 2;
-        column-gap: 3rem;
-    }
+.videography-intro-content ul {
+    columns: 2;
+    column-gap: 3rem;
+}
 
-    .videography-cta {
-        margin-top: 2.5rem;
-        padding-top: 2.5rem;
-        border-top: 1px solid rgba(255, 255, 255, 0.25);
-    }
+.videography-cta {
+    margin-top: 2.5rem;
+    padding-top: 2.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.25);
+}
 
 /* Videography Services - Mobile */
 @media screen and (max-width: 480px) {
@@ -749,150 +747,150 @@
         padding-top: 2rem;
         padding-bottom: 1rem;
     }
-}	
+}
 
 /* ============================================================
-   Drone
+Drone
 ============================================================ */
 
-			.drone-page .drone-intro {
-				display: grid;
-				grid-template-columns: 1.3fr 0.7fr;
-				gap: 2.5rem;
-				align-items: center;
+.drone-page .drone-intro {
+    display: grid;
+    grid-template-columns: 1.3fr 0.7fr;
+    gap: 2.5rem;
+    align-items: center;
 
-				max-width: none;
-				margin: 0 auto 3rem auto;
-				text-align: left;
-			}
+    max-width: none;
+    margin: 0 auto 3rem auto;
+    text-align: left;
+}
 
-			.drone-intro-image img,
-			.drone-intro-image video {
-				display: block;
-				width: 100%;
-				height: 420px;
-				object-fit: cover;
-				object-position: center;
+.drone-intro-image img,
+.drone-intro-image video {
+    display: block;
+    width: 100%;
+    height: 420px;
+    object-fit: cover;
+    object-position: center;
 
-				border-radius: 12px;
-				border: 1px solid rgba(255, 255, 255, 0.18);
-				box-shadow: 0 12px 30px rgba(0, 0, 0, 0.22);
-			}
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.22);
+}
 
-			.drone-page .drone-label {
-				margin-bottom: 0.5rem;
-				font-size: 0.75rem;
-				font-weight: 600;
-				letter-spacing: 0.2rem;
-				text-transform: uppercase;
-				opacity: 0.7;
-			}
+.drone-page .drone-label {
+    margin-bottom: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.2rem;
+    text-transform: uppercase;
+    opacity: 0.7;
+}
 
-			.drone-page .drone-intro h1 {
-				margin-bottom: 1rem;
-			}
+.drone-page .drone-intro h1 {
+    margin-bottom: 1rem;
+}
 
-			.drone-page .drone-tagline {
-				font-size: 1.25rem;
-				margin-bottom: 1.5rem;
-				padding-bottom: 1.25rem;
-				border-bottom: 1px solid rgba(255, 255, 255, 0.25);
-			}
+.drone-page .drone-tagline {
+    font-size: 1.25rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+}
 
-			.drone-intro-content > p {
-				margin-bottom: 1.25rem;
-			}
+.drone-intro-content > p {
+    margin-bottom: 1.25rem;
+}
 
-			.drone-intro-content ul {
-				/* Match the photography/videography service pages: the service
-				   list fills two newspaper columns so the text box runs
-				   shorter. column-gap without `columns` is inert. */
-				columns: 2;
-				column-gap: 3rem;
-			}
+.drone-intro-content ul {
+/* Match the photography/videography service pages: the service
+    list fills two newspaper columns so the text box runs
+    shorter. column-gap without `columns` is inert. */
+    columns: 2;
+    column-gap: 3rem;
+}
 
-			.drone-cta {
-				margin-top: 0;
-				padding-top: 0;
-				border-top: none;
-			}
+.drone-cta {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: none;
+}
 
-		/* Drone Services - Mobile */
-			@media screen and (max-width: 480px) {
+/* Drone Services - Mobile */
+@media screen and (max-width: 480px) {
 
-				.drone-page .drone-intro {
-					display: block;
-					margin-bottom: 2rem;
-				}
+    .drone-page .drone-intro {
+        display: block;
+        margin-bottom: 2rem;
+    }
 
-				.drone-page .drone-intro h1 {
-					font-size: 1.5rem;
-					letter-spacing: 0.2rem;
-				}
+    .drone-page .drone-intro h1 {
+        font-size: 1.5rem;
+        letter-spacing: 0.2rem;
+    }
 
-				.drone-page .drone-tagline {
-					font-size: 1.1rem;
-				}
+    .drone-page .drone-tagline {
+        font-size: 1.1rem;
+    }
 
-				.drone-intro-content ul {
-					column-gap: 2rem;
-				}
+    .drone-intro-content ul {
+        column-gap: 2rem;
+    }
 
-				.drone-intro-content li {
-					break-inside: avoid;
-				}
+    .drone-intro-content li {
+        break-inside: avoid;
+    }
 
-				.drone-intro-image {
-					margin-top: 2rem;
-				}
+    .drone-intro-image {
+        margin-top: 2rem;
+    }
 
-				.drone-intro-image img,
-				.drone-intro-image video {
-					width: 100%;
-					height: auto;
-					aspect-ratio: 4 / 5;
-					object-fit: cover;
-				}
+.drone-intro-image img,
+    .drone-intro-image video {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 4 / 5;
+        object-fit: cover;
+    }
 
-				.drone-cta {
-					margin-top: 0;
-					padding-top: 0;
-					padding-bottom: 0;
-				}
+    .drone-cta {
+        margin-top: 0;
+        padding-top: 0;
+        padding-bottom: 0;
+    }
 
-			}
-
+}
 
 /* Site footer: company name and general-contact link on every page */
 #footer .site-footer {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	gap: 12px 20px;
-	flex-wrap: wrap;
-	padding: 20px 0 0;
-	border-top: 1px solid rgba(255, 255, 255, 0.15);
-	color: rgba(255, 255, 255, 0.6);
-	font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px 20px;
+    flex-wrap: wrap;
+    padding: 20px 0 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.85rem;
 }
 
 #footer .site-footer-brand {
-	font-size: 0.7rem;
-	letter-spacing: 0.18em;
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
 }
 
 #footer .site-footer a {
-	color: inherit;
-	text-underline-offset: 5px;
+    color: inherit;
+    text-underline-offset: 5px;
 }
 
 #footer .site-footer a:hover {
-	color: #ffffff;
+    color: #ffffff;
 }
 
 @media (max-width: 736px) {
-	#footer .site-footer {
-		flex-direction: column;
-		text-align: center;
-	}
+    #footer .site-footer {
+        flex-direction: column;
+        text-align: center;
+    }
 }
+
