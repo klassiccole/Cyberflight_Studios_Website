@@ -86,7 +86,7 @@ Run it after changing any production secret (Turnstile, Resend, Google keys). It
 npm test
 ```
 
-Runs `node --test tests/*.test.mjs`. Suites cover booking input validation (server-derived prices, package rules, participant lists), the submission pipeline's gates (origin, enabled flag, Turnstile hostname/action, availability outcomes), storage triggers, and orphan cleanup after calendar reconciliation. Suites are plain `node:test`; add a `test('name', ...)` in the relevant file rather than introducing a framework. Current count: 21 tests, all passing.
+Runs `node --test tests/*.test.mjs`. Suites cover booking input validation (server-derived prices, package rules, participant lists), the submission pipeline's gates (origin, enabled flag, Turnstile hostname/action, availability outcomes), storage triggers, and orphan cleanup after calendar reconciliation. Suites are plain `node:test`; add a `test('name', ...)` in the relevant file rather than introducing a framework. Current count: 17 tests, all passing.
 
 The pipeline is calendar-as-truth: a booking request is the Bookings Calendar event plus the owner email — booking_requests rows are no longer written (only reconciled/deleted), and there is no client signature/agreement step (removed).
 
