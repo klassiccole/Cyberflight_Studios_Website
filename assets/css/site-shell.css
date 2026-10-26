@@ -1091,9 +1091,7 @@ body.standalone-page #main article {
 Background
 ============================================================ */
 
-/* Video sources and posters come from HTML.
-The reduced-motion background image is defined here. */
-
+/* Static background image is painted by #bg::after below. */
 #bg {
     transform: scale(1);
     backface-visibility: hidden;
@@ -1143,10 +1141,11 @@ The reduced-motion background image is defined here. */
     z-index: 2;
 }
 
-/* Static Background Fallback */
+/* Static Background (the image and overlay paint below; there is
+no longer any video layer) */
 
 #bg::after {
-    display: none;
+    display: block;
 
     background-image: url("../../images/bg.webp");
     background-position: center;
@@ -1158,37 +1157,6 @@ The reduced-motion background image is defined here. */
 
 body.is-preload #bg::before {
     background-color: #000000;
-}
-
-/* Background Video */
-
-#bg video {
-    position: absolute;
-    inset: 0;
-
-    display: block;
-
-    width: 100%;
-    height: 100%;
-
-    object-fit: cover;
-    object-position: center;
-
-    z-index: 1;
-}
-
-/* Background - Reduced Motion */
-
-@media (prefers-reduced-motion: reduce) {
-
-    #bg video {
-        display: none;
-    }
-
-    #bg::after {
-        display: block;
-    }
-
 }
 
 /* ============================================================

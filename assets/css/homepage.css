@@ -124,8 +124,8 @@ body:not(.standalone-page) #wrapper:before {
 /* Logo: the img carries the disc shape itself. */
 
 #header .logo img {
-    width: 12rem;
-    height: 12rem;
+    width: 10rem;
+    height: 10rem;
     object-fit: contain;
     border-radius: 50%;
     display: block;
@@ -326,17 +326,17 @@ body.is-preload #header .content .inner {
     }
 
     #header .logo {
-        width: 9rem;
-        height: 9rem;
+        width: 7.5rem;
+        height: 7.5rem;
     }
 
-    /* The img must shrink with the wrapper; a 12rem img inside a
+    /* The img must shrink with the wrapper; a 10rem img inside a
        smaller container overflows right and breaks the centered
-       connector-line hierarchy. 9rem is the floor between the 12rem
-       desktop disc and the 7rem mobile disc. */
+       connector-line hierarchy. 7.5rem is the floor between the 10rem
+       desktop disc and the 5.75rem mobile disc. */
     #header .logo img {
-        width: 9rem;
-        height: 9rem;
+        width: 7.5rem;
+        height: 7.5rem;
     }
 
     #header .content .inner {
@@ -392,16 +392,16 @@ body.is-preload #header .content .inner {
     }
 
     #header .logo {
-        width: 7rem;
-        height: 7rem;
+        width: 5.75rem;
+        height: 5.75rem;
         display: flex;
         justify-content: center;
         align-items: center;
     }
 
     #header .logo img {
-        width: 7rem;
-        height: 7rem;
+        width: 5.75rem;
+        height: 5.75rem;
         border-radius: 50%;
     }
 

@@ -34,7 +34,7 @@
 
 		<!-- Styles -->
 		<link rel="stylesheet" href="../assets/css/fontawesome-all.min.css" />
-		<link rel="stylesheet" href="../assets/css/site-shell.css?v=7" />
+		<link rel="stylesheet" href="../assets/css/site-shell.css?v=9" />
 		<link rel="stylesheet" href="../assets/css/site-pages.css?v=6" />
 	<body class="standalone-page floating-boxes">
 
@@ -176,39 +176,7 @@
 		</div>
 
 		<!-- Background -->
-		<div id="bg">
-
-			<video
-				id="homepage-video"
-				muted
-				loop
-				playsinline
-				preload="none"
-				poster="../images/bg.webp"
-				aria-hidden="true">
-			</video>
-
-			<script>
-				window.addEventListener("load", function () {
-
-					const video = document.getElementById("homepage-video");
-
-					const source = document.createElement("source");
-					source.src = "../videos/homepage_background.mp4";
-					source.type = "video/mp4";
-
-					video.appendChild(source);
-					video.load();
-
-					video.addEventListener("canplay", function () {
-						video.play().catch(function () {
-							// Poster remains visible if autoplay is unavailable.
-						});
-					}, { once: true });
-
-				});
-			</script>
-		</div>
+		<div id="bg"></div>
 		
 	<!-- Site JavaScript -->
 		<script src="../assets/js/main.js?v=2"></script>
