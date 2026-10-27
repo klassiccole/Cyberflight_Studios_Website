@@ -62,9 +62,7 @@ and reduce the introductory text size for smaller screens.
 #about .about-showcase img {
     display: block;
     width: 100%;
-    height: 420px;
-    object-fit: cover;
-    object-position: center;
+    height: auto;
 
     border-radius: 12px;
     box-shadow: 0 12px 30px rgba(0, 0, 0, 0.22);
@@ -86,10 +84,6 @@ and reduce the introductory text size for smaller screens.
 
     #about .about-intro {
         font-size: 2rem;
-    }
-
-    #about .about-showcase img {
-        height: 240px;
     }
 
 }
