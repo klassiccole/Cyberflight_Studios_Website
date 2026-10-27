@@ -160,6 +160,23 @@ Services Overview
     margin-bottom: 1rem;
 }
 
+/* Full-width info card (no image) at the end of the grid */
+
+.service-item-coming-soon {
+    grid-column: 1 / -1;
+    text-align: center;
+}
+
+.service-item-coming-soon h3 {
+    font-size: 1.6rem;
+    letter-spacing: 0.1rem;
+    margin-bottom: 0.75rem;
+}
+
+.service-item-coming-soon p {
+    margin-bottom: 0;
+}
+
 /* Services - Tablet */
 
 @media screen and (max-width: 736px) {
@@ -358,7 +375,7 @@ checking both pages.
 
 .packages-package-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 1.5rem;
 }
 
@@ -404,12 +421,6 @@ checking both pages.
 
 .packages-package li {
     margin-bottom: 0.45rem;
-}
-
-.packages-book {
-    display: block;
-    width: 100%;
-    margin-top: auto;
 }
 
 /* Featured Package */
@@ -515,6 +526,12 @@ checking both pages.
         width: 100%;
         min-height: 0;
         margin-right: 0;
+    }
+
+    .packages-package-grid {
+        grid-template-columns: 1fr;
+        max-width: 40rem;
+        margin: 0 auto;
     }
 
     .packages-package-description {
