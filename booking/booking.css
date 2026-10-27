@@ -702,6 +702,12 @@ nav bar under the banner. */
         padding: 24px 0;
     }
 
+    /* Portrait phones get the vertical crop of the background photo,
+       matching #bg::after in site-shell.css. */
+    body.cf-booking .booking-background {
+        background-image: url('../images/bg_mobile.webp');
+    }
+
 /* site-shell.css forces #main to full-bleed width at <=480px (ID specificity
 beats body.cf-booking main); re-assert the booking gutters on phones. */
     body.cf-booking main#main {

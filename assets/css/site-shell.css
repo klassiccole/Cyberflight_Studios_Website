@@ -1159,6 +1159,16 @@ body.is-preload #bg::before {
     background-color: #000000;
 }
 
+/* Portrait phones get the vertical crop of the background photo */
+
+@media screen and (max-width: 736px) {
+
+    #bg::after {
+        background-image: url("../../images/bg_mobile.webp");
+    }
+
+}
+
 /* ============================================================
 Footer
 ============================================================ */
