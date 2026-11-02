@@ -23,7 +23,7 @@
   <link rel="stylesheet" href="../assets/css/fontawesome-all.min.css">
   <link rel="stylesheet" href="../assets/css/site-shell.css?v=7">
   <link rel="stylesheet" href="booking.css?v=47">
-  <script defer src="app.js?v=11"></script>
+  <script defer src="app.js?v=12"></script>
 </head>
 <body class="cf-booking">
   <main id="main">
@@ -45,7 +45,8 @@
                 <option value="">Choose what fits best</option>
                 <option value="graduation">Graduation Portraits</option>
                 <option value="real-estate">Real Estate Photography</option>
-                <!-- Future branches drop in here: headshots, event, wedding, drone... -->
+                <option value="portraits">Professional Portraits</option>
+                <!-- Future branches drop in here: event, wedding, drone... -->
                 <option value="other">Something else</option>
               </select>
             </div>
@@ -89,6 +90,25 @@
                 <div class="field"><label for="re-date">Walkthrough date <span>*</span></label><input type="date" id="re-date" name="reDate"></div>
                 <div class="field"><label for="re-time">Time of day</label><select id="re-time" name="reTime"><option value="flexible">No preference</option><option value="morning">Morning</option><option value="afternoon">Afternoon</option><option value="evening">Evening</option></select></div>
               </div>
+            </fieldset>
+
+            <fieldset id="portraits-branch" hidden>
+              <legend class="sr-only">Professional portraits session</legend>
+              <div class="package-options">
+                <label class="package"><input type="radio" name="ppPackage" value="mini"><span class="package-content"><span class="package-top"><span class="package-title">Mini</span><span class="service-price">$125</span></span><span class="package-description">30 minutes · 10+ professionally edited photos.</span></span></label>
+                <label class="package"><input type="radio" name="ppPackage" value="standard" checked><span class="package-content"><span class="package-top"><span class="package-title">Standard</span><span class="service-price">$200</span></span><span class="package-description">60 – 90 minutes · 20 – 25+ photos.</span></span></label>
+                <label class="package"><input type="radio" name="ppPackage" value="group"><span class="package-content"><span class="package-top"><span class="package-title">Group · <small>FROM</small></span><span class="service-price">$280</span></span><span class="package-description">Portraits for a small group or team. I'll shape the plan for the headcount.</span></span></label>
+              </div>
+              <div class="field range-field" id="pp-count-group" hidden>
+                <label for="pp-count">Roughly how many people? <strong id="pp-count-label">4</strong></label>
+                <input type="range" id="pp-count" name="ppCount" min="2" max="8" step="1" value="4">
+                <div class="range-ends"><span>2</span><span>8</span></div>
+              </div>
+              <div class="field-grid">
+                <div class="field"><label for="pp-date">Preferred date <span>*</span></label><input type="date" id="pp-date" name="ppDate"></div>
+                <div class="field"><label for="pp-time">Time of day</label><select id="pp-time" name="ppTime"><option value="flexible">No preference</option><option value="morning">Morning</option><option value="afternoon">Afternoon</option><option value="evening">Evening</option></select></div>
+              </div>
+              <div class="field"><label for="pp-place">Location <span>*</span></label><input id="pp-place" name="ppPlace" maxlength="200" autocomplete="street-address" placeholder="Where should we meet?"></div>
             </fieldset>
 
             <div class="field" id="other-branch" hidden>

@@ -4,7 +4,7 @@
 const $ = id => document.getElementById(id);
 const form = $('booking-form');
 
-const state = { shot: '', gradPackage: '', rePackage: 't1', count: 4 };
+const state = { shot: '', gradPackage: '', rePackage: 't1', ppPackage: 'standard', count: 4, ppCount: 4 };
 
 /* --- Progressive reveal ---------------------------------------------------
    Branches appear when the master question picks them; hidden required
@@ -29,6 +29,14 @@ function syncGradRequired() {
   $('re-unit').disabled = !re;
   $('re-date').required = re;
   $('re-date').disabled = !re;
+  const pp = state.shot === 'portraits';
+  $('portraits-branch').hidden = !pp;
+  document.querySelectorAll('[name=ppPackage]').forEach(el => el.disabled = !pp);
+  $('pp-place').required = pp;
+  $('pp-place').disabled = !pp;
+  $('pp-date').required = pp;
+  $('pp-date').disabled = !pp;
+  $('pp-count-group').hidden = !(pp && state.ppPackage === 'group');
   $('other-title').required = state.shot === 'other';
   $('other-title').disabled = $('other-branch').hidden = state.shot !== 'other';
   syncPlaceRequired();
@@ -43,6 +51,18 @@ document.querySelectorAll('[name=rePackage]').forEach(el => el.addEventListener(
   state.rePackage = el.value;
   updateSummary();
 }));
+document.querySelectorAll('[name=ppPackage]').forEach(el => el.addEventListener('change', () => {
+  if (el.disabled) return;
+  state.ppPackage = el.value;
+  $('pp-count-group').hidden = state.ppPackage !== 'group';
+  updateSummary();
+}));
+$('pp-count').addEventListener('input', () => {
+  if ($('pp-count-group').hidden) return;
+  state.ppCount = Number($('pp-count').value);
+  $('pp-count-label').textContent = `${state.ppCount}`;
+  updateSummary();
+});
 $('shot-select').addEventListener('change', () => {
   state.shot = $('shot-select').value;
   syncGradRequired();
@@ -74,7 +94,7 @@ $('grad-place').addEventListener('change', () => {
 }));
 
 /* --- Live summary sidebar ------------------------------------------------ */
-const SHOT_LABELS = { graduation: 'Graduation Portraits', 'real-estate': 'Real Estate Photography', other: null };
+const SHOT_LABELS = { graduation: 'Graduation Portraits', 'real-estate': 'Real Estate Photography', portraits: 'Professional Portraits', other: null };
 const PACKAGE_LABELS = {
   mini: { spec: '30 minutes · 10+ photos', price: '$125' },
   standard: { spec: '60 – 90 minutes · 20 – 25+ photos', price: '$200' },
@@ -94,12 +114,14 @@ const PACKAGE_IMAGE = {
   mini: '../images/services/graduation/graduation3.webp',
   standard: '../images/services/graduation/graduation3.webp',
   group: '../images/services/graduation/graduation4.webp',
-  'real-estate': '../images/services/realestate/realestate1.webp'
+  'real-estate': '../images/services/realestate/realestate1.webp',
+  portraits: '../images/services/photography/photo1.webp'
 };
 const SUMMARY_ALTS = {
   none: 'Photography by Cyberflight Studios',
   graduation: 'Graduation portraits by Cyberflight Studios',
-  'real-estate': 'Real estate photography by Cyberflight Studios'
+  'real-estate': 'Real estate photography by Cyberflight Studios',
+  portraits: 'Professional portraits by Cyberflight Studios'
 };
 function updateSummary() {
   let pick = null, whenKey='', timeVal=null, imageKey='none';
@@ -111,6 +133,10 @@ function updateSummary() {
     pick = RE_LABELS[state.rePackage];
     imageKey = 'real-estate';
     whenKey = 're-date'; timeVal = TIME_LABELS[$('re-time').value];
+  } else if (state.shot === 'portraits') {
+    pick = PACKAGE_LABELS[state.ppPackage];
+    imageKey = 'portraits';
+    whenKey = 'pp-date'; timeVal = TIME_LABELS[$('pp-time').value];
   }
   $('summary-title').textContent = state.shot === 'other' && $('other-title').value.trim()
     ? $('other-title').value.trim()
@@ -125,7 +151,7 @@ function updateSummary() {
     $('summary-image').alt = SUMMARY_ALTS[imageKey];
   }
 }
-['grad-date', 'grad-time', 're-date', 're-time'].forEach(id => $(id).addEventListener('change', updateSummary));
+['grad-date', 'grad-time', 're-date', 're-time', 'pp-date', 'pp-time'].forEach(id => $(id).addEventListener('change', updateSummary));
 $('other-title').addEventListener('input', updateSummary);
 
 /* --- Turnstile ----------------------------------------------------------- */
@@ -156,7 +182,8 @@ const SUBMIT_ERRORS = {
   'invalid_phone': 'Please enter a valid phone number.',
   'invalid_shot': 'Please choose a shoot type.',
   'invalid_grad_package': 'Please pick a graduation session.',
-  'invalid_grad_count': 'Group size must be 2 – 8 graduates.',
+  'invalid_portraits_package': 'Please pick a portrait session.',
+  'invalid_grad_count': 'Group size must be 2 – 8.',
   'invalid_date': 'Please choose a valid upcoming date.',
   'invalid_location': 'Please choose a location.',
   'send_failed': "The request couldn't be sent. Try again or reach me directly.",

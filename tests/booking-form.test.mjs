@@ -36,7 +36,7 @@ test('group size rides on the chosen package', () => {
   p.gradCount = '3';
   const b = validateBooking(p);
   assert.equal(b.pack.priceLabel, 'from $280');
-  assert.equal(emailSubject(b), 'Shoot Request — Graduation Portraits — Group Session (3) — Jane Doe');
+  assert.equal(emailSubject(b), 'Shoot Request — Graduation Portraits — Group Session (3 graduates) — Jane Doe');
   p.gradCount = '9';
   assert.throws(() => validateBooking(p), /invalid_grad_count/);
 });
@@ -128,6 +128,35 @@ test('real estate address composes street, unit, city and optional ZIP', () => {
   assert.equal(b.address, '421 Elm St · Suite B, Charlotte, NC 28203');
   const missingCity = realestate(); missingCity.reCity = '';
   assert.throws(() => validateBooking(missingCity), /missing_fields/);
+});
+const portraits = () => ({
+  shot: 'portraits', ppPackage: 'standard', ppDate: '2099-08-01', ppTime: 'morning', ppPlace: 'Uptown Charlotte',
+  name: 'Ana Lead', email: 'ana@example.com', phone: '7045550110', contactPref: 'text', notes: ''
+});
+test('professional portraits mirror graduation pricing', () => {
+  const b = validateBooking(portraits());
+  assert.equal(b.pack.label, 'Standard Session');
+  assert.equal(b.pack.priceLabel, '$200');
+  assert.equal(b.place, 'Uptown Charlotte');
+  assert.equal(emailSubject(b), 'Shoot Request — Professional Portraits — Standard Session — Ana Lead');
+  assert.match(emailText(b), /Session: Standard Session \(\$200\)/);
+  assert.match(emailText(b), /Location: Uptown Charlotte/);
+});
+test('portraits group slider bounds mirror graduation', () => {
+  const g = portraits(); g.ppPackage = 'group';
+  assert.throws(() => validateBooking(g), /invalid_grad_count/);
+  g.ppCount = '6';
+  const gb = validateBooking(g);
+  assert.equal(gb.count, 6);
+  assert.equal(emailSubject(gb), 'Shoot Request — Professional Portraits — Group Session (6 people) — Ana Lead');
+  g.ppCount = '9';
+  assert.throws(() => validateBooking(g), /invalid_grad_count/);
+});
+test('portraits branch requires place and valid date', () => {
+  const p = portraits(); p.ppPlace = '   ';
+  assert.throws(() => validateBooking(p), /missing_fields/);
+  const d = portraits(); d.ppDate = '2099-02-30';
+  assert.throws(() => validateBooking(d), /invalid_date/);
 });
 test('prefers tag rides on the chosen channel', () => {
   const e = grad(); e.contactPref = 'email';
