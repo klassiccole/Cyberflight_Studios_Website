@@ -9,123 +9,109 @@
 			(WebP is mishandled by some share platforms). -->
 		<meta property="og:type" content="website" />
 		<meta property="og:site_name" content="Cyberflight Studios" />
-		<meta property="og:title" content="Book a Session · Cyberflight Studios" />
-		<meta property="og:description" content="Book photography, videography, drone, event, wedding, and real estate coverage with Cyberflight Studios." />
+		<meta property="og:title" content="Book a Shoot · Cyberflight Studios" />
+		<meta property="og:description" content="Tell me about your shoot and I'll reply with a plan and pricing. Photography, videography, and drone media in Charlotte, NC." />
 		<meta property="og:url" content="https://cyberflight.studio/booking/" />
 		<meta property="og:image" content="https://cyberflight.studio/images/favicon.png" />
 		<meta property="og:image:alt" content="Cyberflight Studios logo" />
 		<meta name="twitter:card" content="summary_large_image" />
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="Book photography, videography, drone, event, wedding, and real estate coverage with Cyberflight Studios.">
+  <meta name="description" content="Tell me about your shoot and I'll reply with a plan and pricing. Photography, videography, and drone media in Charlotte, NC.">
   <meta name="robots" content="noindex">
-  <title>Book a Session · Cyberflight Studios</title>
+  <title>Book a Shoot · Cyberflight Studios</title>
   <link rel="icon" href="../images/headers/logo_icon.png">
   <link rel="stylesheet" href="../assets/css/fontawesome-all.min.css">
-  <link rel="stylesheet" href="../assets/css/site-shell.css?v=10">
-  <link rel="stylesheet" href="booking.css?v=46">
-  <script defer src="booking-core.js?v=29"></script>
-  <script defer src="app.js?v=47"></script>
+  <link rel="stylesheet" href="../assets/css/site-shell.css?v=7">
+  <link rel="stylesheet" href="booking.css?v=47">
+  <script defer src="app.js?v=1"></script>
 </head>
 <body class="cf-booking">
   <main id="main">
     <div class="intro-tile-slot" data-include="/components/header.html?v=1" data-back="/services/"></div>
     <div class="booking-layout">
       <div class="workspace">
-        <section class="panel" data-panel="0" aria-labelledby="heading-0">
-          <p class="eyebrow">01 / YOUR SERVICE</p><h2 id="heading-0" tabindex="-1">What are we shooting?</h2><p class="muted">Every booking includes a reviewed time and location before it's confirmed. Pricing shown where it's fixed; larger jobs are quoted by proposal. No payment is collected on this form.</p>
-          <fieldset class="package-options"><legend class="sr-only">Choose your service</legend>
-            <div class="service-slot">
-  <label class="package service" data-service="event"><input type="radio" name="service" value="event"><span class="package-content"><span class="package-top"><span class="package-title">Event Coverage <small>BY PROPOSAL</small></span></span><span class="package-description">Parties, openings, races, conferences — you set the coverage length.</span><span class="specs"><span>2 hours – all day</span><span>Custom quote</span></span></span></label>
-  <div class="package-actions"><button class="primary" type="button" data-service="event">Choose a date <span aria-hidden="true">→</span></button></div>
-</div>
-            <div class="service-slot">
-  <label class="package service" data-service="graduation"><input type="radio" name="service" value="graduation"><span class="package-content"><span class="package-top"><span class="package-title">Graduation Portraits</span><span class="service-price" id="grad-price">$200</span></span><span class="package-description">Cap and gown, campus portraits, individual and group sessions.</span>
-              <span class="service-select-wrap"><span class="service-select-label">Session length<span class="caret" aria-hidden="true">▾</span></span><select id="grad-package" class="service-select" disabled><option value="mini">Mini — 10+ Photos — $125</option><option value="standard" selected>Standard — 20 – 25+ Photos — $200</option><option value="group">Group — 30 – 40+ Photos — from $280</option></select></span>
-            </span></label>
-  <div class="package-actions"><button class="primary" type="button" data-service="graduation">Choose a date <span aria-hidden="true">→</span></button></div>
-</div>
-            <div class="service-slot">
-  <label class="package service" data-service="realestate"><input type="radio" name="service" value="realestate"><span class="package-content"><span class="package-top"><span class="package-title">Real Estate</span><span class="service-price" id="re-price">$150</span></span><span class="package-description">Listings shot clean, bright, and ready for the market.</span>
-              <span class="service-select-wrap"><span class="service-select-label">Property size<span class="caret" aria-hidden="true">▾</span></span><select id="re-tier" class="service-select" disabled><option value="t1">Up to 2,000 sq ft — $150</option><option value="t2">2,000 – 3,500 sq ft — $200</option><option value="t3">Over 3,500 sq ft — from $250</option></select></span>
-            </span></label>
-  <div class="package-actions"><button class="primary" type="button" data-service="realestate">Choose a date <span aria-hidden="true">→</span></button></div>
-</div>
-            <div class="service-slot">
-  <label class="package service" data-service="wedding"><input type="radio" name="service" value="wedding"><span class="package-content"><span class="package-top"><span class="package-title">Weddings <small>BY PROPOSAL</small></span></span><span class="package-description">Full-day coverage built around your timeline. Booked through a proposal meeting.</span><span class="specs"><span>Full day</span><span>1 month+ lead ideal</span></span></span></label>
-  <div class="package-actions"><button class="primary" type="button" data-service="wedding">Choose a date <span aria-hidden="true">→</span></button></div>
-</div>
-          </fieldset>
-                  </section>
-        <section class="panel" data-panel="1" aria-labelledby="heading-1" hidden>
-          <p class="eyebrow">02 / DATE &amp; TIME</p>
-          <h2 id="heading-1" tabindex="-1">Find your time.</h2>
+        <section class="panel" aria-labelledby="form-heading">
+          <p class="eyebrow">SHOOT REQUEST</p>
+          <h2 id="form-heading" tabindex="-1">What are we shooting?</h2>
           <p class="muted">
-            All times are shown in Eastern Time, local to Charlotte, NC.
-            <span id="lead-hint">Any upcoming date works — 30+ days of lead time is ideal.</span>
+            Fill this out and I'll reply with a plan and pricing for your date.
+            No payment happens here — this is the conversation starter.
           </p>
-          <div id="group-options" class="inset" hidden><label for="group-size">How many graduates?</label><select id="group-size"><option value="">Group size — 2 to 4 graduates</option><option value="2">2 graduates — $280 total</option><option value="3">3 graduates — $340 total</option><option value="4">4 graduates — $380 total</option></select><p class="small muted">One organizer signs and pays for the group. Friends arrange their own split.</p></div>
-          <div id="session-schedule">
-            <div class="field"><label for="session-date">Session date</label><input type="date" id="session-date"></div>
-            <div class="time-heading"><h3 id="time-heading">Pick a date above</h3><span class="small muted" id="duration-note"></span></div>
-            <div id="slots" class="slots" role="group" aria-label="Available session start times"></div>
-            <p class="small muted" id="slot-explanation" hidden></p>
-          </div>
-          <div id="event-schedule" hidden>
-            <div class="field"><label for="event-date">Event date</label><input type="date" id="event-date"></div>
-            <div class="field range-field"><label for="event-length">Coverage length: <strong id="event-length-label">1 hour</strong></label><input type="range" id="event-length" min="0" max="9" step="1" value="0"></div>
-          <div id="event-all-day-note" class="inset" hidden><p>Choosing <strong>All Day</strong> books the entire date — no start time is needed. I'll review and confirm; if something is already on my calendar that day, I'll be flagged to review before locking it in.</p></div>
-            <div class="time-heading" id="event-time-ui"><h3 id="event-time-heading">Start times</h3><span class="small muted" id="event-duration-note"></span></div>
-            <div id="event-slots" class="slots" role="group" aria-label="Available event start times"></div>
-            <p class="small muted" id="event-note"></p>
-          </div>
-          <div id="wedding-schedule" hidden>
-            <div class="field"><label for="wedding-date">Wedding date</label><input type="date" id="wedding-date"></div>
-            <div class="inset"><p>At least <strong>1 month of planning is ideal</strong> for weddings; earlier requests may be subject to higher cost. Availability isn't shown here — I reach every couple directly to build the day around your timeline before anything is confirmed.</p></div>
-          </div>
-          <p class="form-error" id="time-error" role="alert"></p>
-          <div class="panel-actions"><button class="secondary" type="button" data-back="0">Back</button><button class="primary" type="button" id="enter-details" disabled>Your details <span aria-hidden="true">→</span></button></div>
-        </section>
-        <section class="panel" data-panel="2" aria-labelledby="heading-2" hidden>
-          <p class="eyebrow">03 / YOUR DETAILS</p><h2 id="heading-2" tabindex="-1">Tell me a little about your session.</h2>
-          <p class="muted">
-              Add your contact details and location, along with anything else
-              worth knowing about the shoot.
-            </p>
-          <form id="details-form">
-            <div class="field-grid"><div class="field"><label for="client-name">Your full name <span>*</span></label><input id="client-name" name="clientName" required maxlength="100" autocomplete="name"></div><div class="field"><label for="client-email">Email address <span>*</span></label><input id="client-email" name="email" type="email" required maxlength="254" autocomplete="email"></div><div class="field"><label for="client-phone">Phone number <span>*</span></label><input id="client-phone" name="phone" type="tel" required maxlength="30" autocomplete="tel"></div></div>
-            <div id="grad-location-group"><div class="field-grid"><div class="field"><label for="location">Preferred location <span>*</span></label><select id="location" name="location" required><option value="">Choose a location</option><option value="UNC Charlotte campus">UNC Charlotte campus</option><option value="Another Charlotte-area location">Another Charlotte-area location</option></select></div></div>
-            <div class="field" id="custom-location-field" hidden><label for="custom-location">Location or address <span>*</span></label><input id="custom-location" maxlength="200" autocomplete="street-address"></div></div>
-            <div class="field" id="address-field" hidden><label id="address-label" for="address">Location or address <span>*</span></label><input id="address" maxlength="200" autocomplete="street-address"></div>
-            <div class="field" id="individual-graduate-field" hidden><label for="graduate-name">Graduate’s name <span class="optional">if different from yours</span></label><input id="graduate-name" maxlength="100"></div>
-            <fieldset id="participants-field" class="participants" hidden><legend>Your group</legend><p class="muted small">Include yourself if you’re one of the graduates.</p><div id="participant-rows"></div></fieldset>
-            <div class="field"><label for="notes">Anything you’d like me to know? <span class="optional">optional</span></label><textarea id="notes" rows="3" maxlength="1500"></textarea></div>
-            <fieldset id="promotion-field"><legend>Portfolio permission</legend><p class="small muted">Optional and separate from your booking. Your choice is recorded with your booking request.</p><label class="choice"><input type="radio" name="promotion" value="yes">Yes, photos of me may be used in the portfolio and promotional materials.</label><label class="choice"><input type="radio" name="promotion" value="no">No, keep identifiable photos of me out of public promotions.</label></fieldset>
-            <div class="inset" id="group-promotion-note" hidden><h3>Each graduate has their own choice.</h3><p>Promotional permission will be collected separately from every graduate. This request covers the group booking and payment responsibility, not anyone else’s permission.</p></div>
-            <p class="small muted">
-              Your location will be reviewed before your session is confirmed.
-            </p>
-            <div class="turnstile-box" id="details-turnstile-box" hidden></div>
-            <p class="form-error" id="details-error" role="alert"></p>
-            <div class="panel-actions"><button class="secondary" type="button" data-back="1">Back</button><button class="primary" type="submit" id="details-submit">Book It <span aria-hidden="true">→</span></button></div>
+          <form id="booking-form">
+            <input type="text" name="website" id="website" class="sr-only" tabindex="-1" autocomplete="off" aria-hidden="true">
+            <div class="field">
+              <label for="shot-select">Type of shoot <span>*</span></label>
+              <select id="shot-select" name="shot" required>
+                <option value="">Choose what fits best</option>
+                <option value="graduation">Graduation Portraits</option>
+                <!-- Future branches drop in here: headshots, real estate, event, wedding, drone... -->
+                <option value="other">Something else</option>
+              </select>
+            </div>
+
+            <fieldset id="grad-branch" hidden>
+              <legend class="sr-only">Graduation session</legend>
+              <div class="package-options" id="grad-packages">
+                <label class="package"><input type="radio" name="grad-package" value="mini"><span class="package-content"><span class="package-top"><span class="package-title">Mini</span><span class="service-price">$125</span></span><span class="package-description">30 minutes · one graduate · 10+ professionally edited photos.</span></span></label>
+                <label class="package"><input type="radio" name="grad-package" value="standard" checked><span class="package-content"><span class="package-top"><span class="package-title">Standard</span><span class="service-price">$200</span></span><span class="package-description">60 – 90 minutes · cap and gown + campus portraits · 20 – 25+ photos.</span></span></label>
+                <label class="package"><input type="radio" name="grad-package" value="group"><span class="package-content"><span class="package-top"><span class="package-title">Group · <small>FROM</small></span><span class="service-price">$280</span></span><span class="package-description">30 – 40+ photos across every graduate. I'll shape the plan for the size of your group.</span></span></label>
+              </div>
+              <div class="field range-field" id="grad-count-group" hidden>
+                <label for="grad-count">Roughly how many graduates? <strong id="grad-count-label">4</strong></label>
+                <input type="range" id="grad-count" name="gradCount" min="2" max="8" step="1" value="4">
+                <div class="range-ends"><span>2</span><span>8</span></div>
+              </div>
+              <div class="field-grid">
+                <div class="field"><label for="grad-date">Preferred date <span>*</span></label><input type="date" id="grad-date" name="gradDate"></div>
+                <div class="field"><label for="grad-time">Time of day</label><select id="grad-time" name="gradTime"><option value="flexible">No preference</option><option value="morning">Morning</option><option value="afternoon">Afternoon</option><option value="evening">Evening</option></select></div>
+              </div>
+              <div class="field"><label for="grad-place">Location <span>*</span></label><select id="grad-place" name="gradPlace"><option value="">Choose a location</option><option value="unccharlotte">UNC Charlotte campus</option><option value="other">Another Charlotte-area location</option></select></div>
+              <div class="field" id="grad-place-custom" hidden><label for="grad-place-text">Location or address <span>*</span></label><input id="grad-place-text" name="gradPlaceText" maxlength="200" autocomplete="street-address"></div>
+            </fieldset>
+
+            <div class="field" id="other-branch" hidden>
+              <label for="other-title">What's the shoot? <span>*</span></label>
+              <input id="other-title" name="otherTitle" maxlength="80" placeholder="e.g. Christmas cards, senior photos, a race...">
+            </div>
+
+            <fieldset id="contact-block" class="contact-block">
+              <legend>Your details</legend>
+              <div class="field-grid">
+                <div class="field"><label for="client-name">Full name <span>*</span></label><input id="client-name" name="name" required maxlength="100" autocomplete="name"></div>
+                <div class="field"><label for="client-email">Email <span>*</span></label><input id="client-email" name="email" type="email" required maxlength="254" autocomplete="email"></div>
+                <div class="field"><label for="client-phone">Phone <span>*</span></label><input id="client-phone" name="phone" type="tel" required maxlength="30" autocomplete="tel"></div>
+                <div class="field"><label for="client-contact">Best way to reply</label><select id="client-contact" name="contactPref"><option value="email">Email</option><option value="text">Text</option><option value="call">Call</option><option value="none" selected>No preference</option></select></div>
+              </div>
+            </fieldset>
+            <div class="field"><label for="notes">Anything you'd like me to know? <span class="optional">optional</span></label><textarea id="notes" name="notes" rows="3" maxlength="1500"></textarea></div>
+            <div class="turnstile-box" id="turnstile-box"></div>
+            <p class="form-error" id="form-error" role="alert"></p>
+            <div class="panel-actions">
+              <p class="small muted">I reply personally, usually within a day.</p>
+              <button class="primary" type="submit" id="submit-button">Send request <span aria-hidden="true">→</span></button>
+            </div>
           </form>
         </section>
       </div>
-      <aside class="summary" aria-label="Your session summary"><img class="summary-image" id="summary-image" src="../images/services/graduation/graduation1.webp" alt="Graduation portrait by Cyberflight Studios"><div class="summary-body"><p class="eyebrow">YOUR SESSION</p><h2 id="summary-title">Choose a service</h2><p class="summary-spec" id="summary-spec">Choose a service to begin.</p><dl><div><dt>Date</dt><dd id="summary-date">Choose a date</dd></div><div><dt id="summary-time-label">Time</dt><dd id="summary-time">Choose a time</dd></div><div><dt>Payment due</dt><dd id="summary-due">48 hours before</dd></div><div class="total"><dt id="summary-price-label">Package price</dt><dd id="summary-price">—</dd></div></dl>
-       <p class="small muted">
-        No payment today. Any applicable tax or travel fees will be confirmed
-        before you finalize your booking.
-      </p>
-
-      <div class="summary-note">
-        <strong>A request, then a confirmation.</strong>
-        <p>
-          I’ll review your requested time and location before confirming your session.
-          Choosing a time does not reserve it.
-        </p>
-      </div>
-      </div>
-    </aside>
-  </div>
+      <aside class="summary" aria-label="Your shoot so far">
+        <img class="summary-image" id="summary-image" src="../images/services/graduation/graduation1.webp" alt="Graduation portrait by Cyberflight Studios">
+        <div class="summary-body">
+          <p class="eyebrow">YOUR SHOOT</p>
+          <h2 id="summary-title">Choose a shoot type</h2>
+          <p class="summary-spec" id="summary-spec">The form adapts once you choose.</p>
+          <dl>
+            <div><dt>Package</dt><dd id="summary-package">—</dd></div>
+            <div><dt>Date</dt><dd id="summary-date">—</dd></div>
+            <div><dt>Time of day</dt><dd id="summary-time">—</dd></div>
+            <div class="total"><dt>Session price</dt><dd id="summary-price">—</dd></div>
+          </dl>
+          <div class="summary-note">
+            <strong>A note, not a quote.</strong>
+            <p>Your session details and total are confirmed with you directly before anything is final.</p>
+          </div>
+        </div>
+      </aside>
+    </div>
     <div data-include="/components/footer.html?v=6"></div>
   </main>
   <noscript>
@@ -133,6 +119,12 @@
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 <script src="/components/html-include.js?v=5"></script>
 
-<div class="booking-background" aria-hidden="true"></div>
+<div class="booking-background" aria-hidden="true">
+  <video autoplay muted loop playsinline
+    poster="../images/bg.webp">
+    <source src="../videos/homepage_background.mp4"
+      type="video/mp4">
+  </video>
+</div>
 </body>
 </html>

@@ -1,6 +1,6 @@
 # Cyberflight Studios Website
 
-Source for [cyberflight.studio](https://cyberflight.studio), the site of Cyberflight Studios LLC (photography, videography, drone media; Charlotte, NC). A dependency-free static site whose booking and contact flows run as Cloudflare Pages Functions backed by Google Calendar (the booking source of truth), D1 (connection storage + request reconciliation), Resend, and Zoho Mail.
+Source for [cyberflight.studio](https://cyberflight.studio), the site of Cyberflight Studios LLC (photography, videography, drone media; Charlotte, NC). A dependency-free static site whose booking and contact flows run as Cloudflare Pages Functions backed by Resend and Zoho Mail.
 
 This file is the operational handbook for humans and coding agents.
 
@@ -8,10 +8,8 @@ This file is the operational handbook for humans and coding agents.
 
 - **Frontend:** hand-written HTML5 / CSS3 / vanilla JS. **No frameworks, no bundler, no build step — by deliberate policy.** Do not add one. Started from the HTML5 UP "Dimension" template, heavily customized.
 - **Backend:** Cloudflare Pages Functions (`functions/api/**`) — serverless edge handlers, no Node server.
-- **Database:** Cloudflare D1 (SQLite) — stores the encrypted Google connection and booking_requests rows used for calendar reconciliation. Schema integrity is enforced in SQL: CHECK constraints, triggers, and single-statement overlap guards, not app code.
-- **Email:** Resend (contact form + booking notifications) → owner mailbox on Zoho Mail. Zoho handles inbound MX/DKIM/SPF for the domain.
+- **Email:** Resend (contact form + shoot-request notifications) → owner mailbox on Zoho Mail. Zoho handles inbound MX/DKIM/SPF for the domain.
 - **Spam protection:** Cloudflare Turnstile on contact and booking forms.
-- **Calendar:** Google Calendar API (service account/OAuth, refresh token encrypted at rest in D1).
 - **Tests:** `node:test` + `assert/strict`, no test framework.
 - **Hosting:** GitHub Pages (static assets) + Cloudflare Pages (functions). Pushing to `main` deploys both automatically.
 
@@ -24,21 +22,16 @@ gallery/                   charlotte, nature, film, cyclegearbikenights,
                            hyattshootingcompetitions, monroeairshow (flat,
                            no intermediate hubs)
 services/                  photography, videography, drone, graduation, realestate
-booking/                   Universal booking flow (the active one)
-  index.html               Step-based booking UI
-  app.js booking-core.js booking.css
-  confirmed/index.html     Post-submission receipt screen
+booking/                   Shoot-request form (the active one)
+  index.html               Adaptive single-page form UI
+  app.js booking.css
+  confirmed/index.html     Static "request received" screen
 functions/api/             Pages Functions (the entire backend)
   contact.js               Contact form: Turnstile verify + Resend send
-  availability.js          Availability lookup (openings calendar + free/busy)
-  booking/submit.js        Booking submission (thin wrapper -> lib/booking-submit.mjs)
-  google/[[path]].js       Google OAuth connect/callback proxy
+  booking/submit.js        Shoot request: Turnstile verify + Resend send
 lib/                       Shared logic imported by the functions
-  booking-input.mjs        Validation, prices, durations, Eastern-UTC math
-  booking-submit.mjs       Submission pipeline (calendar event + owner email)
-  google-auth.mjs          Token decryption + bounded Google JSON fetch
-migrations/                D1 migrations 0001-0004 (plain SQL)
-tests/                     node:test suites (unit + storage + submission)
+  booking-form.mjs         Shoot-request validation + email composition
+tests/                     node:test suites (validation + email templates)
 assets/ images/ videos/    Static media
 components/                Shared HTML fragments + include loader (see "Shared fragments" below)
 _redirects                 Cloudflare Pages redirects (301s from the old
@@ -51,11 +44,10 @@ wrangler.jsonc             Local dev config (bindings; DB id for remote ops)
 
 ```bash
 npm install              # first time only (installs wrangler)
-npm run db:migrate:local # create/update local D1 copy from migrations/
 npm run dev              # serves http://localhost:8788
 ```
 
-`npm run dev` runs the **real stack locally**: static site, `functions/api/*` handlers, and a local D1 copy.
+`npm run dev` runs the **real stack locally**: static site and `functions/api/*` handlers.
 
 ### Environment files (local vs production)
 
@@ -72,11 +64,10 @@ Setup: copy `.dev.vars.example` to each file and fill in real values per environ
 npm run secrets:sync -- <pages-project-name>   # pushes .secrets.production to Cloudflare Pages secrets
 ```
 
-Run it after changing any production secret (Turnstile, Resend, Google keys). It does not touch local `.dev.vars`, and it only adds/updates the keys present in the file. `BOOKING_DB` is a binding (configured in `wrangler.jsonc`), not a secret — keep it out of `.secrets.production`.
+Run it after changing any production secret (Turnstile, Resend). It does not touch local `.dev.vars`, and it only adds/updates the keys present in the file. Bindings live in `wrangler.jsonc`, not secrets — keep them out of `.secrets.production`.
 
 - Turnstile ships official test keys: the secret in `.dev.vars.example` (`1x000...AA`) always passes verification locally, so forms work end to end without real keys.
-- Leave Google/Resend values blank and everything non-mail/calendar still works; the affected endpoints fail with a clear error.
-- The local D1 is disposable: `rm -rf .wrangler/state` resets it, then re-run the migrate script.
+- Leave Resend blank and everything non-mail still works; the affected endpoints fail with a clear error.
 
 **Test everything at localhost before pushing.** Localhost exercises the identical handlers and bindings that production runs. The old failure mode was verifying changes only after deploying to production; do not do that.
 
@@ -86,9 +77,9 @@ Run it after changing any production secret (Turnstile, Resend, Google keys). It
 npm test
 ```
 
-Runs `node --test tests/*.test.mjs`. Suites cover booking input validation (server-derived prices, package rules, participant lists), the submission pipeline's gates (origin, enabled flag, Turnstile hostname/action, availability outcomes), storage triggers, and orphan cleanup after calendar reconciliation. Suites are plain `node:test`; add a `test('name', ...)` in the relevant file rather than introducing a framework. Current count: 17 tests, all passing.
+Runs `node --test tests/*.test.mjs`. Suites cover shoot-request validation (per-branch field rules, group-size bounds, date sanity) and the email templates (subject lines, text body, tappable SMS/call/calendar links). Suites are plain `node:test`; add a `test('name', ...)` in the relevant file rather than introducing a framework.
 
-The pipeline is calendar-as-truth: a booking request is the Bookings Calendar event plus the owner email — booking_requests rows are no longer written (only reconciled/deleted), and there is no client signature/agreement step (removed).
+The shoot request is email-as-truth: validated form data goes straight to the owner mailbox; the real scheduling happens in the follow-up conversation. No database, no calendar integration.
 
 ## Deployment
 
@@ -97,13 +88,7 @@ Push to `main` (GitHub). Two deploy targets pick it up:
 1. **GitHub Pages** serves the static site.
 2. **Cloudflare Pages** builds and serves the Functions; production bindings/secrets are set in the Cloudflare dashboard (Workers & Pages → the site project → Settings → Variables & Secrets), or managed from the repo via `.secrets.production` + `npm run secrets:sync` (see Environment files above).
 
-Remote D1 migrations are run manually, in order, when a new migration file lands:
-
-```bash
-npm run db:migrate:remote
-```
-
-**Cache-busting convention:** every cached asset is loaded with a query version and bumped on change — site-wide assets (`main.js?v=NN`, `site-shell.css?v=NN`, `site-pages.css?v=NN`, `noscript.css?v=NN`), homepage (`homepage.css?v=NN`), booking (`booking.css?v=NN`, `booking-core.js?v=NN`, `app.js?v=NN`), and every `data-include` fragment URL (`components/footer.html?v=NN`). Any change to a cached asset requires bumping that `v=` in the pages that load it — site-wide assets are referenced by ~22 pages, so a bump touches all of them. Forgetting this makes correct fixes appear broken (stale browser JS), and has wasted entire sessions before. Check it every time.
+**Cache-busting convention:** every cached asset is loaded with a query version and bumped on change — site-wide assets (`main.js?v=NN`, `site-shell.css?v=NN`, `site-pages.css?v=NN`, `noscript.css?v=NN`), homepage (`homepage.css?v=NN`), booking (`booking.css?v=NN`, `app.js?v=NN`), and every `data-include` fragment URL (`components/footer.html?v=NN`). Any change to a cached asset requires bumping that `v=` in the pages that load it — site-wide assets are referenced by ~22 pages, so a bump touches all of them. Forgetting this makes correct fixes appear broken (stale browser JS), and has wasted entire sessions before. Check it every time.
 
 ## Shared fragments (components/)
 
