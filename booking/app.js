@@ -82,11 +82,11 @@ const PACKAGE_IMAGE = {
   mini: '../images/services/graduation/graduation3.webp',
   standard: '../images/services/graduation/graduation3.webp',
   group: '../images/services/graduation/graduation4.webp',
-  'real-estate': '../images/services/photography/phototile.webp'
+  'real-estate': '../images/services/realestate/realestate1.webp'
 };
 const SUMMARY_ALTS = {
   none: 'Photography by Cyberflight Studios',
-  'graduation': 'Graduation portraits by Cyberflight Studios',
+  graduation: 'Graduation portraits by Cyberflight Studios',
   'real-estate': 'Real estate photography by Cyberflight Studios'
 };
 function updateSummary() {
