@@ -62,6 +62,7 @@ const TIME_LABELS = { flexible: 'No preference', morning: 'Morning', afternoon: 
 const formatDate = key => key ? new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', weekday: 'short', timeZone: 'UTC' }).format(new Date(key + 'T12:00:00Z')) : null;
 
 const PACKAGE_IMAGE = {
+  none: '../images/services/photography/photo1.webp',
   mini: '../images/services/graduation/graduation3.webp',
   standard: '../images/services/graduation/graduation3.webp',
   group: '../images/services/graduation/graduation4.webp'
@@ -75,9 +76,10 @@ function updateSummary() {
   $('summary-package').textContent = pick ? pick.price : '—';
   $('summary-date').textContent = formatDate($('grad-date').value) ?? '—';
   $('summary-time').textContent = state.shot === 'graduation' ? TIME_LABELS[$('grad-time').value] : '—';
-  if (PACKAGE_IMAGE[state.gradPackage]) {
-    $('summary-image').src = PACKAGE_IMAGE[state.gradPackage];
-    $('summary-image').alt = 'Graduation portraits by Cyberflight Studios';
+  const image = PACKAGE_IMAGE[state.gradPackage || 'none'];
+  if ($('summary-image').src.split('/').pop() !== image.split('/').pop()) {
+    $('summary-image').src = image;
+    $('summary-image').alt = state.gradPackage ? 'Graduation portraits by Cyberflight Studios' : 'Photography by Cyberflight Studios';
   }
 }
 ['grad-date', 'grad-time'].forEach(id => $(id).addEventListener('change', updateSummary));
