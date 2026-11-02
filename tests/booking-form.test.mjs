@@ -106,6 +106,7 @@ test('real estate request validates with tier pricing', () => {
   const h = emailHtml(b);
   assert.match(h, /Address: <strong>/);
   assert.match(h, /Square footage: <strong>/);
+  assert.match(h, /href="https:\/\/www\.google\.com\/maps\/search\/\?api=1&query=421%20Elm%20St/);
   assert.match(h, /location=421\+Elm\+St/);
 });
 test('top-tier real estate keeps its from-price label', () => {
