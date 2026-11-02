@@ -109,13 +109,13 @@ const TIME_LABELS = { flexible: 'No preference', morning: 'Morning', afternoon: 
 const formatDate = key => key ? new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', weekday: 'short', timeZone: 'UTC' }).format(new Date(key + 'T12:00:00Z')) : null;
 
 const PACKAGE_IMAGE = {
-  none: '../images/services/photography/photo1.webp',
+  none: '../images/services/photo1.webp',
   graduation: '../images/services/graduation/graduation3.webp',
   mini: '../images/services/graduation/graduation3.webp',
   standard: '../images/services/graduation/graduation3.webp',
   group: '../images/services/graduation/graduation4.webp',
   'real-estate': '../images/services/realestate/realestate1.webp',
-  portraits: '../images/services/photography/photo1.webp'
+  portraits: '../images/services/photo1.webp'
 };
 const SUMMARY_ALTS = {
   none: 'Photography by Cyberflight Studios',
