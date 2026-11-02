@@ -62,7 +62,7 @@ const TIME_LABELS = { flexible: 'No preference', morning: 'Morning', afternoon: 
 const formatDate = key => key ? new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', weekday: 'short', timeZone: 'UTC' }).format(new Date(key + 'T12:00:00Z')) : null;
 
 const PACKAGE_IMAGE = {
-  none: '../images/services/photography/photo1.webp',
+  graduation: '../images/services/graduation/graduation3.webp',
   mini: '../images/services/graduation/graduation3.webp',
   standard: '../images/services/graduation/graduation3.webp',
   group: '../images/services/graduation/graduation4.webp'
@@ -70,6 +70,10 @@ const PACKAGE_IMAGE = {
 function updateSummary() {
   const gradActive = state.shot === 'graduation';
   const pick = gradActive ? PACKAGE_LABELS[state.gradPackage] : null;
+  /* Graduation's own pickup photo shows as soon as the branch has focus. */
+  const imageKey = gradActive
+    ? (state.gradPackage || 'graduation')
+    : 'none';
   $('summary-title').textContent = state.shot === 'other' && $('other-title').value.trim()
     ? $('other-title').value.trim()
     : (SHOT_LABELS[state.shot] ?? 'Choose a shoot type');
@@ -77,7 +81,7 @@ function updateSummary() {
   $('summary-package').textContent = pick ? pick.price : '—';
   $('summary-date').textContent = formatDate($('grad-date').value) ?? '—';
   $('summary-time').textContent = state.shot === 'graduation' ? TIME_LABELS[$('grad-time').value] : '—';
-  const image = PACKAGE_IMAGE[gradActive ? (state.gradPackage || 'none') : 'none'];
+  const image = PACKAGE_IMAGE[imageKey];
   if ($('summary-image').src.split('/').pop() !== image.split('/').pop()) {
     $('summary-image').src = image;
     $('summary-image').alt = gradActive ? 'Graduation portraits by Cyberflight Studios' : 'Photography by Cyberflight Studios';
