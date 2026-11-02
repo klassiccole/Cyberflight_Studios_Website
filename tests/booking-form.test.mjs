@@ -84,6 +84,7 @@ test('html email carries the tappable actions', () => {
   assert.match(html, /Date: <strong>Sun, Jun 14, 2099<\/strong><\/p><p[^>]*>Time of day: <strong>Afternoon<\/strong>/);
   assert.match(html, /Location: <strong>/);
   assert.match(html, /Session: <strong>/);
+  assert.match(html, /Notes:<\/p><p[^>]*><strong>Morning light preferred\./);
   assert.match(html, /dates=20990614%2F20990615/);
   assert.ok(!/<script/i.test(html));
 });
