@@ -88,6 +88,40 @@ test('html email carries the tappable actions', () => {
   assert.match(html, /dates=20990614%2F20990615/);
   assert.ok(!/<script/i.test(html));
 });
+const realestate = () => ({
+  shot: 'real-estate', rePackage: 't2', reAddress: '421 Elm St, Charlotte, NC',
+  reDate: '2099-07-02', reTime: 'morning', name: 'Tom Agent', email: 'tom@example.com',
+  phone: '704-555-0104', contactPref: 'call', notes: 'Lockbox is in the panel.'
+});
+test('real estate request validates with tier pricing', () => {
+  const b = validateBooking(realestate());
+  assert.equal(b.pack.label, '2,000 – 3,500 sq ft');
+  assert.equal(b.pack.priceLabel, '$200');
+  assert.equal(b.address, '421 Elm St, Charlotte, NC');
+  assert.equal(emailSubject(b), 'Shoot Request — Real Estate Photography — 2,000 – 3,500 sq ft — Tom Agent');
+  const t = emailText(b);
+  assert.match(t, /Address: 421 Elm St/);
+  assert.match(t, /Square footage: 2,000 – 3,500 sq ft \(\$200\)/);
+  assert.ok(!t.includes('Session:'));
+  const h = emailHtml(b);
+  assert.match(h, /Address: <strong>/);
+  assert.match(h, /Square footage: <strong>/);
+  assert.match(h, /location=421\+Elm\+St/);
+});
+test('top-tier real estate keeps its from-price label', () => {
+  const p = realestate(); p.rePackage = 't3';
+  const b = validateBooking(p);
+  assert.equal(b.pack.priceLabel, 'from $250');
+  assert.match(emailSubject(b), /Over 3,500 sq ft — /);
+});
+test('real estate branch requires address, valid tier and date', () => {
+  const a = realestate(); a.reAddress = '  ';
+  assert.throws(() => validateBooking(a), /missing_fields/);
+  const t = realestate(); t.rePackage = 't9';
+  assert.throws(() => validateBooking(t), /invalid_re_tier/);
+  const d = realestate(); d.reDate = '2099-02-30';
+  assert.throws(() => validateBooking(d), /invalid_date/);
+});
 test('prefers tag rides on the chosen channel', () => {
   const e = grad(); e.contactPref = 'email';
   const be = validateBooking(e);

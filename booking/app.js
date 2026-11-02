@@ -4,7 +4,7 @@
 const $ = id => document.getElementById(id);
 const form = $('booking-form');
 
-const state = { shot: '', gradPackage: '', count: 4 };
+const state = { shot: '', gradPackage: '', rePackage: 't1', count: 4 };
 
 /* --- Progressive reveal ---------------------------------------------------
    Branches appear when the master question picks them; hidden required
@@ -14,6 +14,11 @@ function syncGradRequired() {
   const grad = state.shot === 'graduation';
   $('grad-branch').hidden = !grad;
   document.querySelectorAll('[name=grad-package]').forEach(el => el.disabled = !grad);
+  const re = state.shot === 'real-estate';
+  $('real-estate-branch').hidden = !re;
+  document.querySelectorAll('[name=re-package]').forEach(el => el.disabled = !re);
+  $('re-address').disabled = !re;
+  $('re-date').disabled = !re;
   $('other-title').disabled = $('other-branch').hidden = state.shot !== 'other';
   syncPlaceRequired();
 }
@@ -21,6 +26,11 @@ function syncPlaceRequired() {
   const custom = state.shot === 'graduation' && state.place === 'other';
   $('grad-place-text').disabled = $('grad-place-custom').hidden = !custom;
 }
+document.querySelectorAll('[name=re-package]').forEach(el => el.addEventListener('change', () => {
+  if (el.disabled) return;
+  state.rePackage = el.value;
+  updateSummary();
+}));
 $('shot-select').addEventListener('change', () => {
   state.shot = $('shot-select').value;
   syncGradRequired();
@@ -52,11 +62,16 @@ $('grad-place').addEventListener('change', () => {
 }));
 
 /* --- Live summary sidebar ------------------------------------------------ */
-const SHOT_LABELS = { graduation: 'Graduation Portraits', other: null };
+const SHOT_LABELS = { graduation: 'Graduation Portraits', 'real-estate': 'Real Estate Photography', other: null };
 const PACKAGE_LABELS = {
   mini: { spec: '30 minutes · 10+ photos', price: '$125' },
   standard: { spec: '60 – 90 minutes · 20 – 25+ photos', price: '$200' },
   group: { spec: 'Group session · size flexible', price: 'from $280' }
+};
+const RE_LABELS = {
+  t1: { spec: 'Up to 2,000 sq ft', price: '$150' },
+  t2: { spec: '2,000 – 3,500 sq ft', price: '$200' },
+  t3: { spec: 'Over 3,500 sq ft', price: 'from $250' }
 };
 const TIME_LABELS = { flexible: 'No preference', morning: 'Morning', afternoon: 'Afternoon', evening: 'Evening' };
 const formatDate = key => key ? new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', weekday: 'short', timeZone: 'UTC' }).format(new Date(key + 'T12:00:00Z')) : null;
@@ -66,29 +81,39 @@ const PACKAGE_IMAGE = {
   graduation: '../images/services/graduation/graduation3.webp',
   mini: '../images/services/graduation/graduation3.webp',
   standard: '../images/services/graduation/graduation3.webp',
-  group: '../images/services/graduation/graduation4.webp'
+  group: '../images/services/graduation/graduation4.webp',
+  'real-estate': '../images/services/photography/phototile.webp'
+};
+const SUMMARY_ALTS = {
+  none: 'Photography by Cyberflight Studios',
+  'graduation': 'Graduation portraits by Cyberflight Studios',
+  'real-estate': 'Real estate photography by Cyberflight Studios'
 };
 function updateSummary() {
-  const gradActive = state.shot === 'graduation';
-  const pick = gradActive ? PACKAGE_LABELS[state.gradPackage] : null;
-  /* Graduation's own pickup photo shows as soon as the branch has focus. */
-  const imageKey = gradActive
-    ? (state.gradPackage || 'graduation')
-    : 'none';
+  let pick = null, whenKey='', timeVal=null, imageKey='none';
+  if (state.shot === 'graduation') {
+    pick = PACKAGE_LABELS[state.gradPackage];
+    imageKey = state.gradPackage || 'graduation';
+    whenKey = 'grad-date'; timeVal = TIME_LABELS[$('grad-time').value];
+  } else if (state.shot === 'real-estate') {
+    pick = RE_LABELS[state.rePackage];
+    imageKey = 'real-estate';
+    whenKey = 're-date'; timeVal = TIME_LABELS[$('re-time').value];
+  }
   $('summary-title').textContent = state.shot === 'other' && $('other-title').value.trim()
     ? $('other-title').value.trim()
     : (SHOT_LABELS[state.shot] ?? 'Choose a shoot type');
   $('summary-spec').textContent = pick ? pick.spec : 'The form adapts once you choose.';
   $('summary-package').textContent = pick ? pick.price : '—';
-  $('summary-date').textContent = formatDate($('grad-date').value) ?? '—';
-  $('summary-time').textContent = state.shot === 'graduation' ? TIME_LABELS[$('grad-time').value] : '—';
+  $('summary-date').textContent = whenKey ? (formatDate($(whenKey).value) ?? '—') : '—';
+  $('summary-time').textContent = timeVal ?? '—';
   const image = PACKAGE_IMAGE[imageKey];
   if ($('summary-image').src.split('/').pop() !== image.split('/').pop()) {
     $('summary-image').src = image;
-    $('summary-image').alt = gradActive ? 'Graduation portraits by Cyberflight Studios' : 'Photography by Cyberflight Studios';
+    $('summary-image').alt = SUMMARY_ALTS[imageKey];
   }
 }
-['grad-date', 'grad-time'].forEach(id => $(id).addEventListener('change', updateSummary));
+['grad-date', 'grad-time', 're-date', 're-time'].forEach(id => $(id).addEventListener('change', updateSummary));
 $('other-title').addEventListener('input', updateSummary);
 
 /* --- Turnstile ----------------------------------------------------------- */

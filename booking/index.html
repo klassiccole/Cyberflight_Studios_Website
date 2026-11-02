@@ -23,7 +23,7 @@
   <link rel="stylesheet" href="../assets/css/fontawesome-all.min.css">
   <link rel="stylesheet" href="../assets/css/site-shell.css?v=7">
   <link rel="stylesheet" href="booking.css?v=47">
-  <script defer src="app.js?v=6"></script>
+  <script defer src="app.js?v=7"></script>
 </head>
 <body class="cf-booking">
   <main id="main">
@@ -44,7 +44,8 @@
               <select id="shot-select" name="shot" required>
                 <option value="">Choose what fits best</option>
                 <option value="graduation">Graduation Portraits</option>
-                <!-- Future branches drop in here: headshots, real estate, event, wedding, drone... -->
+                <option value="real-estate">Real Estate Photography</option>
+                <!-- Future branches drop in here: headshots, event, wedding, drone... -->
                 <option value="other">Something else</option>
               </select>
             </div>
@@ -67,6 +68,20 @@
               </div>
               <div class="field"><label for="grad-place">Location <span>*</span></label><select id="grad-place" name="gradPlace"><option value="">Choose a location</option><option value="unccharlotte">UNC Charlotte campus</option><option value="other">Another Charlotte-area location</option></select></div>
               <div class="field" id="grad-place-custom" hidden><label for="grad-place-text">Location or address <span>*</span></label><input id="grad-place-text" name="gradPlaceText" maxlength="200" autocomplete="street-address"></div>
+            </fieldset>
+
+            <fieldset id="real-estate-branch" hidden>
+              <legend class="sr-only">Real estate session</legend>
+              <div class="field"><label for="re-address">Property address <span>*</span></label><input id="re-address" name="reAddress" maxlength="200" autocomplete="street-address"></div>
+              <div class="package-options">
+                <label class="package"><input type="radio" name="re-package" value="t1" checked><span class="package-content"><span class="package-top"><span class="package-title">Up to 2,000 sq ft</span><span class="service-price">$150</span></span><span class="package-description">Compact listing ready for the market.</span></span></label>
+                <label class="package"><input type="radio" name="re-package" value="t2"><span class="package-content"><span class="package-top"><span class="package-title">2,000 – 3,500 sq ft</span><span class="service-price">$200</span></span><span class="package-description">The mainline listing tier.</span></span></label>
+                <label class="package"><input type="radio" name="re-package" value="t3"><span class="package-content"><span class="package-top"><span class="package-title">Over 3,500 sq ft <small>FROM</small></span><span class="service-price">$250</span></span><span class="package-description">Estates and large properties.</span></span></label>
+              </div>
+              <div class="field-grid">
+                <div class="field"><label for="re-date">Walkthrough date <span>*</span></label><input type="date" id="re-date" name="reDate"></div>
+                <div class="field"><label for="re-time">Time of day</label><select id="re-time" name="reTime"><option value="flexible">No preference</option><option value="morning">Morning</option><option value="afternoon">Afternoon</option><option value="evening">Evening</option></select></div>
+              </div>
             </fieldset>
 
             <div class="field" id="other-branch" hidden>
