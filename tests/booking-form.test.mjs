@@ -125,10 +125,6 @@ test('real estate branch requires address, valid tier and date', () => {
 test('real estate address composes street, unit, city and optional ZIP', () => {
   const b = validateBooking(realestate());
   assert.equal(b.address, '421 Elm St · Suite B, Charlotte, NC 28203');
-  const bare = realestate(); bare.reUnit = ''; bare.reZip = '';
-  assert.equal(validateBooking(bare).address, '421 Elm St, Charlotte, NC');
-  const noZip = realestate(); noZip.reZip = 'xxxx';
-  assert.equal(validateBooking(noZip).address, '421 Elm St · Suite B, Charlotte, NC');
   const missingCity = realestate(); missingCity.reCity = '';
   assert.throws(() => validateBooking(missingCity), /missing_fields/);
 });

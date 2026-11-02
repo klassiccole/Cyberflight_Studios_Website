@@ -22,10 +22,11 @@ function syncGradRequired() {
   document.querySelectorAll('[name=rePackage]').forEach(el => el.disabled = !re);
   $('re-address').required = re;
   $('re-city').required = re;
+  $('re-zip').required = re;
   $('re-address').disabled = !re;
   $('re-city').disabled = !re;
-  $('re-unit').disabled = !re;
   $('re-zip').disabled = !re;
+  $('re-unit').disabled = !re;
   $('re-date').required = re;
   $('re-date').disabled = !re;
   $('other-title').required = state.shot === 'other';
