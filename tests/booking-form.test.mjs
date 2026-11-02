@@ -81,7 +81,9 @@ test('html email carries the tappable actions', () => {
   assert.match(html, /tel:\+17045550100/);
   assert.match(html, /calendar\.google\.com\/calendar\/render\?action=TEMPLATE/);
   assert.match(html, /add=jane%40example\.com|add=jane@example.com/);
-  assert.match(html, /Date: Sun, Jun 14, 2099<br>Time of day: Afternoon</);
+  assert.match(html, /Date: <strong>Sun, Jun 14, 2099<\/strong><br>Time of day: <strong>Afternoon<\/strong>/);
+  assert.match(html, /Location: <strong>/);
+  assert.match(html, /Session: <strong>/);
   assert.match(html, /dates=20990614%2F20990615/);
   assert.ok(!/<script/i.test(html));
 });
