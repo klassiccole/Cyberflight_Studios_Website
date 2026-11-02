@@ -77,7 +77,7 @@ test('html email carries the tappable actions', () => {
   const b = validateBooking(grad());
   const html = emailHtml(b);
   assert.match(html, /Name: <strong>Jane Doe<\/strong><\/p><p[^>]*>Email: <strong>jane@example\.com<\/strong><\/p><p[^>]*>Phone: <strong>\(704\) 555-0100<\/strong> — prefers text/);
-  assert.match(html, /href="sms:\+17045550100"/);
+  assert.match(html, /href="https:\/\/voice\.google\.com\/web\/sms\/17045550100"/);
   assert.match(html, /tel:\+17045550100/);
   assert.match(html, /calendar\.google\.com\/calendar\/render\?action=TEMPLATE/);
   assert.match(html, /add=jane%40example\.com|add=jane@example.com/);
