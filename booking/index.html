@@ -23,7 +23,7 @@
   <link rel="stylesheet" href="../assets/css/fontawesome-all.min.css">
   <link rel="stylesheet" href="../assets/css/site-shell.css?v=7">
   <link rel="stylesheet" href="booking.css?v=47">
-  <script defer src="app.js?v=8"></script>
+  <script defer src="app.js?v=9"></script>
 </head>
 <body class="cf-booking">
   <main id="main">
@@ -53,9 +53,9 @@
             <fieldset id="grad-branch" hidden>
               <legend class="sr-only">Graduation session</legend>
               <div class="package-options" id="grad-packages">
-                <label class="package"><input type="radio" name="grad-package" value="mini"><span class="package-content"><span class="package-top"><span class="package-title">Mini</span><span class="service-price">$125</span></span><span class="package-description">30 minutes · one graduate · 10+ professionally edited photos.</span></span></label>
-                <label class="package"><input type="radio" name="grad-package" value="standard" checked><span class="package-content"><span class="package-top"><span class="package-title">Standard</span><span class="service-price">$200</span></span><span class="package-description">60 – 90 minutes · cap and gown + campus portraits · 20 – 25+ photos.</span></span></label>
-                <label class="package"><input type="radio" name="grad-package" value="group"><span class="package-content"><span class="package-top"><span class="package-title">Group · <small>FROM</small></span><span class="service-price">$280</span></span><span class="package-description">30 – 40+ photos across every graduate. I'll shape the plan for the size of your group.</span></span></label>
+                <label class="package"><input type="radio" name="gradPackage" value="mini"><span class="package-content"><span class="package-top"><span class="package-title">Mini</span><span class="service-price">$125</span></span><span class="package-description">30 minutes · one graduate · 10+ professionally edited photos.</span></span></label>
+                <label class="package"><input type="radio" name="gradPackage" value="standard" checked><span class="package-content"><span class="package-top"><span class="package-title">Standard</span><span class="service-price">$200</span></span><span class="package-description">60 – 90 minutes · cap and gown + campus portraits · 20 – 25+ photos.</span></span></label>
+                <label class="package"><input type="radio" name="gradPackage" value="group"><span class="package-content"><span class="package-top"><span class="package-title">Group · <small>FROM</small></span><span class="service-price">$280</span></span><span class="package-description">30 – 40+ photos across every graduate. I'll shape the plan for the size of your group.</span></span></label>
               </div>
               <div class="field range-field" id="grad-count-group" hidden>
                 <label for="grad-count">Roughly how many graduates? <strong id="grad-count-label">4</strong></label>
@@ -74,9 +74,9 @@
               <legend class="sr-only">Real estate session</legend>
               <div class="field"><label for="re-address">Property address <span>*</span></label><input id="re-address" name="reAddress" maxlength="200" autocomplete="street-address"></div>
               <div class="package-options">
-                <label class="package"><input type="radio" name="re-package" value="t1" checked><span class="package-content"><span class="package-top"><span class="package-title">Up to 2,000 sq ft</span><span class="service-price">$150</span></span><span class="package-description">Compact listing ready for the market.</span></span></label>
-                <label class="package"><input type="radio" name="re-package" value="t2"><span class="package-content"><span class="package-top"><span class="package-title">2,000 – 3,500 sq ft</span><span class="service-price">$200</span></span><span class="package-description">The mainline listing tier.</span></span></label>
-                <label class="package"><input type="radio" name="re-package" value="t3"><span class="package-content"><span class="package-top"><span class="package-title">Over 3,500 sq ft <small>FROM</small></span><span class="service-price">$250</span></span><span class="package-description">Estates and large properties.</span></span></label>
+                <label class="package"><input type="radio" name="rePackage" value="t1" checked><span class="package-content"><span class="package-top"><span class="package-title">Up to 2,000 sq ft</span><span class="service-price">$150</span></span><span class="package-description">Compact listing ready for the market.</span></span></label>
+                <label class="package"><input type="radio" name="rePackage" value="t2"><span class="package-content"><span class="package-top"><span class="package-title">2,000 – 3,500 sq ft</span><span class="service-price">$200</span></span><span class="package-description">The mainline listing tier.</span></span></label>
+                <label class="package"><input type="radio" name="rePackage" value="t3"><span class="package-content"><span class="package-top"><span class="package-title">Over 3,500 sq ft <small>FROM</small></span><span class="service-price">$250</span></span><span class="package-description">Estates and large properties.</span></span></label>
               </div>
               <div class="field-grid">
                 <div class="field"><label for="re-date">Walkthrough date <span>*</span></label><input type="date" id="re-date" name="reDate"></div>

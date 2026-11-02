@@ -13,20 +13,27 @@ const state = { shot: '', gradPackage: '', rePackage: 't1', count: 4 };
 function syncGradRequired() {
   const grad = state.shot === 'graduation';
   $('grad-branch').hidden = !grad;
-  document.querySelectorAll('[name=grad-package]').forEach(el => el.disabled = !grad);
+  document.querySelectorAll('[name=gradPackage]').forEach(el => el.disabled = !grad);
+  /* Branch-required fields carry required while visible, so the browser
+     pins the missing one instead of a generic submit error. */
+  $('grad-date').required = grad;
   const re = state.shot === 'real-estate';
   $('real-estate-branch').hidden = !re;
-  document.querySelectorAll('[name=re-package]').forEach(el => el.disabled = !re);
+  document.querySelectorAll('[name=rePackage]').forEach(el => el.disabled = !re);
+  $('re-address').required = re;
+  $('re-date').required = re;
   $('re-address').disabled = !re;
   $('re-date').disabled = !re;
+  $('other-title').required = state.shot === 'other';
   $('other-title').disabled = $('other-branch').hidden = state.shot !== 'other';
   syncPlaceRequired();
 }
 function syncPlaceRequired() {
   const custom = state.shot === 'graduation' && state.place === 'other';
+  $('grad-place-text').required = custom;
   $('grad-place-text').disabled = $('grad-place-custom').hidden = !custom;
 }
-document.querySelectorAll('[name=re-package]').forEach(el => el.addEventListener('change', () => {
+document.querySelectorAll('[name=rePackage]').forEach(el => el.addEventListener('change', () => {
   if (el.disabled) return;
   state.rePackage = el.value;
   updateSummary();
@@ -36,7 +43,7 @@ $('shot-select').addEventListener('change', () => {
   syncGradRequired();
   updateSummary();
 });
-document.querySelectorAll('[name=grad-package]').forEach(el => el.addEventListener('change', () => {
+document.querySelectorAll('[name=gradPackage]').forEach(el => el.addEventListener('change', () => {
   if (el.disabled) return;
   state.gradPackage = el.value;
   $('grad-count-group').hidden = state.gradPackage !== 'group';
