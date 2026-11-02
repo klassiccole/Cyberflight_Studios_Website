@@ -76,12 +76,12 @@ test('unknown shoot requests keep the title as label, no date row', () => {
 test('html email carries the tappable actions', () => {
   const b = validateBooking(grad());
   const html = emailHtml(b);
-  assert.match(html, /Name: <strong>Jane Doe<\/strong><br>Email: <strong>jane@example\.com<\/strong><br>Phone: <strong>\(704\) 555-0100<\/strong> — prefers text/);
+  assert.match(html, /Name: <strong>Jane Doe<\/strong><\/p><p[^>]*>Email: <strong>jane@example\.com<\/strong><\/p><p[^>]*>Phone: <strong>\(704\) 555-0100<\/strong> — prefers text/);
   assert.match(html, /sms:\+17045550100\?body=/);
   assert.match(html, /tel:\+17045550100/);
   assert.match(html, /calendar\.google\.com\/calendar\/render\?action=TEMPLATE/);
   assert.match(html, /add=jane%40example\.com|add=jane@example.com/);
-  assert.match(html, /Date: <strong>Sun, Jun 14, 2099<\/strong><br>Time of day: <strong>Afternoon<\/strong>/);
+  assert.match(html, /Date: <strong>Sun, Jun 14, 2099<\/strong><\/p><p[^>]*>Time of day: <strong>Afternoon<\/strong>/);
   assert.match(html, /Location: <strong>/);
   assert.match(html, /Session: <strong>/);
   assert.match(html, /dates=20990614%2F20990615/);
