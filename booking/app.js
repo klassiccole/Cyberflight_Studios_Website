@@ -68,7 +68,8 @@ const PACKAGE_IMAGE = {
   group: '../images/services/graduation/graduation4.webp'
 };
 function updateSummary() {
-  const pick = PACKAGE_LABELS[state.gradPackage];
+  const gradActive = state.shot === 'graduation';
+  const pick = gradActive ? PACKAGE_LABELS[state.gradPackage] : null;
   $('summary-title').textContent = state.shot === 'other' && $('other-title').value.trim()
     ? $('other-title').value.trim()
     : (SHOT_LABELS[state.shot] ?? 'Choose a shoot type');
@@ -76,10 +77,10 @@ function updateSummary() {
   $('summary-package').textContent = pick ? pick.price : '—';
   $('summary-date').textContent = formatDate($('grad-date').value) ?? '—';
   $('summary-time').textContent = state.shot === 'graduation' ? TIME_LABELS[$('grad-time').value] : '—';
-  const image = PACKAGE_IMAGE[state.gradPackage || 'none'];
+  const image = PACKAGE_IMAGE[gradActive ? (state.gradPackage || 'none') : 'none'];
   if ($('summary-image').src.split('/').pop() !== image.split('/').pop()) {
     $('summary-image').src = image;
-    $('summary-image').alt = state.gradPackage ? 'Graduation portraits by Cyberflight Studios' : 'Photography by Cyberflight Studios';
+    $('summary-image').alt = gradActive ? 'Graduation portraits by Cyberflight Studios' : 'Photography by Cyberflight Studios';
   }
 }
 ['grad-date', 'grad-time'].forEach(id => $(id).addEventListener('change', updateSummary));
