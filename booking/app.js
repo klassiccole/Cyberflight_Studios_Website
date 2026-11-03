@@ -94,9 +94,9 @@ const PACKAGE_LABELS = {
   group: { spec: 'Group session · size flexible', price: 'from $280' }
 };
 const RE_LABELS = {
-  t1: { spec: 'Up to 2,000 sq ft', price: '$150' },
-  t2: { spec: '2,000 – 3,500 sq ft', price: '$200' },
-  t3: { spec: 'Over 3,500 sq ft', price: 'from $250' }
+  t1: { spec: 'Up to 2,000 sq ft · 30+ photos', price: '$150' },
+  t2: { spec: '2,000 – 3,500 sq ft · 45+ photos', price: '$200' },
+  t3: { spec: 'Over 3,500 sq ft · 60+ photos', price: 'from $250' }
 };
 const TIME_LABELS = { flexible: 'No preference', morning: 'Morning', afternoon: 'Afternoon', evening: 'Evening' };
 const formatDate = key => key ? new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', weekday: 'short', timeZone: 'UTC' }).format(new Date(key + 'T12:00:00Z')) : null;

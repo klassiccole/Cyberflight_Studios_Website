@@ -21,8 +21,8 @@ about/ contact/ gallery/   Static pages, one dir + index.html per clean URL
 gallery/                   charlotte, nature, film, cyclegearbikenights,
                            hyattshootingcompetitions, monroeairshow (flat,
                            no intermediate hubs)
-services/                  Graduation, Real Estate, Drone (a Professional
-                           Portraits page is planned)
+services/                  Graduation, Professional Portraits, Real Estate,
+                           Drone
 booking/                   Shoot-request form (the only booking flow)
   index.html               Adaptive single-page form: shoot-type branches
                            (Graduation / Real Estate / Professional Portraits
@@ -176,7 +176,7 @@ All read via `env.*` inside Functions; set in Cloudflare dashboard (prod) or `.d
 - `site-shell.css` — shared blueprint, loads on all 20 pages: reset, fonts, typography, background, header tile, footer, page states, the floating-box layout and the unified nav bar. Homepage and booking load it, so it must stay page-agnostic.
 - `site-pages.css` — content-page layer (about / gallery / services / contact / privacy / terms + the footer fragment styling). The homepage and booking pages must never be affected by it.
 - `homepage.css` / `booking.css` — the two single-purpose files. The homepage footer is intentionally its own copy; keep it in sync manually.
-- **Shared page family:** the `.packages-page` CSS family (intro, tagline, package-card tiles, information, CTA) is used by BOTH `services/graduation` and `services/realestate` — do not rename or trim members without checking both pages.
+- **Shared page family:** the `.packages-page` CSS family (intro, tagline, package-card tiles, information, CTA) is used by `services/graduation`, `services/realestate`, and `services/portraits` — do not rename or trim members without checking all three pages.
 - **Booking form rhythm:** spacing is owned by one rule set in `booking.css` ("Vertical rhythm"): 24px between direct children of `#booking-form`, 12px between fields inside a block, and a block's last field contributes no margin (blocks own their spacing). Never adjust individual seams; new branches inherit the model.
 
 ## Working conventions for agents (learned the hard way)

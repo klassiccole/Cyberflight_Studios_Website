@@ -317,16 +317,17 @@ under the floating-boxes layout. */
 }
 
 /* ============================================================
-Service Packages (graduation + real estate)
+Service Packages (graduation + portraits + real estate)
 ============================================================ */
 
 /*
-SHARED PAGE FAMILY: the .packages-page class family is used by BOTH
-services/graduation and services/realestate (which reuse the full
-template: intro, tagline, package card tiles, information, CTA).
+SHARED PAGE FAMILY: the .packages-page class family is used by
+services/graduation, services/realestate, and services/portraits (which
+reuse the full template: intro, tagline, package card tiles,
+information, CTA).
 Some members (.packages-showcase, .packages-info-image) currently
-render only on graduation. Do not rename or trim members without
-checking both pages.
+render only on graduation and portraits. Do not rename or trim members
+without checking all three pages.
 */
 
 .packages-page .packages-intro {
@@ -348,6 +349,13 @@ checking both pages.
     border-radius: 12px;
     border: 1px solid rgba(255, 255, 255, 0.18);
     box-shadow: 0 12px 30px rgba(0, 0, 0, 0.22);
+}
+
+/* Real estate: the intro copy is shorter than the default 420px image,
+   so the image is matched to the text instead of stretching the panel
+   and leaving dead space above and below the copy. */
+#service-realestate .packages-intro-image img {
+    height: 380px;
 }
 
 .packages-page .packages-label {
@@ -402,12 +410,19 @@ checking both pages.
     gap: 1.5rem;
 }
 
+/* Two-card variant (services/portraits): centers the pair instead of
+   leaving an empty third column. The tablet rule below still stacks it. */
+.packages-package-grid-duo {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-width: 46rem;
+    margin: 0 auto;
+}
+
 .packages-package {
     position: relative;
     display: flex;
     flex-direction: column;
     width: 100%;
-    min-height: 30rem;
     padding: 1.75rem;
 
     background: rgba(255, 255, 255, 0.05);
@@ -438,8 +453,11 @@ checking both pages.
 }
 
 .packages-package ul {
-    flex-grow: 1;
     margin-bottom: 1.5rem;
+}
+
+.packages-package ul:last-child {
+    margin-bottom: 0;
 }
 
 .packages-package li {
@@ -591,6 +609,10 @@ checking both pages.
         height: auto;
         aspect-ratio: 4 / 5;
         object-fit: cover;
+    }
+
+    #service-realestate .packages-intro-image img {
+        height: auto;
     }
 
 /* Swipeable Package Cards */
