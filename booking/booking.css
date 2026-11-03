@@ -135,9 +135,24 @@ body.cf-booking fieldset > :last-child > :last-child,
 body.cf-booking fieldset > .field:last-child {
     margin-bottom:0
 }
-/* Your-details → notes seam: one uniform gap, owned here, not stacked. */
-body.cf-booking #contact-block {
-    margin-bottom:12px
+
+/* --- Vertical rhythm: one gap model for the whole form -------------------
+   - Direct children of the form separate by one 24px block gap.
+   - Fields inside a block stack 12px; a block's last field contributes 0
+     so block spacing is owned by the block, never stacked on top of it.
+   - No seams are adjusted individually; adding a branch never adds CSS. */
+body.cf-booking #booking-form > * {
+    margin:0 0 24px
+}
+body.cf-booking #booking-form > .panel-actions {
+    margin-top:24px;
+    margin-bottom:0
+}
+body.cf-booking #booking-form fieldset .field {
+    margin:0 0 12px
+}
+body.cf-booking #booking-form fieldset .package-options {
+    margin-top:0
 }
 body.cf-booking legend {
     font-size:1.1rem;
