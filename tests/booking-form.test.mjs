@@ -152,6 +152,14 @@ test('portraits branch requires place and valid date', () => {
   const d = portraits(); d.ppDate = '2099-02-30';
   assert.throws(() => validateBooking(d), /invalid_date/);
 });
+test('unsure portraits visitors hand location picking to Cole', () => {
+  const p = portraits();
+  p.ppPlace = '';
+  p.ppPlaceUnsure = 'on';
+  const b = validateBooking(p);
+  assert.equal(b.place, "I'll let you suggest a few places. I can't think of any.");
+  assert.match(emailText(b), /Location: I'll let you suggest/);
+});
 test('prefers tag rides on the chosen channel', () => {
   const e = grad(); e.contactPref = 'email';
   const be = validateBooking(e);

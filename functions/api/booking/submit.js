@@ -28,7 +28,7 @@ export async function onRequest({ request, env }) {
     if (verification.success !== true) return json({error: 'verification_failed'}, 403);
 
     const plain = {};
-    for (const key of ['shot', 'gradPackage', 'rePackage', 'reAddress', 'reUnit', 'reCity', 'reZip', 'reDate', 'reTime', 'ppPackage', 'ppCount', 'ppDate', 'ppTime', 'ppPlace', 'gradCount', 'gradDate', 'gradTime', 'gradPlace', 'gradPlaceText', 'otherTitle', 'name', 'email', 'phone', 'contactPref', 'notes']) {
+    for (const key of ['shot', 'gradPackage', 'rePackage', 'reAddress', 'reUnit', 'reCity', 'reZip', 'reDate', 'reTime', 'ppPackage', 'ppCount', 'ppDate', 'ppTime', 'ppPlace', 'ppPlaceUnsure', 'gradCount', 'gradDate', 'gradTime', 'gradPlace', 'gradPlaceText', 'otherTitle', 'name', 'email', 'phone', 'contactPref', 'notes']) {
       const value = form.get(key);
       plain[key] = value === null ? undefined : String(value);
     }

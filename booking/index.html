@@ -23,7 +23,7 @@
   <link rel="stylesheet" href="../assets/css/fontawesome-all.min.css">
   <link rel="stylesheet" href="../assets/css/site-shell.css?v=7">
   <link rel="stylesheet" href="booking.css?v=47">
-  <script defer src="app.js?v=16"></script>
+  <script defer src="app.js?v=17"></script>
 </head>
 <body class="cf-booking">
   <main id="main">
@@ -102,7 +102,9 @@
                 <div class="field"><label for="pp-date">Preferred date <span>*</span></label><input type="date" id="pp-date" name="ppDate"></div>
                 <div class="field"><label for="pp-time">Time of day</label><select id="pp-time" name="ppTime"><option value="flexible">No preference</option><option value="morning">Morning</option><option value="afternoon">Afternoon</option><option value="evening">Evening</option></select></div>
               </div>
-              <div class="field"><label for="pp-place">Location <span>*</span></label><input id="pp-place" name="ppPlace" maxlength="200" autocomplete="street-address" placeholder="Where should we meet?"></div>
+              <div class="field" id="pp-place-field"><label for="pp-place">Location <span>*</span></label><input id="pp-place" name="ppPlace" maxlength="200" autocomplete="street-address" placeholder="Where should we meet?">
+                <label class="choice"><input type="checkbox" id="pp-place-unsure" name="ppPlaceUnsure"> I'm not sure yet — suggest a few places for me</label>
+              </div>
             </fieldset>
 
             <div class="field" id="other-branch" hidden>
