@@ -154,6 +154,11 @@ body.cf-booking #booking-form fieldset .field {
 body.cf-booking #booking-form fieldset .package-options {
     margin-top:0
 }
+/* Card groups that open a block (graduation) sit flush; card groups that
+   follow other inputs (real estate) inherit the standard field gap. */
+body.cf-booking #booking-form fieldset .package-options:not(:first-child) {
+    margin-top:12px
+}
 body.cf-booking legend {
     font-size:1.1rem;
     font-weight:600;
