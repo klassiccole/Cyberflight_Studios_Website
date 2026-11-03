@@ -47,6 +47,9 @@ function syncPpPlace() {
   $('pp-place').required = pp && !unsure;
   $('pp-place').disabled = !pp || unsure;
   $('pp-place-unsure').disabled = !pp;
+  /* The * only marks a truly required field. */
+  const reqStar = document.querySelector('#pp-place-field label[for=pp-place] span:not(.optional)');
+  if (reqStar) reqStar.hidden = unsure;
 }
 $('pp-place-unsure').addEventListener('change', syncPpPlace);
 function syncPlaceRequired() {
