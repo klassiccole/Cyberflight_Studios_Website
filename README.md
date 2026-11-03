@@ -21,22 +21,33 @@ about/ contact/ gallery/   Static pages, one dir + index.html per clean URL
 gallery/                   charlotte, nature, film, cyclegearbikenights,
                            hyattshootingcompetitions, monroeairshow (flat,
                            no intermediate hubs)
-services/                  portraits? (TBD), drone, graduation, realestate
-booking/                   Shoot-request form (the active one)
-  index.html               Adaptive single-page form UI
-  app.js booking.css
-  confirmed/index.html     Static "request received" screen
+services/                  Graduation, Real Estate, Drone (a Professional
+                           Portraits page is planned)
+booking/                   Shoot-request form (the only booking flow)
+  index.html               Adaptive single-page form: shoot-type branches
+                           (Graduation / Real Estate / Professional Portraits
+                           / Other) reveal their own fields; contact block
+                           and notes are shared; submit emails the owner
+  app.js                   Reveal logic, live summary sidebar, Turnstile
+  booking.css              Shared with booking/confirmed and contact/confirmed
+  confirmed/index.html     Static "request sent" screen
 functions/api/             Pages Functions (the entire backend)
   contact.js               Contact form: Turnstile verify + Resend send
-  booking/submit.js        Shoot request: Turnstile verify + Resend send
+  booking/submit.js        Shoot request: Turnstile verify + Resend send;
+                           relays to the owner mailbox after validation
 lib/                       Shared logic imported by the functions
-  booking-form.mjs         Shoot-request validation + email composition
-tests/                     node:test suites (validation + email templates)
+  booking-form.mjs         Shoot-request validation (per-branch rules) + email
+                           text/HTML templates (Text / Call, Maps, calendar
+                           template link)
+tests/                     node:test suites (booking-form validation + email
+                           templates)
 assets/ images/ videos/    Static media
 components/                Shared HTML fragments + include loader (see "Shared fragments" below)
-_redirects                 Cloudflare Pages redirects (301s from the old
-                           /gallery/events/* URLs; see "Gallery structure" below)
-wrangler.jsonc             Local dev config (bindings; DB id for remote ops)
+_redirects                 Cloudflare Pages redirects (301s from retired URLs:
+                           the old /gallery/events/* plus the retired
+                           /services/photography and /services/videography
+                           pages; see "Gallery structure" below)
+wrangler.jsonc             Local dev config (Pages project; no bindings)
 .dev.vars.example          Template for local secrets (copy to .dev.vars)
 ```
 
@@ -125,7 +136,7 @@ Every page except the homepage renders its header tile from **one fragment** —
 - **Current-section highlight:** `html-include.js` marks the menu link matching the URL's first path segment with `aria-current="page"` + `.is-active` (filled white chip).
 - **Brand row:** `logo_icon.png` + the studio name link home; legibility over the animated background via drop-shadow/text-shadow; scales down on small phones (40px mark / 20px name).
 - **Pixel-locked nav:** sizes in px with an explicit typeface so booking's 17px `CFBooking` root can't inflate or re-typeface the bar.
-- **Booking flow:** `booking/index.html` uses the fragment with `data-back="/services/"`; the two confirmation pages place the header above their centered success panel (their inline brand/nav and the scoped `body.cf-booking .confirm-panel .page-home` rules are gone).
+- **Booking flow:** `booking/index.html` uses the fragment with `data-back="/services/"`; the nav-back fallback in `app.js` is a plain history step (the form has no wizard steps anymore). The two confirmation pages place the header above their centered success panel.
 - **Excluded:** the homepage keeps its own full-page header design (not this component). The old banner-image header design (full-bleed `images/headers/*.webp` + `:has()` overlay) was removed with the brand-row tile; no page carries `.page-banner` and the banner CSS is deleted.
 - **No-JS:** pages without JavaScript show no header tile (fragment requires the loader). Accepted trade-off; the homepage and booking forms remain fully usable without it.
 
@@ -136,7 +147,7 @@ The gallery is **flat**: `charlotte`, `nature`, `film`, `cyclegearbikenights`, `
 - Old URLs 301-redirect via `_redirects` at the repo root (Cloudflare Pages). If a gallery page moves again, add a redirect line there.
 - Canonical tags and `sitemap.xml` point at the new URLs; keep them in sync with any move.
 - Image folders mirror the page folders: `images/gallery/<name>/` (the bike-nights image folder was renamed to match its page dir).
-- `booking/booking-core.js` uses `images/gallery/events_cover.webp` as the generic event summary image — that file's path is load-bearing for the booking flow.
+- `images/services/` mirrors the service pages; `booking/app.js` maps each shoot type to its sidebar photo (see `PACKAGE_IMAGE` there) — those paths are load-bearing for the booking form. The professional-portraits branch reads `images/services/portraits/portrait*.webp`.
 
 ## Variables
 
@@ -157,7 +168,7 @@ All read via `env.*` inside Functions; set in Cloudflare dashboard (prod) or `.d
 ## Design principles (enforced, not aspirational)
 
 1. **No frontend frameworks or new dependencies.** Vanilla only. If a change seems to need a library, it doesn't.
-2. **Never trust the client.** Prices, durations, package names, and timezone math are computed in `lib/` from server state. Browser-submitted values of those fields are rejected (`unexpected_fields`, `invalid_package`). Agreements are served by the server and hashed with the signature at submission.
+2. **Never trust the client.** Every booking field is revalidated in `lib/booking-form.mjs` (branch rules, group-size bounds, future-date sanity, phone digits); the server owns email composition, and prices stay out of the form entirely — they live on the services pages and are confirmed by the owner offline.
 3. **Clean URLs via directory structure:** each page is `<dir>/index.html`. Keep that pattern for new pages.
 
 ## Stylesheet ownership
@@ -166,6 +177,7 @@ All read via `env.*` inside Functions; set in Cloudflare dashboard (prod) or `.d
 - `site-pages.css` — content-page layer (about / gallery / services / contact / privacy / terms + the footer fragment styling). The homepage and booking pages must never be affected by it.
 - `homepage.css` / `booking.css` — the two single-purpose files. The homepage footer is intentionally its own copy; keep it in sync manually.
 - **Shared page family:** the `.packages-page` CSS family (intro, tagline, package-card tiles, information, CTA) is used by BOTH `services/graduation` and `services/realestate` — do not rename or trim members without checking both pages.
+- **Booking form rhythm:** spacing is owned by one rule set in `booking.css` ("Vertical rhythm"): 24px between direct children of `#booking-form`, 12px between fields inside a block, and a block's last field contributes no margin (blocks own their spacing). Never adjust individual seams; new branches inherit the model.
 
 ## Working conventions for agents (learned the hard way)
 
@@ -179,3 +191,5 @@ All read via `env.*` inside Functions; set in Cloudflare dashboard (prod) or `.d
 
 - One Turnstile widget/sitekey pair covers any page on the domain; don't create per-form widgets.
 - `booking/app.js` is the single frontend brain for the whole flow; large string-surgery edits on it have corrupted files before. Prefer small, verified edits.
+- New shoot type = one dropdown option + one branch fieldset + one section in `lib/booking-form.mjs` + a `PACKAGE_IMAGE` entry + tests. Nothing else moves.
+- Owner-email buttons are plain deep links: Text / Call = `tel:`, calendar = a Google Calendar **template link**, Maps = `maps/search/?api=1`. Any new button is a link built in `lib/booking-form.mjs` — no APIs, no tokens.
