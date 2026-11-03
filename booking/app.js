@@ -32,26 +32,15 @@ function syncGradRequired() {
   const pp = state.shot === 'portraits';
   $('portraits-branch').hidden = !pp;
   document.querySelectorAll('[name=ppPackage]').forEach(el => el.disabled = !pp);
-  syncPpPlace();
+  $('pp-place').required = false;
+  $('pp-place').disabled = !pp;
   $('pp-date').required = pp;
   $('pp-date').disabled = !pp;
   $('other-title').required = state.shot === 'other';
   $('other-title').disabled = $('other-branch').hidden = state.shot !== 'other';
   syncPlaceRequired();
 }
-/* Location for portraits can be handed to Cole: checking the checkbox
-   hands their field over for suggestions instead of requiring an address. */
-function syncPpPlace() {
-  const pp = state.shot === 'portraits';
-  const unsure = pp && $('pp-place-unsure').checked;
-  $('pp-place').required = pp && !unsure;
-  $('pp-place').disabled = !pp || unsure;
-  $('pp-place-unsure').disabled = !pp;
-  /* The * only marks a truly required field. */
-  const reqStar = document.querySelector('#pp-place-field label[for=pp-place] span:not(.optional)');
-  if (reqStar) reqStar.hidden = unsure;
-}
-$('pp-place-unsure').addEventListener('change', syncPpPlace);
+
 function syncPlaceRequired() {
   const custom = state.shot === 'graduation' && state.place === 'other';
   $('grad-place-text').required = custom;
@@ -130,7 +119,7 @@ const SUMMARY_ALTS = {
   portraits: 'Professional portraits by Cyberflight Studios'
 };
 function updateSummary() {
-  let pick = null, whenKey='', timeVal=null, imageKey='none', specSuffix='';
+  let pick = null, whenKey='', timeVal=null, imageKey='none';
   if (state.shot === 'graduation') {
     pick = PACKAGE_LABELS[state.gradPackage];
     imageKey = state.gradPackage || 'graduation';
@@ -145,12 +134,11 @@ function updateSummary() {
       : state.ppPackage === 'standard' ? 'pp-standard'
       : 'portraits';
     whenKey = 'pp-date'; timeVal = TIME_LABELS[$('pp-time').value];
-    if ($('pp-place-unsure').checked) specSuffix = ' · waiting on location suggestions';
   }
   $('summary-title').textContent = state.shot === 'other' && $('other-title').value.trim()
     ? $('other-title').value.trim()
     : (SHOT_LABELS[state.shot] ?? 'Choose a shoot type');
-  $('summary-spec').textContent = pick ? pick.spec + specSuffix : 'The form adapts once you choose.';
+  $('summary-spec').textContent = pick ? pick.spec : 'The form adapts once you choose.';
   $('summary-package').textContent = pick ? pick.price : '—';
   $('summary-date').textContent = whenKey ? (formatDate($(whenKey).value) ?? '—') : '—';
   $('summary-time').textContent = timeVal ?? '—';

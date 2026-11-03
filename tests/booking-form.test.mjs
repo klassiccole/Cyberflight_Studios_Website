@@ -146,19 +146,13 @@ test('portraits offers no group tier', () => {
   const g = portraits(); g.ppPackage = 'group';
   assert.throws(() => validateBooking(g), /invalid_portraits_package/);
 });
-test('portraits branch requires place and valid date', () => {
+test('portraits branch tolerates a blank location and valid dates only', () => {
   const p = portraits(); p.ppPlace = '   ';
-  assert.throws(() => validateBooking(p), /missing_fields/);
+  const b = validateBooking(p);
+  assert.equal(b.place, '');
+  assert.ok(!emailText(b).includes('Location:'));
   const d = portraits(); d.ppDate = '2099-02-30';
   assert.throws(() => validateBooking(d), /invalid_date/);
-});
-test('unsure portraits visitors hand location picking to Cole', () => {
-  const p = portraits();
-  p.ppPlace = '';
-  p.ppPlaceUnsure = 'on';
-  const b = validateBooking(p);
-  assert.equal(b.place, "I'll let you suggest a few places. I can't think of any.");
-  assert.match(emailText(b), /Location: I'll let you suggest/);
 });
 test('prefers tag rides on the chosen channel', () => {
   const e = grad(); e.contactPref = 'email';
