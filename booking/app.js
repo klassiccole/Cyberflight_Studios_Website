@@ -107,7 +107,9 @@ const PACKAGE_IMAGE = {
   standard: '../images/services/graduation/graduation3.webp',
   group: '../images/services/graduation/graduation4.webp',
   'real-estate': '../images/services/realestate/realestate1.webp',
-  portraits: '../images/services/portraits/portrait1.webp'
+  portraits: '../images/services/portraits/portrait1.webp',
+  'pp-mini': '../images/services/portraits/portrait1.webp',
+  'pp-standard': '../images/services/portraits/portraits4.webp'
 };
 const SUMMARY_ALTS = {
   none: 'Photography by Cyberflight Studios',
@@ -127,7 +129,9 @@ function updateSummary() {
     whenKey = 're-date'; timeVal = TIME_LABELS[$('re-time').value];
   } else if (state.shot === 'portraits') {
     pick = PACKAGE_LABELS[state.ppPackage];
-    imageKey = 'portraits';
+    imageKey = state.ppPackage === 'mini' ? 'pp-mini'
+      : state.ppPackage === 'standard' ? 'pp-standard'
+      : 'portraits';
     whenKey = 'pp-date'; timeVal = TIME_LABELS[$('pp-time').value];
   }
   $('summary-title').textContent = state.shot === 'other' && $('other-title').value.trim()
