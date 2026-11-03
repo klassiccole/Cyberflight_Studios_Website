@@ -131,6 +131,10 @@ body.cf-booking fieldset {
 body.cf-booking fieldset > :last-child {
     margin-bottom:0
 }
+body.cf-booking fieldset > :last-child > :last-child,
+body.cf-booking fieldset > .field:last-child {
+    margin-bottom:0
+}
 body.cf-booking legend {
     font-size:1.1rem;
     font-weight:600;
