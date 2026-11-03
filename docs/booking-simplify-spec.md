@@ -1,3 +1,9 @@
+> **SUPERSEDED.** This draft described the DB-backed redesign we ultimately
+> simplified away. The shipped design (adaptive single-page form → owner
+> email, no DB, no calendar) lives in `booking/`, `lib/booking-form.mjs`,
+> and `functions/api/booking/submit.js`, with the decisions recorded in this
+> doc's thread. Kept only as decision history.
+
 # Booking Flow Simplification — Spec
 
 Status: draft for review. Zero live bookings in the system; free to change anything.

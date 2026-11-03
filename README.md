@@ -144,18 +144,9 @@ All read via `env.*` inside Functions; set in Cloudflare dashboard (prod) or `.d
 
 | Variable | Purpose | Required |
 |---|---|---|
-| `BOOKING_DB` | D1 binding, configured in `wrangler.jsonc` | Yes (binding, not a secret) |
 | `TURNSTILE_SECRET` | Server side of the Turnstile widget | Yes |
 | `RESEND_API_KEY` | Sends contact + booking notification email | Yes |
 | `BOOKING_OWNER_EMAIL` | Owner mailbox notifications are sent to | Yes |
-| `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` / `GOOGLE_REDIRECT_URI` | OAuth app for calendar connect flow | Yes |
-| `GOOGLE_ALLOWED_EMAIL` | Owner account allowed to connect the calendar | Yes |
-| `GOOGLE_TOKEN_ENCRYPTION_KEY` | 32-byte AES-GCM key (base64); encrypts the stored Google refresh token | Yes |
-| `GOOGLE_AVAILABILITY_CALENDAR_ID` | Calendar read for open slots (the availability calendar) | Yes |
-| `GOOGLE_BOOKINGS_CALENDAR_ID` | Calendar that new bookings are written to (separate from availability) | Yes |
-| `GOOGLE_PERSONAL_CALENDAR_ID` | Owner's personal calendar (free/busy context) | Yes |
-| `BOOKING_SUBMISSIONS_ENABLED` | Gate: `true` enables public booking; anything else returns `booking_not_open_yet` | Yes |
-| `BOOKING_SKIP_TURNSTILE` | **Danger:** `true` disables Turnstile verification. Never set in production; use only for throwaway pipeline tests, then delete | No |
 
 ## Domain/email infrastructure (context you shouldn't touch casually)
 
@@ -167,32 +158,24 @@ All read via `env.*` inside Functions; set in Cloudflare dashboard (prod) or `.d
 
 1. **No frontend frameworks or new dependencies.** Vanilla only. If a change seems to need a library, it doesn't.
 2. **Never trust the client.** Prices, durations, package names, and timezone math are computed in `lib/` from server state. Browser-submitted values of those fields are rejected (`unexpected_fields`, `invalid_package`). Agreements are served by the server and hashed with the signature at submission.
-3. **Push integrity into the schema.** Use CHECK constraints/triggers over app-level guards when the database can express the rule.
-4. **Calendar is the source of truth:** every booking request becomes a Bookings Calendar event plus an owner email; no booking rows are written to D1. Availability is the merge of the openings calendar and free/busy data. Lead times are advisory (30+ days ideal for events/weddings), never enforced in code. All-day event requests are an owner override: never rejected for busy time, but the owner email is conflict-flagged for calendar review.
-5. **Clean URLs via directory structure:** each page is `<dir>/index.html`. Keep that pattern for new pages.
+3. **Clean URLs via directory structure:** each page is `<dir>/index.html`. Keep that pattern for new pages.
 
 ## Stylesheet ownership
 
 - `site-shell.css` — shared blueprint, loads on all 20 pages: reset, fonts, typography, background, header tile, footer, page states, the floating-box layout and the unified nav bar. Homepage and booking load it, so it must stay page-agnostic.
 - `site-pages.css` — content-page layer (about / gallery / services / contact / privacy / terms + the footer fragment styling). The homepage and booking pages must never be affected by it.
 - `homepage.css` / `booking.css` — the two single-purpose files. The homepage footer is intentionally its own copy; keep it in sync manually.
-- **Shared page family:** the `.packages-page` CSS family (intro, tagline, package-card tiles, information, CTA) is used by BOTH `services/graduation` and `services/realestate` — do not rename or trim members without checking both pages. The `graduation` booking service name (`/booking/?service=graduation`, D1 rows) is unrelated to these class names and is not part of any rename.
+- **Shared page family:** the `.packages-page` CSS family (intro, tagline, package-card tiles, information, CTA) is used by BOTH `services/graduation` and `services/realestate` — do not rename or trim members without checking both pages.
 
 ## Working conventions for agents (learned the hard way)
 
 - **Never push, commit, deploy, delete data, or change Cloudflare settings without explicit per-action approval.** When asked for "comment and code", reply with exactly the pastable commands and nothing else.
 - **Verify locally before proposing any push.** The deploy-then-see loop is the most expensive mistake this project has.
-- **Test rows are your mess.** If you submit test bookings, clean up the resulting D1 rows and calendar events yourself and say so. Ghost rows from uncleaned tests caused repeated "That time was just taken" loops.
 - **Ask, don't assume, on scope.** The author fixes scope precisely (e.g. "only the booking folder"). Confirm which files a change touches before making it.
 - **One real fix beats three guesses.** Before "fixing" an error, reproduce it locally and name the failing line. Guess-fix cycles burned more trust than any other behavior.
 - **Windows note:** use npm scripts (`npm run ...`), not bare `npx` — `npx.ps1` trips PowerShell's execution policy on this machine.
 
 ## Known gotchas
 
-- The production D1 console cannot paste multi-statement migration files (triggers choke the parser); always use `wrangler d1 migrations apply`.
-- The D1 check constraint on `package_id` is migration-versioned; adding a package means a new migration, not an edit to an old one.
 - One Turnstile widget/sitekey pair covers any page on the domain; don't create per-form widgets.
 - `booking/app.js` is the single frontend brain for the whole flow; large string-surgery edits on it have corrupted files before. Prefer small, verified edits.
-- **Pricing lives in three synchronized places:** the booking page's select options, `booking/booking-core.js` (client twin), and `lib/booking-input.mjs` (server authority). A price/duration change must touch all three; drift fails safe because the server recomputes and rejects client-submitted prices, but the UI shows stale numbers until all three are updated.
-- Event coverage length ceilings differ by layer by design: UI slider allows 1-9 hours (+ All Day), the server accepts up to 1200 minutes for timed events, and all-day requests bypass availability entirely (conflict-flagged email instead).
-- **Simultaneous duplicate submissions can double-book a slot** (known, accepted risk): the availability check and the calendar event creation are two separate steps, so two requests for the same slot in the same instant can both see the slot free and both create events. The old D1 single-statement insert guard used to serialize this; persistence was removed with the calendar-as-truth design. Likelihood is low (same-second collisions); if it ever bites, the fix is a D1 "claims ledger" insert before the calendar call.
