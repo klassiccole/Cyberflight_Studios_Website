@@ -142,15 +142,9 @@ test('professional portraits mirror graduation pricing', () => {
   assert.match(emailText(b), /Session: Standard Session \(\$200\)/);
   assert.match(emailText(b), /Location: Uptown Charlotte/);
 });
-test('portraits group slider bounds mirror graduation', () => {
+test('portraits offers no group tier', () => {
   const g = portraits(); g.ppPackage = 'group';
-  assert.throws(() => validateBooking(g), /invalid_grad_count/);
-  g.ppCount = '6';
-  const gb = validateBooking(g);
-  assert.equal(gb.count, 6);
-  assert.equal(emailSubject(gb), 'Shoot Request — Professional Portraits — Group Session (6 people) — Ana Lead');
-  g.ppCount = '9';
-  assert.throws(() => validateBooking(g), /invalid_grad_count/);
+  assert.throws(() => validateBooking(g), /invalid_portraits_package/);
 });
 test('portraits branch requires place and valid date', () => {
   const p = portraits(); p.ppPlace = '   ';

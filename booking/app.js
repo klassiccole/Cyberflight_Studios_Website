@@ -4,7 +4,7 @@
 const $ = id => document.getElementById(id);
 const form = $('booking-form');
 
-const state = { shot: '', gradPackage: '', rePackage: 't1', ppPackage: 'standard', count: 4, ppCount: 4 };
+const state = { shot: '', gradPackage: '', rePackage: 't1', ppPackage: 'standard', count: 4 };
 
 /* --- Progressive reveal ---------------------------------------------------
    Branches appear when the master question picks them; hidden required
@@ -36,7 +36,6 @@ function syncGradRequired() {
   $('pp-place').disabled = !pp;
   $('pp-date').required = pp;
   $('pp-date').disabled = !pp;
-  $('pp-count-group').hidden = !(pp && state.ppPackage === 'group');
   $('other-title').required = state.shot === 'other';
   $('other-title').disabled = $('other-branch').hidden = state.shot !== 'other';
   syncPlaceRequired();
@@ -54,15 +53,8 @@ document.querySelectorAll('[name=rePackage]').forEach(el => el.addEventListener(
 document.querySelectorAll('[name=ppPackage]').forEach(el => el.addEventListener('change', () => {
   if (el.disabled) return;
   state.ppPackage = el.value;
-  $('pp-count-group').hidden = state.ppPackage !== 'group';
   updateSummary();
 }));
-$('pp-count').addEventListener('input', () => {
-  if ($('pp-count-group').hidden) return;
-  state.ppCount = Number($('pp-count').value);
-  $('pp-count-label').textContent = `${state.ppCount}`;
-  updateSummary();
-});
 $('shot-select').addEventListener('change', () => {
   state.shot = $('shot-select').value;
   syncGradRequired();
