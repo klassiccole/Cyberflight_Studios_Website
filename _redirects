@@ -5,3 +5,10 @@
 /gallery/events/hyattshootingcompetitions/  /gallery/hyattshootingcompetitions/  301
 /gallery/events/monroeairshow/  /gallery/monroeairshow/  301
 /gallery/events/  /gallery/  301
+
+# The photography and videography service pages were retired; the
+# professional-portraits card will replace them. Old URLs go to the hub.
+/services/photography  /services/  301
+/services/photography/*  /services/  301
+/services/videography  /services/  301
+/services/videography/*  /services/  301

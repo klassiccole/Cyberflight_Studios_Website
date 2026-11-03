@@ -21,7 +21,7 @@ about/ contact/ gallery/   Static pages, one dir + index.html per clean URL
 gallery/                   charlotte, nature, film, cyclegearbikenights,
                            hyattshootingcompetitions, monroeairshow (flat,
                            no intermediate hubs)
-services/                  photography, videography, drone, graduation, realestate
+services/                  portraits? (TBD), drone, graduation, realestate
 booking/                   Shoot-request form (the active one)
   index.html               Adaptive single-page form UI
   app.js booking.css
