@@ -132,7 +132,7 @@ Every page except the homepage renders its header tile from **one fragment** —
 ```
 
 - **Slot reservation:** while the fetch is in flight, the placeholder's `.intro-tile-slot` class (CSS in `site-shell.css`) holds the tile's final height (184px desktop, 116px mobile) so content below never jumps. The class is consumed on injection.
-- **Back link:** defaults to `href="../"` — which only works because tiles exist at exactly one directory depth site-wide (keep that rule). Override with `data-back="/services/"` (booking does this); omit entirely with `data-no-back` (the two confirmation pages). The back link carries `id="nav-back"` because `booking/app.js` hooks it to step backwards through the booking wizard — don't remove the id. `main.js` still adds same-site history-aware behavior by class.
+- **Back link:** defaults to `href="../"` — which only works because tiles exist at exactly one directory depth site-wide (keep that rule). Override with `data-back="/services/"` (booking does this); omit entirely with `data-no-back` (the two confirmation pages). The back link carries `id="nav-back"`; `booking/app.js` and `main.js` hook it for same-site history behavior — don't remove the id.
 - **Current-section highlight:** `html-include.js` marks the menu link matching the URL's first path segment with `aria-current="page"` + `.is-active` (filled white chip).
 - **Brand row:** `logo_icon.png` + the studio name link home; legibility over the animated background via drop-shadow/text-shadow; scales down on small phones (40px mark / 20px name).
 - **Pixel-locked nav:** sizes in px with an explicit typeface so booking's 17px `CFBooking` root can't inflate or re-typeface the bar.
