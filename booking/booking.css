@@ -854,9 +854,12 @@ body.cf-booking .pp-place-head .pp-unsure input[type=checkbox] {
     width:19px;
     height:19px;
     min-height:0;
+    /* Native checkboxes paint dark (invisible on this dark form) unless
+       forced to a light scheme. */
+    color-scheme:light;
     accent-color:var(--accent);
     border:0;
-    background:transparent;
+    background:#ecebf2;
     padding:0;
     margin:0
 }
