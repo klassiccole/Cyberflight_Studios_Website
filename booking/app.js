@@ -107,7 +107,7 @@ const PACKAGE_IMAGE = {
   standard: '../images/services/graduation/graduation3.webp',
   group: '../images/services/graduation/graduation4.webp',
   'real-estate': '../images/services/realestate/realestate1.webp',
-  portraits: '../images/services/photo1.webp'
+  portraits: '../images/services/portraits/portrait1.webp'
 };
 const SUMMARY_ALTS = {
   none: 'Photography by Cyberflight Studios',
