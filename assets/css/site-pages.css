@@ -93,51 +93,65 @@ Gallery
 ============================================================ */
 
 /*
-Controls the image grid used on the Gallery content page.
-Includes thumbnail layout, image sizing, hover behavior,
-and responsive gallery adjustments for smaller screens.
+Gallery page styles. The main gallery page lists albums as
+full-width cards (cover image left, title + description right).
+.gallery-grid is the media grid shared by the sub-gallery pages.
 */
 
-.gallery-grid {
+/* Album cards */
+
+.album-list {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 1.5rem;
-    margin-top: 2rem;
+    margin-bottom: 26px;
 }
 
-.gallery-item {
-    display: block;
-    border-bottom: 0; /* the theme gives every link a dotted bottom border;
-                         stretched tiles would show it below the caption bar */
+.album-card {
+    display: flex;
+    align-items: center;
+    gap: 1.75rem;
+
+    background: rgba(27, 31, 37, 0.85);
+    border: 1px solid #3b414c;
     border-radius: 12px;
-    text-align: center;
+    overflow: hidden;
     text-decoration: none;
-    transition: transform 0.3s ease;
+
+    transition: border-color 0.3s ease;
 }
 
-.gallery-item img {
-    width: 100%;
-    height: 180px;
+.album-card img {
+    flex: 0 0 300px;
+    width: 300px;
+    height: 200px;
     object-fit: cover;
-    border-radius: 12px 12px 0 0;
+    display: block;
+
     transition: filter 0.3s ease;
 }
 
-.gallery-item h3 {
-    margin: 0;
-    padding: 0.8rem 0;
+.album-card-content {
+    flex: 1;
+    min-width: 0;
+    padding-right: 2rem;
+}
+
+.album-card-content h3 {
+    margin: 0 0 0.5rem 0;
     color: #fff;
-    font-size: 1.1rem;
+    font-size: 1.3rem;
     letter-spacing: 0.05em;
-    background: rgba(255, 255, 255, 0.08);
-    border-radius: 0 0 12px 12px;
 }
 
-.gallery-item:hover {
-    transform: scale(1.03);
+.album-card-content p {
+    margin: 0;
 }
 
-.gallery-item:hover img {
+.album-card:hover {
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+.album-card:hover img {
     filter: brightness(1.15);
 }
 
@@ -149,6 +163,25 @@ and responsive gallery adjustments for smaller screens.
     height: auto;
     display: block;
     border-radius: 12px;
+}
+
+/* Album cards - Mobile */
+
+@media screen and (max-width: 736px) {
+
+    .album-card {
+        display: block;
+    }
+
+    .album-card img {
+        width: 100%;
+        height: 220px;
+    }
+
+    .album-card-content {
+        padding: 1.25rem 1.5rem 0.25rem 1.5rem;
+    }
+
 }
 
 /* Gallery Grid - Tablet */
