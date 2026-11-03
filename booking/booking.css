@@ -851,7 +851,13 @@ body.cf-booking .pp-place-head .pp-unsure {
     cursor:pointer
 }
 body.cf-booking .pp-place-head .pp-unsure input[type=checkbox] {
+    width:19px;
+    height:19px;
+    min-height:0;
     accent-color:var(--accent);
+    border:0;
+    background:transparent;
+    padding:0;
     margin:0
 }
 @media(max-width:760px) {
