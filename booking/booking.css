@@ -135,6 +135,10 @@ body.cf-booking fieldset > :last-child > :last-child,
 body.cf-booking fieldset > .field:last-child {
     margin-bottom:0
 }
+/* Your-details → notes seam: one uniform gap, owned here, not stacked. */
+body.cf-booking #contact-block {
+    margin-bottom:12px
+}
 body.cf-booking legend {
     font-size:1.1rem;
     font-weight:600;
