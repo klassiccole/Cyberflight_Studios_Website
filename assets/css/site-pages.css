@@ -1136,7 +1136,7 @@ Drone
 
 .privacy-cards {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 14px;
     margin: 1.5rem 0;
 }
@@ -1162,9 +1162,9 @@ Drone
     line-height: 1.5;
 }
 
-@media (max-width: 1100px) {
+@media (max-width: 850px) {
     .privacy-cards {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: 1fr;
     }
 }
 
