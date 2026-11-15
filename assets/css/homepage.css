@@ -57,6 +57,7 @@ body:not(.standalone-page) #wrapper:before {
 
 @media screen and (max-width: 736px) {
 
+
     body:not(.standalone-page) #wrapper {
         padding: 2rem 1rem;
     }
@@ -450,11 +451,13 @@ body.is-preload #header .content .inner {
    only page stylesheet besides site-shell.css. */
 
 #footer .site-footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    /* Three-slot footer: brand left, AI note centered, links right.
+       1fr/auto/1fr keeps the note truly centered regardless of how
+       wide the brand and links are. */
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: baseline;
     gap: 12px 20px;
-    flex-wrap: wrap;
     padding: 20px 0 0;
     border-top: 1px solid #ffffff;
     color: rgba(255, 255, 255, 0.6);
@@ -463,6 +466,9 @@ body.is-preload #header .content .inner {
 }
 
 #footer .site-footer-brand {
+    grid-row: 1;
+    grid-column: 1;
+    justify-self: start;
     font-size: 0.7rem;
     letter-spacing: 0.18em;
 }
@@ -471,6 +477,9 @@ body.is-preload #header .content .inner {
    Kept in sync with site-pages.css. */
 
 #footer .site-footer-links {
+    grid-row: 1;
+    grid-column: 3;
+    justify-self: end;
     display: flex;
     align-items: center;
     gap: 12px;
@@ -483,6 +492,24 @@ body.is-preload #header .content .inner {
 
 #footer .site-footer a:hover {
     color: #ffffff;
+}
+
+
+
+/* Trust statement in the footer row's center slot (brand left, note
+   middle, links right; flex-wrap stacks them on phones). Homepage-only
+   AI disclosure; quiet caption styling. */
+
+#footer .site-footer-note {
+    grid-row: 1; /* sparse auto-placement would otherwise drop the
+                    note to row 2: its column precedes the links' */
+    grid-column: 2;
+    margin: 0; /* the theme gives every p a 2rem bottom margin */
+    color: rgba(255, 255, 255, 0.45);
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    text-align: center;
 }
 
 /* Footer Connector: vertical line rising from the footer rule to the
@@ -502,4 +529,28 @@ body.is-preload #header .content .inner {
 
 #footer {
     margin-top: 0;
+}
+
+/* Footer stacking: the three-slot grid becomes one centered
+   column on phones. Lives at the end of the file so the desktop
+   column pins above lose the cascade. */
+
+@media screen and (max-width: 736px) {
+
+    #footer .site-footer {
+        grid-template-columns: 1fr;
+        justify-items: center;
+        text-align: center;
+    }
+
+    /* release the desktop column pins so the single-column grid
+       auto-places all three slots in the one explicit column */
+    #footer .site-footer-brand,
+    #footer .site-footer-note,
+    #footer .site-footer-links {
+        grid-row: auto;
+        grid-column: 1;
+        justify-self: center;
+    }
+
 }
