@@ -237,7 +237,7 @@ body:not(.standalone-page) #wrapper:before {
     padding: 0 1.25rem 0 1.45rem;
     text-transform: uppercase;
     letter-spacing: 0.2rem;
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     border-bottom: 0;
 }
 
@@ -368,6 +368,15 @@ body.is-preload #header .content .inner {
         width: 100%;
         min-width: 0;
         max-width: 100%;
+
+
+
+        /* The stacked buttons sit over the photo; a frosted plate
+        (same surface as the shared .page-nav pill, site-shell.css)
+        keeps the text legible. Desktop keeps the bare band. */
+        background: rgba(19, 21, 25, 0.55);
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
     }
 
     #header nav ul li {
@@ -386,7 +395,7 @@ body.is-preload #header .content .inner {
         min-width: 0;
         padding-left: 1rem;
         padding-right: 1rem;
-        font-size: 1rem;
+        font-size: 1.1rem;
     }
 
     /* The centered divider makes no sense on a stacked list. */
