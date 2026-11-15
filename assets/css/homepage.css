@@ -122,15 +122,76 @@ body:not(.standalone-page) #wrapper:before {
     display: none;
 }
 
-/* Logo: the img carries the disc shape itself. */
+/* Logo: the img carries the disc shape itself. The wrapper is sized
+   explicitly because the flip feature (main.js) needs a fixed box to
+   absolutely position the two faces inside. Without JS there is no
+   .logo-flip markup and the img simply fills the wrapper as before. */
 
-#header .logo img {
+#header .logo {
     width: 10rem;
     height: 10rem;
+    perspective: 50rem;
+}
+
+#header .logo img {
+    width: 100%;
+    height: 100%;
     object-fit: contain;
     border-radius: 50%;
     display: block;
     margin: 0 auto;
+}
+
+/* Logo flip: main.js wraps the logo img in a front-face link and
+   appends the profile photo behind a back-face link (/about/). The
+   container rotates 180deg and the back face is pre-rotated, so both
+   faces show correctly at every angle of the flip. Hover also flips
+   (see main.js); the timer pauses while hovered so it cannot fight
+   the pointer. */
+
+#header .logo .logo-flip {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 1s ease-in-out;
+}
+
+#header .logo .logo-flip.is-flipped {
+    transform: rotateY(180deg);
+}
+
+/* Each face is a full-size link; backface-visibility on the link
+   carries the hidden state, and the img fills it. */
+
+#header .logo .logo-face {
+    position: absolute;
+    inset: 0;
+    display: block;
+    border-radius: 50%;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+#header .logo .logo-face img {
+    margin: 0;
+}
+
+#header .logo .logo-face-back {
+    transform: rotateY(180deg);
+}
+
+#header .logo .logo-face-back img {
+    object-fit: cover;
+}
+
+/* Reduced motion: swap instantly instead of spinning. */
+
+@media (prefers-reduced-motion: reduce) {
+
+    #header .logo .logo-flip {
+        transition: none;
+    }
 }
 
 /* Company info box: bordered band with the name and tagline. */
@@ -333,14 +394,9 @@ body.is-preload #header .content .inner {
         height: 7.5rem;
     }
 
-    /* The img must shrink with the wrapper; a 10rem img inside a
-       smaller container overflows right and breaks the centered
-       connector-line hierarchy. 7.5rem is the floor between the 10rem
+    /* The img fills the wrapper (width/height: 100%), so resizing the
+       wrapper resizes the disc. 7.5rem is the floor between the 10rem
        desktop disc and the 5.75rem mobile disc. */
-    #header .logo img {
-        width: 7.5rem;
-        height: 7.5rem;
-    }
 
     #header .content .inner {
         padding: 2rem 1rem;
@@ -410,12 +466,6 @@ body.is-preload #header .content .inner {
         display: flex;
         justify-content: center;
         align-items: center;
-    }
-
-    #header .logo img {
-        width: 5.75rem;
-        height: 5.75rem;
-        border-radius: 50%;
     }
 
     #header > .content::before {

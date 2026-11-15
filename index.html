@@ -27,9 +27,15 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<meta name="description" content="Cyberflight Studios provides drone media, photography, and videography services in Charlotte, NC, specializing in dynamic visuals built around movement, perspective, and adrenaline." />
 		<link rel="icon" type="image/png" href="images/favicon.png" />
+		<!--
+			Preload the flip face for the homepage logo carousel (main.js
+			"Logo Flip") so the first rotation never shows a half-loaded
+			image. 600px WebP hand-resized from images/about/profile.webp.
+		-->
+		<link rel="preload" as="image" href="images/about/profile-600.webp" />
 		<link rel="stylesheet" href="assets/css/fontawesome-all.min.css" />
 		<link rel="stylesheet" href="assets/css/site-shell.css?v=10" />
-		<link rel="stylesheet" href="assets/css/homepage.css?v=18" />
+		<link rel="stylesheet" href="assets/css/homepage.css?v=20" />
 		<noscript>
 			<link rel="stylesheet" href="assets/css/noscript.css?v=2" />
 		</noscript>

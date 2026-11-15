@@ -101,4 +101,96 @@
 
     });
 
+/*
+* Logo Flip (homepage)
+*
+* Wraps the homepage logo disc in a 3D flip container and adds the
+* profile photo as a hidden back face, then toggles the flip on a
+* timer so the header alternates between logo and portrait. Styling
+* lives in homepage.css ("Logo flip"); without JS no markup is added
+* and the plain logo renders exactly as before.
+*
+* Each face is a link: the logo side returns home, the profile side
+* opens the About page. Hovering flips the disc and pauses the timer
+* so it cannot fight the pointer; the timer pauses while the tab is
+* hidden so the disc does not sit mid-flip (or drift through cycles)
+* when the visitor returns.
+*/
+    document.addEventListener('DOMContentLoaded', function () {
+
+        const logo = document.querySelector('#header .logo');
+
+        if (!logo || !logo.querySelector('img'))
+            return;
+
+        const FLIP_INTERVAL = 5000;
+
+        const img = logo.querySelector('img');
+        const flip = document.createElement('div');
+        const front = document.createElement('a');
+        const back = document.createElement('a');
+        const backImg = document.createElement('img');
+
+        flip.className = 'logo-flip';
+
+        front.className = 'logo-face logo-face-front';
+        front.href = '/';
+        front.setAttribute('aria-label', 'Cyberflight Studios — home');
+
+        back.className = 'logo-face logo-face-back';
+        back.href = '/about/';
+        back.setAttribute('aria-label', 'About Cole');
+        backImg.src = 'images/about/profile-600.webp';
+        backImg.alt = '';
+        backImg.setAttribute('aria-hidden', 'true');
+        back.appendChild(backImg);
+
+        // Order matters: .logo-flip must replace the img inside .logo
+        // before the faces are attached, or flip ends up nested inside
+        // a face (HierarchyRequestError) and the logo area is lost.
+        img.parentNode.insertBefore(flip, img);
+        front.appendChild(img);
+        flip.appendChild(front);
+        flip.appendChild(back);
+
+        let timer = null;
+        let hovering = false;
+
+        function toggleFlip() {
+            flip.classList.toggle('is-flipped');
+        }
+
+        function start() {
+            if (!timer && !hovering)
+                timer = setInterval(toggleFlip, FLIP_INTERVAL);
+        }
+
+        function stop() {
+            clearInterval(timer);
+            timer = null;
+        }
+
+        logo.addEventListener('mouseenter', function () {
+            hovering = true;
+            stop();
+            flip.classList.add('is-flipped');
+        });
+
+        logo.addEventListener('mouseleave', function () {
+            hovering = false;
+            flip.classList.remove('is-flipped');
+            start();
+        });
+
+        document.addEventListener('visibilitychange', function () {
+            if (document.hidden)
+                stop();
+            else
+                start();
+        });
+
+        start();
+
+    });
+
 })();
