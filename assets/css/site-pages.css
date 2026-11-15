@@ -1173,3 +1173,91 @@ Drone
         grid-template-columns: 1fr;
     }
 }
+
+/* ============================================================
+Contact - direct-contact note
+============================================================ */
+
+/*
+Between the page title and the form: text and email as two
+half-width buttons side by side, echoing the form's half-field
+layout and the submit button's styling. Stack full-width on
+small screens where two halves cannot fit the email address.
+*/
+
+.contact-alt {
+    display: flex;
+    gap: 1rem;
+    margin: 0 0 1.5rem 0;
+}
+
+.contact-alt-link {
+    flex: 1 1 0%;
+    min-width: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    height: 3rem;
+    border-radius: 4px;
+    border: 0;
+    background-color: rgba(255, 255, 255, 0.1);
+    font-size: 0.95rem;
+    font-weight: 400;
+    letter-spacing: 0.1rem;
+    line-height: 3rem;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: #ffffff;
+    border-bottom: 0;
+    text-decoration: none;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.contact-alt-link:hover {
+    background-color: rgba(255, 255, 255, 0.175);
+    color: #ffffff;
+}
+
+.contact-alt-link .icon {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/*
+Quiet eyebrow label above the form: names what the form does so
+the contact buttons above read as alternatives, not steps.
+*/
+
+.form-heading {
+    margin: 0 0 1rem 0;
+    font-size: 0.8rem;
+    font-weight: 400;
+    letter-spacing: 0.2rem;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/*
+At 480px and below the theme drops the fields container's -1.5rem
+top margin (which on desktop cancels the first field's padding-top),
+leaving a stranded 1.5rem under the heading. Drop the heading's own
+margin there so the visual gap matches desktop.
+*/
+
+@media screen and (max-width: 736px) {
+
+    .contact-alt {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+}
+
+@media screen and (max-width: 480px) {
+
+    .form-heading {
+        margin-bottom: 0;
+    }
+
+}
